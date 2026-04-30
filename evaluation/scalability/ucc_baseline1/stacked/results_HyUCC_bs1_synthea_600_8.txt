@@ -1,0 +1,7 @@
+
+### PATTERN (en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[he:HAS_END]-(en3:Encounter)
+
+tempo d'esecuzione totale: 1080.606 s
+internal keys discovery time: 271.035 s
+external keys discovery time: 797.894 s
+memoria massima totale: 1248.61 MB

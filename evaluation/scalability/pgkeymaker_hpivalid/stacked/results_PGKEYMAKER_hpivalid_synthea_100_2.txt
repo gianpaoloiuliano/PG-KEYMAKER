@@ -1,0 +1,18 @@
+pattern;keys found
+
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['en1.date', 'en1.code', 'en2.date', 'en2.baseCost', 'en2.code', 'pro.code'], ['en1.date', 'en1.code', 'en2.date', 'en2.claimCost', 'pro.code'], ['en1.date', 'en1.code', 'en2.date', 'en2.code', 'en2.description', 'pro.code'], ['en1.date', 'en1.code', 'en2.date', 'en2.code', 'en2.coveredAmount', 'pro.code'], ['en1.date', 'en1.code', 'en2.date', 'en2.code', 'en2.class', 'pro.code'], ['en1.date', 'en1.code', 'en1.id', 'en2.date', 'pro.code'], ['en1.date', 'en1.code', 'en2.end', 'pro.code'], ['en1.date', 'en1.code', 'en2.id', 'pro.code'], ['en1.date', 'en1.code', 'en1.id', 'en2.date', 'pro.description'], ['en1.date', 'en1.code', 'en2.date', 'en2.baseCost', 'en2.code', 'pro.description'], ['en1.date', 'en1.code', 'en2.date', 'en2.code', 'en2.description', 'pro.description'], ['en1.date', 'en1.code', 'en2.date', 'en2.code', 'en2.coveredAmount', 'pro.description'], ['en1.date', 'en1.code', 'en2.date', 'en2.code', 'en2.class', 'pro.description'], ['en1.date', 'en1.code', 'en2.date', 'en2.claimCost', 'pro.description'], ['en1.date', 'en1.code', 'en2.end', 'pro.description'], ['en1.date', 'en1.code', 'en2.id', 'pro.description']]
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter);[['en1.date', 'en1.code', 'en1.id', 'en2.date', 'en2.code', 'en2.id']]
+(en1:Encounter);[['en1.date', 'en1.code', 'en1.id']]
+[nx:NEXT];[]
+(en2:Encounter);[['en2.date', 'en2.code', 'en2.id']]
+(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['en2.date', 'en2.claimCost', 'pro.code'], ['en2.date', 'en2.code', 'en2.coveredAmount', 'pro.code'], ['en2.end', 'pro.code'], ['en2.id', 'pro.code'], ['en2.date', 'en2.claimCost', 'pro.description'], ['en2.date', 'en2.code', 'en2.coveredAmount', 'pro.description'], ['en2.end', 'pro.description'], ['en2.id', 'pro.description']]
+[hasp:HAS_PROCEDURE];[]
+(pro:Procedure);[['pro.code'], ['pro.description']]
+
+execution time for tree and leaves: 4.59 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 26.19 s
+execution time for case 3: 2.63 s
+total execution time: 33.50 s
+Max memory used: 170.85 MB

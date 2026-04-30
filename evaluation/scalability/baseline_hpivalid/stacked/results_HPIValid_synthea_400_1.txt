@@ -1,0 +1,7 @@
+
+### PATTERN (p:Patient)-[has:HAS_ENCOUNTER]-(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure)
+
+tempo d'esecuzione totale: 140.741 s
+internal keys discovery time: 79.099 s
+external keys discovery time: 50.845 s
+memoria massima totale: 486.11 MB

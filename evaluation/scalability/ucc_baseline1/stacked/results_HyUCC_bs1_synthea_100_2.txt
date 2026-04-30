@@ -1,0 +1,13 @@
+
+### PATTERN (en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure)
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter) - INTERNAL_KEYS [['en1.date', 'en2.date', 'en2.code', 'en2.id', 'en1.code', 'en1.id']]
+(pro:Procedure) - INTERNAL_KEYS [['pro.code'], ['pro.description']]
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure) - INTERNAL_KEYS [['en1.date', 'en2.date', 'en1.code', 'pro.code', 'en1.id'], ['en1.date', 'en2.date', 'en1.code', 'pro.description', 'en1.id'], ['en1.date', 'en2.end', 'en1.code', 'pro.code'], ['en1.date', 'en2.end', 'en1.code', 'pro.description'], ['en1.date', 'en2.id', 'en1.code', 'pro.code'], ['en1.date', 'en2.id', 'en1.code', 'pro.description'], ['en1.date', 'en2.date', 'en2.code', 'en2.coveredAmount', 'en1.code', 'pro.code'], ['en1.date', 'en2.date', 'en2.code', 'en2.coveredAmount', 'en1.code', 'pro.description'], ['en1.date', 'en2.date', 'en2.claimCost', 'en1.code', 'pro.code'], ['en1.date', 'en2.date', 'en2.claimCost', 'en1.code', 'pro.description'], ['en1.date', 'en2.date', 'en2.code', 'en2.description', 'en1.code', 'pro.code'], ['en1.date', 'en2.date', 'en2.baseCost', 'en2.code', 'en1.code', 'pro.code'], ['en1.date', 'en2.date', 'en2.code', 'en2.class', 'en1.code', 'pro.code'], ['en1.date', 'en2.date', 'en2.code', 'en2.description', 'en1.code', 'pro.description'], ['en1.date', 'en2.date', 'en2.baseCost', 'en2.code', 'en1.code', 'pro.description'], ['en1.date', 'en2.date', 'en2.code', 'en2.class', 'en1.code', 'pro.description']]
+(en2:Encounter) - INTERNAL_KEYS [['en2.date', 'en2.code', 'en2.id']]
+(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure) - INTERNAL_KEYS [['pro.code', 'en2.end'], ['pro.description', 'en2.end'], ['pro.code', 'en2.id'], ['pro.description', 'en2.id'], ['en2.date', 'pro.code', 'en2.code', 'en2.coveredAmount'], ['en2.date', 'pro.description', 'en2.code', 'en2.coveredAmount'], ['en2.date', 'pro.code', 'en2.claimCost'], ['en2.date', 'pro.description', 'en2.claimCost']]
+(en1:Encounter) - INTERNAL_KEYS [['en1.date', 'en1.code', 'en1.id']]
+
+tempo d'esecuzione totale: 43.729 s
+internal keys discovery time: 40.848 s
+external keys discovery time: 0.000 s
+memoria massima totale: 293.77 MB

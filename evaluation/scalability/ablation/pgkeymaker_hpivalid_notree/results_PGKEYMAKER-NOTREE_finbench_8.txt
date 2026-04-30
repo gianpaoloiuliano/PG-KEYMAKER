@@ -1,0 +1,18 @@
+pattern;keys found
+
+(a:Account)-[wd:Withdraw]-(a2:Account)-[rep:Repay]-(ln:Loan);[('wd.createTime', 'a2.accountId', 'rep.createTime', 'ln.createTime', 'a.accountId'), ('wd.createTime', 'a2.accountId', 'rep.createTime', 'ln.createTime', 'a.lastLoginTime'), ('wd.createTime', 'a2.accountId', 'rep.createTime', 'ln.createTime', 'a.createTime'), ('wd.createTime', 'a2.accountId', 'rep.createTime', 'ln.loanId', 'a.accountId'), ('wd.createTime', 'a2.accountId', 'rep.createTime', 'ln.loanId', 'a.lastLoginTime'), ('wd.createTime', 'a2.accountId', 'rep.createTime', 'ln.loanId', 'a.createTime'), ('wd.createTime', 'a2.lastLoginTime', 'rep.createTime', 'ln.createTime', 'a.accountId'), ('wd.createTime', 'a2.lastLoginTime', 'rep.createTime', 'ln.createTime', 'a.lastLoginTime'), ('wd.createTime', 'a2.lastLoginTime', 'rep.createTime', 'ln.createTime', 'a.createTime'), ('wd.createTime', 'a2.lastLoginTime', 'rep.createTime', 'ln.loanId', 'a.accountId'), ('wd.createTime', 'a2.lastLoginTime', 'rep.createTime', 'ln.loanId', 'a.lastLoginTime'), ('wd.createTime', 'a2.lastLoginTime', 'rep.createTime', 'ln.loanId', 'a.createTime'), ('wd.createTime', 'a2.createTime', 'rep.createTime', 'ln.createTime', 'a.accountId'), ('wd.createTime', 'a2.createTime', 'rep.createTime', 'ln.createTime', 'a.lastLoginTime'), ('wd.createTime', 'a2.createTime', 'rep.createTime', 'ln.createTime', 'a.createTime'), ('wd.createTime', 'a2.createTime', 'rep.createTime', 'ln.loanId', 'a.accountId'), ('wd.createTime', 'a2.createTime', 'rep.createTime', 'ln.loanId', 'a.lastLoginTime'), ('wd.createTime', 'a2.createTime', 'rep.createTime', 'ln.loanId', 'a.createTime')]
+(a2:Account)-[rep:Repay]-(ln:Loan);[('a2.accountId', 'ln.createTime', 'rep.createTime'), ('a2.accountId', 'ln.loanId', 'rep.createTime'), ('a2.lastLoginTime', 'ln.createTime', 'rep.createTime'), ('a2.lastLoginTime', 'ln.loanId', 'rep.createTime'), ('a2.createTime', 'ln.createTime', 'rep.createTime'), ('a2.createTime', 'ln.loanId', 'rep.createTime')]
+(a2:Account);[['a2.accountId'], ['a2.lastLoginTime'], ['a2.createTime']]
+[rep:Repay];[['rep.createTime']]
+(ln:Loan);[['ln.createTime'], ['ln.loanId']]
+(a:Account)-[wd:Withdraw]-(a2:Account);[('a2.accountId', 'a.accountId', 'wd.createTime'), ('a2.accountId', 'a.lastLoginTime', 'wd.createTime'), ('a2.accountId', 'a.createTime', 'wd.createTime'), ('a2.lastLoginTime', 'a.accountId', 'wd.createTime'), ('a2.lastLoginTime', 'a.lastLoginTime', 'wd.createTime'), ('a2.lastLoginTime', 'a.createTime', 'wd.createTime'), ('a2.createTime', 'a.accountId', 'wd.createTime'), ('a2.createTime', 'a.lastLoginTime', 'wd.createTime'), ('a2.createTime', 'a.createTime', 'wd.createTime')]
+(a:Account);[['a.accountId'], ['a.lastLoginTime'], ['a.createTime']]
+[wd:Withdraw];[['wd.createTime']]
+
+execution time for tree and leaves: 44.16 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 0.00 s
+execution time for case 3: 0.00 s
+total execution time: 44.16 s
+Max memory used: 334.48 MB

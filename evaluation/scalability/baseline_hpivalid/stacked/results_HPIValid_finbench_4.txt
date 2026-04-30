@@ -1,0 +1,7 @@
+
+### PATTERN (ln:Loan)-[dep:Deposit]-(a:Account)-[tran:Transfer]-(a2:Account)
+
+tempo d'esecuzione totale: 346.493 s
+internal keys discovery time: 346.490 s
+external keys discovery time: 0.000 s
+memoria massima totale: 1787.18 MB

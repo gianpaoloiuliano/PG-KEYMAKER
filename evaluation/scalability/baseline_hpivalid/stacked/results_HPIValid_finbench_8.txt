@@ -1,0 +1,7 @@
+
+### PATTERN (a:Account)-[wd:Withdraw]-(a2:Account)-[rep:Repay]-(ln:Loan)
+
+tempo d'esecuzione totale: 285.371 s
+internal keys discovery time: 285.368 s
+external keys discovery time: 0.000 s
+memoria massima totale: 1432.23 MB

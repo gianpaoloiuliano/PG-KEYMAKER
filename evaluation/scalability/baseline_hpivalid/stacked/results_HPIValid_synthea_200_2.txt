@@ -1,0 +1,7 @@
+
+### PATTERN (en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure)
+
+tempo d'esecuzione totale: 93.113 s
+internal keys discovery time: 86.409 s
+external keys discovery time: 0.000 s
+memoria massima totale: 485.73 MB

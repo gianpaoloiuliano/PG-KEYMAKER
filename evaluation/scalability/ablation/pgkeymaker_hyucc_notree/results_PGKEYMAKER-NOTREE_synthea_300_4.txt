@@ -1,0 +1,19 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter)-[hd:HAS_DRUG]-(dr:Drug);[['en1.date', 'dr.code', 'en1.end', 'en1.id'], ['en1.date', 'dr.description', 'en1.end', 'en1.id'], ['en1.date', 'dr.code', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'dr.description', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'dr.code', 'en1.claimCost', 'en1.id'], ['en1.date', 'dr.description', 'en1.claimCost', 'en1.id'], ['en1.date', 'dr.code', 'en1.description', 'en1.id'], ['en1.date', 'en1.baseCost', 'dr.code', 'en1.id'], ['en1.date', 'dr.code', 'en1.id', 'en1.class'], ['en1.date', 'dr.code', 'en1.id', 'en1.isEnd'], ['en1.date', 'dr.description', 'en1.description', 'en1.id'], ['en1.date', 'en1.baseCost', 'dr.description', 'en1.id'], ['en1.date', 'dr.description', 'en1.id', 'en1.class'], ['en1.date', 'dr.description', 'en1.id', 'en1.isEnd']]
+(p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter);[['en1.date', 'en1.code', 'en1.end', 'en1.id'], ['en1.date', 'en1.code', 'en1.claimCost', 'en1.id'], ['en1.date', 'en1.code', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'en1.code', 'en1.description', 'en1.id'], ['en1.date', 'en1.baseCost', 'en1.code', 'en1.id'], ['en1.date', 'en1.code', 'en1.id', 'en1.class'], ['en1.date', 'en1.code', 'en1.id', 'en1.isEnd']]
+(p:Patient);[['p.SSN'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.city'], ['p.lastName', 'p.birthDate'], ['p.deathDate', 'p.birthDate'], ['p.lastName', 'p.city']]
+[has:HAS_ENCOUNTER];[]
+(en1:Encounter);[['en1.date', 'en1.code', 'en1.end', 'en1.id'], ['en1.date', 'en1.code', 'en1.claimCost', 'en1.id'], ['en1.date', 'en1.code', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'en1.code', 'en1.description', 'en1.id'], ['en1.date', 'en1.baseCost', 'en1.code', 'en1.id'], ['en1.date', 'en1.code', 'en1.id', 'en1.class'], ['en1.date', 'en1.code', 'en1.id', 'en1.isEnd']]
+(en1:Encounter)-[hd:HAS_DRUG]-(dr:Drug);[['en1.date', 'dr.code', 'en1.end', 'en1.id'], ['en1.date', 'dr.description', 'en1.end', 'en1.id'], ['en1.date', 'dr.code', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'dr.description', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'dr.code', 'en1.claimCost', 'en1.id'], ['en1.date', 'dr.description', 'en1.claimCost', 'en1.id'], ['en1.date', 'dr.code', 'en1.description', 'en1.id'], ['en1.date', 'en1.baseCost', 'dr.code', 'en1.id'], ['en1.date', 'dr.code', 'en1.id', 'en1.class'], ['en1.date', 'dr.code', 'en1.id', 'en1.isEnd'], ['en1.date', 'dr.description', 'en1.description', 'en1.id'], ['en1.date', 'en1.baseCost', 'dr.description', 'en1.id'], ['en1.date', 'dr.description', 'en1.id', 'en1.class'], ['en1.date', 'dr.description', 'en1.id', 'en1.isEnd']]
+[hd:HAS_DRUG];[]
+(dr:Drug);[['dr.code']]
+
+execution time for tree and leaves: 14.43 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 22.66 s
+execution time for case 3: 1.35 s
+total execution time: 38.47 s
+Memory: 289.37 MB
+Max memory used: 535.59 MB

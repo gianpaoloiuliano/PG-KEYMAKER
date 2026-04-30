@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../../AURAS/.idea/AURAS.iml" filepath="$PROJECT_DIR$/../../AURAS/.idea/AURAS.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../FDSML2024_25_Biomedical_Knowledge_Graph/.idea/FDSML2024_25_Biomedical_Knowledge_Graph.iml" filepath="$PROJECT_DIR$/../../FDSML2024_25_Biomedical_Knowledge_Graph/.idea/FDSML2024_25_Biomedical_Knowledge_Graph.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../HEROES/.idea/HEROES.iml" filepath="$PROJECT_DIR$/../../HEROES/.idea/HEROES.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../../../HPIvalid/.idea/HPIvalid.iml" filepath="$PROJECT_DIR$/../../../../HPIvalid/.idea/HPIvalid.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../RFD-Incremental-Imputation/.idea/Incremental_Imputation_Utils.iml" filepath="$PROJECT_DIR$/../../RFD-Incremental-Imputation/.idea/Incremental_Imputation_Utils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PG-Keys mining.iml" filepath="$PROJECT_DIR$/.idea/PG-Keys mining.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PythonProject.iml" filepath="$PROJECT_DIR$/.idea/PythonProject.iml" />
+      <module fileurl="file://$USER_HOME$/PycharmProjects/cose_a_caso/.idea/cose_a_caso.iml" filepath="$USER_HOME$/PycharmProjects/cose_a_caso/.idea/cose_a_caso.iml" />
+      <module fileurl="file://$USER_HOME$/PycharmProjects/scriptScrittiFDSML/.idea/scriptScrittiFDSML.iml" filepath="$USER_HOME$/PycharmProjects/scriptScrittiFDSML/.idea/scriptScrittiFDSML.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../../synthea/.idea/synthea.iml" filepath="$PROJECT_DIR$/../../synthea/.idea/synthea.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,19 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]-(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['pro.code', 'en.id'], ['pro.description', 'en.id'], ['pro.code', 'en.coveredAmount', 'en.end'], ['pro.description', 'en.coveredAmount', 'en.end'], ['pro.code', 'en.claimCost', 'en.end'], ['pro.description', 'en.claimCost', 'en.end']]
+(p:Patient)-[has:HAS_ENCOUNTER]-(en:Encounter);[]
+(p:Patient);[['p.id'], ['p.SSN', 'p.birthDate'], ['p.firstName', 'p.SSN'], ['p.lastName', 'p.SSN'], ['p.SSN', 'p.city'], ['p.SSN', 'p.marital'], ['p.SSN', 'p.ethnicity'], ['p.firstName', 'p.birthDate'], ['p.lastName', 'p.city', 'p.birthDate'], ['p.lastName', 'p.marital', 'p.birthDate'], ['p.lastName', 'p.gender', 'p.birthDate'], ['p.city', 'p.deathDate', 'p.birthDate'], ['p.firstName', 'p.lastName', 'p.city'], ['p.firstName', 'p.lastName', 'p.deathDate'], ['p.firstName', 'p.lastName', 'p.marital'], ['p.firstName', 'p.marital', 'p.city']]
+[has:HAS_ENCOUNTER];[]
+(en:Encounter);[]
+(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['pro.code', 'en.id'], ['pro.description', 'en.id'], ['pro.code', 'en.coveredAmount', 'en.end'], ['pro.description', 'en.coveredAmount', 'en.end'], ['pro.code', 'en.claimCost', 'en.end'], ['pro.description', 'en.claimCost', 'en.end']]
+[hasp:HAS_PROCEDURE];[]
+(pro:Procedure);[['pro.code'], ['pro.description']]
+
+execution time for tree and leaves: 35.66 s
+execution time for external keys: 449.61 s
+execution time for case 1: 0.00 s
+execution time for case 2: 81.73 s
+execution time for case 3: 7.62 s
+total execution time: 574.85 s
+Memory: 804.27 MB
+Max memory used: 170.45 MB

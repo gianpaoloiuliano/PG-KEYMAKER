@@ -1,0 +1,7 @@
+
+### PATTERN (p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter)-[hd:HAS_DRUG]-(dr:Drug)
+
+tempo d'esecuzione totale: 186.173 s
+internal keys discovery time: 89.057 s
+external keys discovery time: 82.598 s
+memoria massima totale: 1204.58 MB

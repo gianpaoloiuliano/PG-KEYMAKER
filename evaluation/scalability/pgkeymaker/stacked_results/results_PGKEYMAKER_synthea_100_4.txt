@@ -1,0 +1,18 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter)-[hd:HAS_DRUG]-(dr:Drug);[['en1.date', 'dr.code', 'en1.end', 'en1.id'], ['en1.date', 'dr.description', 'en1.end', 'en1.id'], ['en1.date', 'dr.code', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'dr.description', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'dr.code', 'en1.claimCost', 'en1.id'], ['en1.date', 'dr.description', 'en1.claimCost', 'en1.id'], ['en1.date', 'dr.code', 'en1.code', 'en1.id'], ['en1.date', 'dr.description', 'en1.code', 'en1.id'], ['en1.date', 'dr.code', 'en1.description', 'en1.id'], ['en1.date', 'dr.code', 'en1.id', 'en1.class'], ['en1.date', 'en1.baseCost', 'dr.code', 'en1.id'], ['en1.date', 'dr.code', 'en1.id', 'en1.isEnd'], ['en1.date', 'dr.description', 'en1.description', 'en1.id'], ['en1.date', 'dr.description', 'en1.id', 'en1.class'], ['en1.date', 'en1.baseCost', 'dr.description', 'en1.id'], ['en1.date', 'dr.description', 'en1.id', 'en1.isEnd']]
+(en1:Encounter)-[hd:HAS_DRUG]-(dr:Drug);[['en1.date', 'dr.code', 'en1.end', 'en1.id'], ['en1.date', 'dr.description', 'en1.end', 'en1.id'], ['en1.date', 'dr.code', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'dr.description', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'dr.code', 'en1.claimCost', 'en1.id'], ['en1.date', 'dr.description', 'en1.claimCost', 'en1.id'], ['en1.date', 'dr.code', 'en1.code', 'en1.id'], ['en1.date', 'dr.description', 'en1.code', 'en1.id'], ['en1.date', 'dr.code', 'en1.description', 'en1.id'], ['en1.date', 'dr.code', 'en1.id', 'en1.class'], ['en1.date', 'en1.baseCost', 'dr.code', 'en1.id'], ['en1.date', 'dr.code', 'en1.id', 'en1.isEnd'], ['en1.date', 'dr.description', 'en1.description', 'en1.id'], ['en1.date', 'dr.description', 'en1.id', 'en1.class'], ['en1.date', 'en1.baseCost', 'dr.description', 'en1.id'], ['en1.date', 'dr.description', 'en1.id', 'en1.isEnd']]
+(en1:Encounter);[['en1.date', 'en1.code', 'en1.id']]
+[hd:HAS_DRUG];[]
+(dr:Drug);[['dr.code'], ['dr.description']]
+(p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter);[['en1.date', 'en1.code', 'en1.id']]
+(p:Patient);[['p.id'], ['p.SSN'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.city'], ['p.firstName', 'p.marital', 'p.race'], ['p.lastName', 'p.birthDate'], ['p.deathDate', 'p.birthDate'], ['p.lastName', 'p.city']]
+[has:HAS_ENCOUNTER];[]
+
+execution time for tree and leaves: 5.85 s
+execution time for case 1: 0.00 s
+execution time for case 2: 7.69 s
+execution time for case 3: 0.76 s
+total execution time: 14.30 s
+Memory: 233.43 MB
+Max memory used: 297.78 MB

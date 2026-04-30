@@ -1,0 +1,18 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter)-[hd:HAS_DRUG]-(dr:Drug);[['en1.date', 'en1.baseCost', 'en1.id', 'dr.code'], ['en1.date', 'en1.code', 'en1.id', 'dr.code'], ['en1.date', 'en1.claimCost', 'en1.id', 'dr.code'], ['en1.date', 'en1.description', 'en1.id', 'dr.code'], ['en1.date', 'en1.coveredAmount', 'en1.id', 'dr.code'], ['en1.date', 'en1.end', 'en1.id', 'dr.code'], ['en1.date', 'en1.id', 'en1.isEnd', 'dr.code'], ['en1.date', 'en1.id', 'en1.class', 'dr.code'], ['en1.date', 'en1.baseCost', 'en1.id', 'dr.description'], ['en1.date', 'en1.code', 'en1.id', 'dr.description'], ['en1.date', 'en1.claimCost', 'en1.id', 'dr.description'], ['en1.date', 'en1.description', 'en1.id', 'dr.description'], ['en1.date', 'en1.coveredAmount', 'en1.id', 'dr.description'], ['en1.date', 'en1.end', 'en1.id', 'dr.description'], ['en1.date', 'en1.id', 'en1.isEnd', 'dr.description'], ['en1.date', 'en1.id', 'en1.class', 'dr.description']]
+(p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter);[['en1.date', 'en1.code', 'en1.id']]
+(p:Patient);[['p.firstName', 'p.marital', 'p.race'], ['p.firstName', 'p.city'], ['p.firstName', 'p.lastName'], ['p.lastName', 'p.city'], ['p.id'], ['p.firstName', 'p.birthDate'], ['p.lastName', 'p.birthDate'], ['p.deathDate', 'p.birthDate'], ['p.SSN']]
+[has:HAS_ENCOUNTER];[]
+(en1:Encounter);[['en1.date', 'en1.code', 'en1.id']]
+(en1:Encounter)-[hd:HAS_DRUG]-(dr:Drug);[['en1.date', 'en1.baseCost', 'en1.id', 'dr.code'], ['en1.date', 'en1.code', 'en1.id', 'dr.code'], ['en1.date', 'en1.claimCost', 'en1.id', 'dr.code'], ['en1.date', 'en1.description', 'en1.id', 'dr.code'], ['en1.date', 'en1.coveredAmount', 'en1.id', 'dr.code'], ['en1.date', 'en1.end', 'en1.id', 'dr.code'], ['en1.date', 'en1.id', 'en1.isEnd', 'dr.code'], ['en1.date', 'en1.id', 'en1.class', 'dr.code'], ['en1.date', 'en1.baseCost', 'en1.id', 'dr.description'], ['en1.date', 'en1.code', 'en1.id', 'dr.description'], ['en1.date', 'en1.claimCost', 'en1.id', 'dr.description'], ['en1.date', 'en1.description', 'en1.id', 'dr.description'], ['en1.date', 'en1.coveredAmount', 'en1.id', 'dr.description'], ['en1.date', 'en1.end', 'en1.id', 'dr.description'], ['en1.date', 'en1.id', 'en1.isEnd', 'dr.description'], ['en1.date', 'en1.id', 'en1.class', 'dr.description']]
+[hd:HAS_DRUG];[]
+(dr:Drug);[['dr.code'], ['dr.description']]
+
+execution time for tree and leaves: 6.46 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 7.38 s
+execution time for case 3: 0.37 s
+total execution time: 14.22 s
+Max memory used: 295.99 MB

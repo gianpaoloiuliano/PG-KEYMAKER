@@ -1,0 +1,8 @@
+
+### PATTERN (en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hd:HAS_DRUG]-(dr:Drug)
+(dr:Drug) - INTERNAL_KEYS [['dr.code']]
+
+tempo d'esecuzione totale: 730.787 s
+internal keys discovery time: 175.154 s
+external keys discovery time: 541.960 s
+memoria massima totale: 921.03 MB

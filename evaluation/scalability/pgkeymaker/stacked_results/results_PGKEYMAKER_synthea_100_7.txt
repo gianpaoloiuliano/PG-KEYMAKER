@@ -1,0 +1,18 @@
+pattern;keys found
+
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[he:HAS_END]-(en3:Encounter);[['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.id'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.end'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.coveredAmount'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.claimCost'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.description'], ['en1.date', 'en1.baseCost', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.class'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.isEnd']]
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter);[['en1.date', 'en2.date', 'en2.code', 'en2.id', 'en1.code', 'en1.id']]
+(en1:Encounter);[['en1.date', 'en1.code', 'en1.id']]
+[nx:NEXT];[]
+(en2:Encounter);[['en2.date', 'en2.code', 'en2.id']]
+(en2:Encounter)-[he:HAS_END]-(en3:Encounter);[['en2.date', 'en2.code', 'en3.date', 'en3.code']]
+[he:HAS_END];[]
+(en3:Encounter);[['en3.date', 'en3.code', 'en3.id']]
+
+execution time for tree and leaves: 4.71 s
+execution time for case 1: 0.00 s
+execution time for case 2: 35.35 s
+execution time for case 3: 5.37 s
+total execution time: 45.57 s
+Memory: 370.70 MB
+Max memory used: 260.47 MB

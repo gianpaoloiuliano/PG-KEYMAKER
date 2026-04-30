@@ -1,0 +1,7 @@
+
+### PATTERN (med:Medium)-[sig:SignIn]-(a:Account)-[wd:Withdraw]-(a2:Account)
+
+tempo d'esecuzione totale: 297.854 s
+internal keys discovery time: 297.852 s
+external keys discovery time: 0.000 s
+memoria massima totale: 1895.55 MB

@@ -1,0 +1,18 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]-(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['pro.code', 'en.id'], ['pro.description', 'en.id'], ['pro.code', 'en.end'], ['pro.description', 'en.end']]
+(p:Patient)-[has:HAS_ENCOUNTER]-(en:Encounter);[['en.date', 'en.code', 'en.end', 'en.id'], ['en.date', 'en.code', 'en.claimCost', 'en.id'], ['en.date', 'en.code', 'en.coveredAmount', 'en.id'], ['en.date', 'en.code', 'en.description', 'en.id'], ['en.date', 'en.baseCost', 'en.code', 'en.id'], ['en.date', 'en.code', 'en.id', 'en.class'], ['en.date', 'en.code', 'en.id', 'en.isEnd']]
+(p:Patient);[['p.SSN'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.city'], ['p.lastName', 'p.birthDate'], ['p.deathDate', 'p.birthDate'], ['p.lastName', 'p.city']]
+[has:HAS_ENCOUNTER];[]
+(en:Encounter);[['en.date', 'en.code', 'en.end', 'en.id'], ['en.date', 'en.code', 'en.claimCost', 'en.id'], ['en.date', 'en.code', 'en.coveredAmount', 'en.id'], ['en.date', 'en.code', 'en.description', 'en.id'], ['en.date', 'en.baseCost', 'en.code', 'en.id'], ['en.date', 'en.code', 'en.id', 'en.class'], ['en.date', 'en.code', 'en.id', 'en.isEnd']]
+(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['pro.code', 'en.id'], ['pro.description', 'en.id'], ['pro.code', 'en.end'], ['pro.description', 'en.end']]
+[hasp:HAS_PROCEDURE];[]
+(pro:Procedure);[['pro.code'], ['pro.description']]
+
+execution time for tree and leaves: 14.82 s
+execution time for case 1: 0.00 s
+execution time for case 2: 20.60 s
+execution time for case 3: 1.72 s
+total execution time: 37.18 s
+Memory: 349.53 MB
+Max memory used: 170.29 MB
