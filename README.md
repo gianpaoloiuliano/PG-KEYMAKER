@@ -32,7 +32,7 @@ The pipeline works as follows:
 ## ⚙️ Requirements
 
 - Python ≥ 3.8
-- A running **Neo4j** instance (with APOC plugin for fast batch validation)
+- A running **Neo4j** instance (with APOC plugin for fast batch validation) (all dataset are loaded with N4J version 5.26.1)
 - **WSL / Ubuntu** (required only if using the `hpivalid` UCC algorithm)
 
 ### Python Dependencies
