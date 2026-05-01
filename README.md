@@ -1,20 +1,17 @@
 # PG-KEYMAKER — Property Graph Key Discovery
-
-> **Automatic discovery of PG Keys in Property Graphs stored on Neo4j**, leveraging graph pattern decomposition and Unique Column Combination (UCC) mining algorithms.
-
 ---
 
 ## 📖 Overview
 
-**PG-KEYMAKER** is a research algorithm for **PG Key discovery**: it automatically extracts **PG Keys** (sets of attributes that uniquely identify entities within a graph pattern) from a **Neo4j Property Graph**, given a user-defined Cypher-like pattern.
+**PG-KEYMAKER** is an algorithm for **PG Key discovery**: it automatically extracts **PG Keys** (sets of attributes that uniquely identify entities within a graph pattern) from a **Property Graph**, given a user-defined Cypher-like pattern.
 
 The pipeline works as follows:
 
-1. A **graph pattern** (e.g., `(p:Patient)-[:HAS_ENCOUNTER]->(e:Encounter)`) is decomposed into a hierarchy of **subpatterns and triples**.
-2. Each subpattern is **matched against the Neo4j graph** via auto-generated Cypher queries.
+1. A **graph pattern** (e.g., `(p:Patient)-[:HAS_ENCOUNTER]->(e:Encounter)`) is decomposed into a hierarchy of **subpatterns**.
+2. Each subpattern is **matched against the graph** via auto-generated Cypher queries.
 3. For each match result, **UCC algorithms** (HyUCC or HPIValid) discover candidate keys.
 4. Keys are **propagated and validated** bottom-up through the subpattern tree until keys for the full pattern are found.
-5. When no internal keys exist, **external keys** (from neighboring nodes reachable via 1-to-N bijective paths) are discovered automatically.
+5. When no internal keys exist, **external keys** (from neighboring nodes reachable) are discovered automatically.
 
 ---
 
@@ -84,45 +81,6 @@ Results are saved to `./evaluation/` as structured `.txt` files.
 
 ---
 
-## 🧠 How It Works
-
-### Subpattern Decomposition (`subpattern_extractor.py`)
-
-Given a pattern of the form `N1-E1-N2-E2-N3`, the extractor recursively generates all valid subpatterns (triples and longer paths) and builds a **directed acyclic graph (DAG)** using NetworkX. Each node in the DAG stores:
-
-- `label`: type (`node`, `edge`, `tripla`, `subpattern`, `original_pattern`)
-- `sub_key`: discovered keys
-- `external_key`: whether keys come from neighboring entities
-- `info_for_ext_match`: metadata for external key matching
-
-### Cypher Query Generation (`neo4j_querying_module.py`)
-
-Auto-generates `MATCH ... RETURN` Cypher queries for any pattern fragment (node, edge, or path). Handles:
-- **Node-only** patterns
-- **Edge-only** patterns (with deduplication via `id(a) < id(b)`)
-- **Full paths** with multiple hops
-
-Also implements **external key discovery**: given a node with no internal key, it searches for neighboring nodes reachable via a 1-to-1 path within a configurable depth (`max_depth`).
-
-### Key Validation (`PG_K_validator.py`)
-
-Keys are propagated bottom-up through the subpattern DAG:
-
-- **Leaf nodes** (single nodes/edges): keys found directly via UCC mining.
-- **Triples**: keys assembled from their leaf children.
-- **Longer subpatterns**: keys built by combining and validating candidate key sets.
-
-Minimal keys are extracted using a greedy anti-monotone pruning strategy, with optional fast batch verification via **APOC** (`apoc.cypher.run`).
-
-### UCC Algorithms (`metanome_ucc.py`)
-
-| Algorithm | Backend | Output |
-|---|---|---|
-| `hyucc` | `openclean-metanome` Python wrapper | List of UCC attribute sets |
-| `hpivalid` | HPIValid binary via `subprocess` + WSL | Parsed from `.hg` output files |
-
----
-
 ## 📊 Evaluation Output
 
 Results are written to:
@@ -152,7 +110,7 @@ Execution times and memory usage are also logged per phase:
 
 ## 🔧 Configuration Notes
 
-- If using `hpivalid`, update `PROJECT_DIR` and `CSV_DIR` in `metanome_ucc.py` to match your local WSL paths.
+- If using `hpivalid`, update `PROJECT_DIR` and `CSV_DIR` in `metanome_ucc.py` to match your local paths.
 - APOC must be enabled on your Neo4j instance for fast batch key checking (`check_key_uniqueness_apoc`).
 - The `max_ucc_size` parameter in HyUCC controls the maximum key size (`-1` = unlimited).
 
