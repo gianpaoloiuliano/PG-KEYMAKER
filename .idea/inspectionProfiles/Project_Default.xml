@@ -1,0 +1,72 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="xgboost" />
+          <option value="cffi" />
+          <option value="cycler" />
+          <option value="freetype" />
+          <option value="jpeg" />
+          <option value="kiwisolver" />
+          <option value="libedit" />
+          <option value="libffi" />
+          <option value="libpng" />
+          <option value="libtiff" />
+          <option value="matplotlib" />
+          <option value="ncurses" />
+          <option value="ninja" />
+          <option value="olefile" />
+          <option value="patsy" />
+          <option value="pillow" />
+          <option value="pycparser" />
+          <option value="pyparsing" />
+          <option value="pytorch" />
+          <option value="readline" />
+          <option value="scipy" />
+          <option value="seaborn" />
+          <option value="statsmodels" />
+          <option value="tk" />
+          <option value="torchvision" />
+          <option value="tornado" />
+          <option value="xz" />
+          <option value="zlib" />
+          <option value="zstd" />
+          <option value="scikit-learn-extra" />
+          <option value="bleach" />
+          <option value="chardet" />
+          <option value="docutils" />
+          <option value="idna" />
+          <option value="pkginfo" />
+          <option value="pygments" />
+          <option value="readme-renderer" />
+          <option value="requests" />
+          <option value="requests-toolbelt" />
+          <option value="tqdm" />
+          <option value="twine" />
+          <option value="urllib3" />
+          <option value="webencodings" />
+          <option value="enum34" />
+          <option value="gensim" />
+          <option value="psycopg2-binary" />
+          <option value="pyitlib" />
+          <option value="pytest-xdist" />
+          <option value="python-Levenshtein" />
+          <option value="sqlalchemy" />
+          <option value="jupyter" />
+          <option value="runipy" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyStubPackagesAdvertiser" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="pandas-stubs==2.3.2.250926" />
+          <option value="pandas" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="ReassignedToPlainText" enabled="false" level="WARNING" enabled_by_default="false" />
+  </profile>
+</component>
