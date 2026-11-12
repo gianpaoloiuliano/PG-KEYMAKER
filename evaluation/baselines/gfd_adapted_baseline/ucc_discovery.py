@@ -1,36 +1,36 @@
 """
 ucc_discovery.py
 ================
-Scoperta degli IDENTIFIER minimali (Unique Column Combinations) sulla tabella
-dei match di un pattern. E' l'"horizontal spawning" della baseline adattata.
+Discovery of the minimal IDENTIFIERs (Unique Column Combinations) on the match
+table of a pattern. This is the "horizontal spawning" of the adapted baseline.
 
-Un sottoinsieme di colonne S e' un IDENTIFIER (PG-Key interna) se:
-  - MANDATORY : nessun valore NULL su nessuna colonna di S, per nessun match
-  - EXCLUSIVE : la proiezione dei match su S non ha duplicati (unicita')
-  - SINGLETON : ogni target ha esattamente un valore per ogni attributo di S
-                (sempre vero per attributi semplici / scalari)
+A subset of columns S is an IDENTIFIER (internal PG-Key) if:
+  - MANDATORY : no NULL value on any column of S, for any match
+  - EXCLUSIVE : the projection of the matches on S has no duplicates (uniqueness)
+  - SINGLETON : each target has exactly one value for each attribute of S
+                (always true for simple / scalar attributes)
 
-Osservazione chiave sul pruning di MANDATORY
---------------------------------------------
-MANDATORY e' "downward-closed" rispetto all'inclusione di colonne: se una
-colonna c contiene anche un solo NULL, allora QUALSIASI insieme S che contenga
-c viola MANDATORY (S e' un sovrainsieme di {c} e mantiene quel NULL). Dunque
-nessun IDENTIFIER puo' contenere c.
+Key observation on the MANDATORY pruning
+----------------------------------------
+MANDATORY is "downward-closed" with respect to column inclusion: if a
+column c contains even a single NULL, then ANY set S containing c violates
+MANDATORY (S is a superset of {c} and retains that NULL). Hence no IDENTIFIER
+can contain c.
 
-Di conseguenza il controllo MANDATORY per-sottoinsieme descritto nella baseline
-e' equivalente a: eliminare a monte ogni colonna con almeno un NULL, e poi
-cercare gli UCC minimali (solo EXCLUSIVE) sulle colonne rimanenti. Questa
-forma e' piu' efficiente ed e' quella implementata qui.
+Consequently, the per-subset MANDATORY check described in the baseline is
+equivalent to: dropping upfront every column with at least one NULL, and then
+searching for the minimal UCCs (EXCLUSIVE only) on the remaining columns. This
+form is more efficient and is the one implemented here.
 
-Pruning EXCLUSIVE (reticolo)
-----------------------------
-EXCLUSIVE e' "upward-closed": se S e' unico, ogni sovrainsieme di S e' unico ma
-NON minimale  -> anti-monotonicita': trovato un IDENTIFIER, non si esplorano i
-suoi sovrainsiemi. Viceversa, se S non e' unico, ogni suo sottoinsieme non e'
-unico (pruning complementare). Entrambi sono realizzati dalla generazione dei
-candidati in stile Apriori (BFS sul reticolo, cardinalita' crescente):
-un candidato di taglia k+1 e' considerato solo se TUTTI i suoi sottoinsiemi di
-taglia k sono "non-chiavi" (cioe' nessuno di essi era gia' un IDENTIFIER).
+EXCLUSIVE pruning (lattice)
+---------------------------
+EXCLUSIVE is "upward-closed": if S is unique, every superset of S is unique but
+NOT minimal  -> anti-monotonicity: once an IDENTIFIER is found, its supersets
+are not explored. Conversely, if S is not unique, none of its subsets is
+unique (complementary pruning). Both are achieved by Apriori-style candidate
+generation (BFS on the lattice, increasing cardinality):
+a candidate of size k+1 is considered only if ALL its subsets of size k are
+"non-keys" (i.e. none of them was already an IDENTIFIER).
 """
 
 from itertools import combinations
@@ -40,16 +40,16 @@ import pandas as pd
 
 
 def _is_exclusive(df: pd.DataFrame, cols: List[str], n_rows: int) -> bool:
-    """True se la proiezione di df su `cols` non ha righe duplicate."""
+    """True if the projection of df on `cols` has no duplicate rows."""
     if not cols:
-        # L'insieme vuoto distingue i match solo se ce n'e' al piu' uno.
+        # The empty set distinguishes the matches only if there is at most one.
         return n_rows <= 1
-    # Numero di tuple distinte == numero di match  => unicita'.
+    # Number of distinct tuples == number of matches  => uniqueness.
     return df.drop_duplicates(subset=cols).shape[0] == n_rows
 
 
 def _mandatory_columns(df: pd.DataFrame) -> List[str]:
-    """Colonne senza alcun NULL: le uniche candidabili a far parte di una chiave."""
+    """Columns without any NULL: the only ones that can be part of a key."""
     return [c for c in df.columns if df[c].notna().all()]
 
 
@@ -57,14 +57,14 @@ def _generate_next_level(
     non_keys: List[FrozenSet[str]], k: int
 ) -> List[FrozenSet[str]]:
     """
-    Genera i candidati di taglia k+1 a partire dalle non-chiavi di taglia k,
-    in stile Apriori: un candidato e' valido solo se TUTTI i suoi sottoinsiemi
-    di taglia k sono non-chiavi (presenti in `non_keys`).
+    Generates the candidates of size k+1 from the non-keys of size k,
+    Apriori-style: a candidate is valid only if ALL its subsets of size k
+    are non-keys (present in `non_keys`).
 
-    Questo realizza contemporaneamente:
-      - il pruning di minimalita' (un candidato che contiene un IDENTIFIER gia'
-        trovato ha un sottoinsieme assente da non_keys -> scartato);
-      - il pruning complementare sulle non-chiavi.
+    This simultaneously achieves:
+      - the minimality pruning (a candidate containing an already found
+        IDENTIFIER has a subset missing from non_keys -> discarded);
+      - the complementary pruning on non-keys.
     """
     non_key_set = set(non_keys)
     candidates = set()
@@ -84,13 +84,13 @@ def _generate_next_level(
 
 def find_minimal_identifiers(df: pd.DataFrame) -> List[FrozenSet[str]]:
     """
-    Trova tutti i sottoinsiemi minimali di colonne che sono IDENTIFIER.
+    Finds all minimal subsets of columns that are IDENTIFIERs.
 
-    Strategia: BFS sul reticolo delle colonne (cardinalita' crescente) con
-    pruning anti-monotonico in stile Apriori. MANDATORY e' gestito a monte
-    eliminando le colonne con NULL.
+    Strategy: BFS on the column lattice (increasing cardinality) with
+    Apriori-style anti-monotonic pruning. MANDATORY is handled upfront
+    by dropping the columns with NULLs.
 
-    Ritorna una lista di frozenset (ognuno e' una PG-Key interna minimale).
+    Returns a list of frozensets (each one is a minimal internal PG-Key).
     """
     n_rows = len(df)
     results: List[FrozenSet[str]] = []
@@ -110,9 +110,9 @@ def find_minimal_identifiers(df: pd.DataFrame) -> List[FrozenSet[str]]:
         for cand in level:
             cols = list(cand)
             if _is_exclusive(df, cols, n_rows):
-                keys.append(cand)           # IDENTIFIER minimale (MANDATORY garantito)
+                keys.append(cand)           # minimal IDENTIFIER (MANDATORY guaranteed)
             else:
-                non_keys.append(cand)       # non-chiave: si potra' estendere
+                non_keys.append(cand)       # non-key: it can be extended later
         level = _generate_next_level(non_keys, k)
         k += 1
 
@@ -120,15 +120,15 @@ def find_minimal_identifiers(df: pd.DataFrame) -> List[FrozenSet[str]]:
 
 
 if __name__ == "__main__":
-    # Test rapido su una relazione sintetica.
+    # Quick test on a synthetic relation.
     data = pd.DataFrame(
         {
-            "n.id":    [1, 2, 3, 4],       # chiave (unica, no null)
-            "n.name":  ["a", "a", "b", "b"],   # non unica
-            "n.code":  ["x", "y", "x", "y"],   # non unica
-            "n.opt":   [None, 1, 2, 3],        # ha NULL -> mai in una chiave
+            "n.id":    [1, 2, 3, 4],       # key (unique, no null)
+            "n.name":  ["a", "a", "b", "b"],   # not unique
+            "n.code":  ["x", "y", "x", "y"],   # not unique
+            "n.opt":   [None, 1, 2, 3],        # has NULL -> never in a key
         }
     )
-    # (name, code) insieme e' unico -> chiave; id da solo -> chiave.
+    # (name, code) together are unique -> key; id alone -> key.
     for key in find_minimal_identifiers(data):
         print("IDENTIFIER:", sorted(key))

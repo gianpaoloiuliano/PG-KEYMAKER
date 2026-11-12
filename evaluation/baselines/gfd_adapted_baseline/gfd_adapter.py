@@ -1,18 +1,18 @@
 """
 gfd_adapter.py
 ==============
-Orchestrazione dell'intera baseline GFD-adattata per la scoperta di PG-Keys
-interne (internally-described).
+Orchestration of the whole GFD-adapted baseline for discovering internal
+(internally-described) PG-Keys.
 
 Pipeline:
-  1. parse dello scope                       (parser.parse_scope)
-  2. enumerazione sotto-pattern contigui     (subpattern_enum.enumerate_subpatterns)
-  3. per ogni sotto-pattern:
-       a. scoperta proprieta' + estrazione match da Neo4j (neo4j_connector)
-       b. UCC discovery con pruning anti-monotonico       (ucc_discovery)
-       c. misura di tempo e (opzionale) memoria
-  4. output testuale raggruppato per sotto-pattern, nel formato
-       FOR <pattern> IDENTIFIER <attributi>
+  1. parse the scope                         (parser.parse_scope)
+  2. enumerate contiguous sub-patterns       (subpattern_enum.enumerate_subpatterns)
+  3. for each sub-pattern:
+       a. property discovery + match extraction from Neo4j (neo4j_connector)
+       b. UCC discovery with anti-monotonic pruning        (ucc_discovery)
+       c. time and (optional) memory measurement
+  4. text output grouped by sub-pattern, in the format
+       FOR <pattern> IDENTIFIER <attributes>
 """
 
 import time
@@ -38,7 +38,7 @@ class SubPatternResult:
 
 
 def _format_key(key: FrozenSet[str]) -> str:
-    """Rende un IDENTIFIER come lista ordinata di attributi 'var.prop'."""
+    """Renders an IDENTIFIER as a sorted list of 'var.prop' attributes."""
     return ", ".join(sorted(key))
 
 
@@ -50,14 +50,14 @@ def run_discovery(
     filters_str: str = "",
 ) -> List[SubPatternResult]:
     """
-    Esegue la scoperta su tutti i sotto-pattern dello scope e ritorna i risultati.
-    `filters_str`: filtri Cypher (anche aggregati con PER), come in PG-KEYMAKER;
-    a ogni sotto-pattern si applicano solo quelli i cui alias compaiono in esso.
+    Runs the discovery on all sub-patterns of the scope and returns the results.
+    `filters_str`: Cypher filters (also aggregates with PER), as in PG-KEYMAKER;
+    only the filters whose aliases appear in a sub-pattern are applied to it.
     """
     scope = parse_scope(scope_str)
     subpatterns: List[SubPattern] = enumerate_subpatterns(scope)
     if filters_str:
-        qf.dbg(f"filtri: {filters_str}")
+        qf.dbg(f"filters: {filters_str}")
     filters = qf.parse_filters(filters_str, scope_str)
 
     if track_memory and not tracemalloc.is_tracing():
@@ -69,7 +69,7 @@ def run_discovery(
         pattern_str = sp.display()
         sp_filters = qf.applicable_filters(filters, sp.variables())
         if filters:
-            print(f"sotto-pattern {pattern_str}{qf.filters_label(sp_filters)}")
+            print(f"sub-pattern {pattern_str}{qf.filters_label(sp_filters)}")
 
         if track_memory:
             tracemalloc.reset_peak()
@@ -102,7 +102,7 @@ def run_discovery(
 
 
 def render_report(results: List[SubPatternResult], min_support: int) -> str:
-    """Costruisce il report testuale completo (anche per salvataggio su file)."""
+    """Builds the complete text report (also for saving to a file)."""
     lines: List[str] = []
     total_keys = 0
     total_time = 0.0
@@ -121,13 +121,13 @@ def render_report(results: List[SubPatternResult], min_support: int) -> str:
         lines.append("")
         lines.append(f"FOR {res.pattern}")
         mem = f", peak {res.peak_kib:.1f} KiB" if res.peak_kib is not None else ""
-        lines.append(f"  match: {res.n_matches} | tempo: {res.elapsed_s*1000:.2f} ms{mem}")
+        lines.append(f"  match: {res.n_matches} | time: {res.elapsed_s*1000:.2f} ms{mem}")
 
         if res.status == "no_matches":
-            lines.append("  [skip] nessun match per questo sotto-pattern")
+            lines.append("  [skip] no match for this sub-pattern")
             continue
         if res.status == "below_support":
-            lines.append(f"  [skip] supporto {res.n_matches} < min-support {min_support}")
+            lines.append(f"  [skip] support {res.n_matches} < min-support {min_support}")
             continue
         if res.status == "no_key":
             lines.append("  no key found")
@@ -139,12 +139,12 @@ def render_report(results: List[SubPatternResult], min_support: int) -> str:
 
     lines.append("")
     lines.append("-" * 72)
-    lines.append(f"Totale PG-Keys trovate : {total_keys}")
-    lines.append(f"Sotto-pattern esaminati: {len(results)}")
-    lines.append(f"tempo d'esecuzione totale:: {total_time:.2f}s")
+    lines.append(f"Total PG-Keys found    : {total_keys}")
+    lines.append(f"Sub-patterns examined  : {len(results)}")
+    lines.append(f"total execution time: {total_time:.2f}s")
 
     if max_peak > 0:
-        lines.append(f"memoria massima totale: {max_peak:.1f} KiB")
+        lines.append(f"max total memory: {max_peak:.1f} KiB")
     lines.append("-" * 72)
 
     return "\n".join(lines)

@@ -16,12 +16,12 @@ def check_keys_all_leaf(G,driver,tempi,ucc_alg):
             if len(G.nodes[elem]["sub_key"]) == 0:
                 if G.nodes[elem]["label"] == "node":
                     original_label = G.nodes[elem].get("original_label")
-                    # la cache distingue foglie con la stessa label ma filtri diversi
+                    # the cache distinguishes leaves with the same label but different filters
                     cache_key = (original_label, qf.filter_signature(G.nodes[elem].get("filters"), G.nodes[elem].get("alias")))
                     if cache_key[1]:
-                        qf.dbg(f"cache chiavi esterne {elem}: {'HIT' if cache_key in analyzed else 'MISS'}", level=2)
+                        qf.dbg(f"external keys cache {elem}: {'HIT' if cache_key in analyzed else 'MISS'}", level=2)
                     if cache_key not in analyzed:
-                        #print("sono senza chiave, vedo esterno",elem)
+                        #print("no key, checking external",elem)
                         external_entities = n4j.matching_external_candidates_in_graph_v2(elem,driver,ucc_alg)
                         analyzed[cache_key] = elem
                         if len(external_entities) > 0:
@@ -31,9 +31,9 @@ def check_keys_all_leaf(G,driver,tempi,ucc_alg):
                             #print("external keys found:", G.nodes[elem]["sub_key"])
                             print("info for ext matching:", G.nodes[elem]["info_for_ext_match"])
                     else:
-                        print(f"[DEBUG] else: copia da {analyzed[cache_key]} -> {elem}")
+                        print(f"[DEBUG] else: copy from {analyzed[cache_key]} -> {elem}")
                         src_node = analyzed[cache_key]
-                        # copia diretta (nessun alias fix)
+                        # direct copy (no alias fix)
                         for key in ("external_key", "sub_key", "info_for_ext_match"):
                             value = G.nodes[src_node].get(key)
                             if isinstance(value, list):
@@ -46,12 +46,12 @@ def check_keys_all_leaf(G,driver,tempi,ucc_alg):
                     for ent in external_entities:
                         #print("ent",ent)
                         key = ucc.compute_keys(ent[2])
-                        print("key di external ent",key)
+                        print("key of external ent",key)
                         if len(key) > 0:
                             G.nodes[elem]["external_key"] = True
                             # info external match update
                             for k in key:
-                                #print("k ESTERNO",k)
+                                #print("k EXTERNAL",k)
                                 G.nodes[elem]["sub_key"].append(k)
                                 #if len(k) == 1:
                                 #    print("k",k[0])
@@ -60,8 +60,8 @@ def check_keys_all_leaf(G,driver,tempi,ucc_alg):
                                 #    alias_target_clean = alias_target[0].replace("(", "")
                                 #    print("alias_target_clean", alias_target_clean)
                                 #    tmp = k[0].split(".")
-                                #    #print("tmp di 0", tmp[0])
-                                #    #print("tmp di 1", tmp[1])
+                                #    #print("tmp of 0", tmp[0])
+                                #    #print("tmp of 1", tmp[1])
                             #tupla = (one_to_one_path)
                             #print(tupla)
                             G.nodes[elem].get("info_for_ext_match").append((ent[0],ent[1]))
@@ -79,12 +79,12 @@ def check_keys_all_leaf_notree(G,driver,tempi,ucc_alg):
             if len(G.nodes[elem]["sub_key"]) == 0:
                 if G.nodes[elem]["label"] == "node":
                     original_label = G.nodes[elem].get("original_label")
-                    # la cache distingue foglie con la stessa label ma filtri diversi
+                    # the cache distinguishes leaves with the same label but different filters
                     cache_key = (original_label, qf.filter_signature(G.nodes[elem].get("filters"), G.nodes[elem].get("alias")))
                     if cache_key[1]:
-                        qf.dbg(f"cache chiavi esterne {elem}: {'HIT' if cache_key in analyzed else 'MISS'}", level=2)
+                        qf.dbg(f"external keys cache {elem}: {'HIT' if cache_key in analyzed else 'MISS'}", level=2)
                     if cache_key not in analyzed:
-                        #print("sono senza chiave, vedo esterno",elem)
+                        #print("no key, checking external",elem)
                         external_entities = n4j.matching_external_candidates_in_graph_v2(elem,driver,ucc_alg)
                         #analyzed[cache_key] = elem
                         if len(external_entities) > 0:
@@ -94,9 +94,9 @@ def check_keys_all_leaf_notree(G,driver,tempi,ucc_alg):
                             #print("external keys found:", G.nodes[elem]["sub_key"])
                             print("info for ext matching:", G.nodes[elem]["info_for_ext_match"])
                     else:
-                        print(f"[DEBUG] else: copia da {analyzed[cache_key]} -> {elem}")
+                        print(f"[DEBUG] else: copy from {analyzed[cache_key]} -> {elem}")
                         src_node = analyzed[cache_key]
-                        # copia diretta (nessun alias fix)
+                        # direct copy (no alias fix)
                         for key in ("external_key", "sub_key", "info_for_ext_match"):
                             value = G.nodes[src_node].get(key)
                             if isinstance(value, list):
@@ -109,12 +109,12 @@ def check_keys_all_leaf_notree(G,driver,tempi,ucc_alg):
                     for ent in external_entities:
                         #print("ent",ent)
                         key = ucc.compute_keys(ent[2])
-                        print("key di external ent",key)
+                        print("key of external ent",key)
                         if len(key) > 0:
                             G.nodes[elem]["external_key"] = True
                             # info external match update
                             for k in key:
-                                #print("k ESTERNO",k)
+                                #print("k EXTERNAL",k)
                                 G.nodes[elem]["sub_key"].append(k)
                                 #if len(k) == 1:
                                 #    print("k",k[0])
@@ -123,8 +123,8 @@ def check_keys_all_leaf_notree(G,driver,tempi,ucc_alg):
                                 #    alias_target_clean = alias_target[0].replace("(", "")
                                 #    print("alias_target_clean", alias_target_clean)
                                 #    tmp = k[0].split(".")
-                                #    #print("tmp di 0", tmp[0])
-                                #    #print("tmp di 1", tmp[1])
+                                #    #print("tmp of 0", tmp[0])
+                                #    #print("tmp of 1", tmp[1])
                             #tupla = (one_to_one_path)
                             #print(tupla)
                             G.nodes[elem].get("info_for_ext_match").append((ent[0],ent[1]))
@@ -136,11 +136,11 @@ def check_keys_all_leaf_notree(G,driver,tempi,ucc_alg):
 
 def validate_subkeys(G,pattern_father,subkey_set,info_for_ext_match):
     #print("subkey set",subkey_set)
-    #print("g prima", G.nodes[pattern_father].get("sub_key"))
+    #print("g before", G.nodes[pattern_father].get("sub_key"))
     are_external = G.nodes[pattern_father].get("external_key")
-    #print("tripla è " + pattern_father + " ed are_external è: " + str(are_external))
+    #print("triple is " + pattern_father + " and are_external is: " + str(are_external))
     if len(info_for_ext_match) == 0:
-        #print("len di info_for_ext",len(info_for_ext_match))
+        #print("len of info_for_ext",len(info_for_ext_match))
         matched_data = n4j.matching_pattern_for_validation(pattern_father,are_external,[])
         subkey_set = generate_combinations(subkey_set)
 
@@ -156,10 +156,10 @@ def validate_subkeys(G,pattern_father,subkey_set,info_for_ext_match):
                 G.nodes[pattern_father].get("sub_key").append(key)
             else:
                 is_key = False
-        print(f"tripla considerata:",G.nodes[pattern_father].get("pattern"))
-        #print(f"nuove chiavi per la tripla: ",G.nodes[pattern_father].get("sub_key"))
+        print(f"triple considered:",G.nodes[pattern_father].get("pattern"))
+        #print(f"new keys for the triple: ",G.nodes[pattern_father].get("sub_key"))
         #triple_key = ucc.compute_keys(matched_data)
-        #print("chiavi valide con ucc",triple_key)
+        #print("valid keys with ucc",triple_key)
         print("\n")
     else:
         bindings = []
@@ -170,17 +170,17 @@ def validate_subkeys(G,pattern_father,subkey_set,info_for_ext_match):
             alias_target_clean = alias_target[0].replace("(","")
             print("alias_target_clean", alias_target_clean)
             for elem in G.nodes[pattern_father]["info_for_ext_match"][target]:
-                print("stampo elem",elem[0])
+                print("printing elem",elem[0])
                 tmp = elem[0].split(".")
                 if tmp[0] not in pattern_father:
-                    print("tmp di 0", tmp[0])
-                    print("tmp di 1", tmp[1])
+                    print("tmp of 0", tmp[0])
+                    print("tmp of 1", tmp[1])
                     tupla = (alias_target_clean,tmp[0].capitalize(),tmp[1])
                     print(tupla)
         '''
         for tupla in info_for_ext_match:
             if tupla[1] not in pattern_father:
-                #print("tupla[1] e pattern_father " + tupla[1] +" " + pattern_father)
+                #print("tupla[1] and pattern_father " + tupla[1] +" " + pattern_father)
                 bindings.append(tupla)
         #print("bindings",bindings)
         matched_data = n4j.matching_pattern_for_validation(pattern_father,are_external,bindings)
@@ -192,7 +192,7 @@ def validate_subkeys(G,pattern_father,subkey_set,info_for_ext_match):
             t = tuple(item)
             if t not in set_keys_tmp:
                 set_keys_tmp.add(t)
-                subkey_set_clean.append(item)  # Manteniamo la lista, non la tupla
+                subkey_set_clean.append(item)  # Keep the list, not the tuple
         subkey_set = subkey_set_clean
         subkey_set = generate_combinations(subkey_set)
         for key in subkey_set:
@@ -202,7 +202,7 @@ def validate_subkeys(G,pattern_father,subkey_set,info_for_ext_match):
             count = matched_data.groupby(key).size()
             if (count == 1).all():
                 is_key = True
-                #print("key valida",key)
+                #print("valid key",key)
                 G.nodes[pattern_father].get("sub_key").append(key)
                 #print("g", G.nodes[pattern_father].get("sub_key"))
             '''
@@ -217,7 +217,7 @@ def validate_subkeys(G,pattern_father,subkey_set,info_for_ext_match):
                     #print("tpl_clean",tpl_clean)
                     if key == tpl_clean:
                         G.nodes[pattern_father].get("info_for_ext_match").append(tupla)
-                        #print("info ext nuovo",G.nodes[pattern_father].get("info_for_ext_match"))
+                        #print("new info ext",G.nodes[pattern_father].get("info_for_ext_match"))
                 '''
                 key_parts = key.split(".")
                 if key_parts not in pattern_father:
@@ -226,22 +226,22 @@ def validate_subkeys(G,pattern_father,subkey_set,info_for_ext_match):
                 '''
             else:
                 is_key = False
-        print(f"tripla considerata:",G.nodes[pattern_father].get("pattern"))
-        #print(f"nuove chiavi per la tripla: ",G.nodes[pattern_father].get("sub_key"))
+        print(f"triple considered:",G.nodes[pattern_father].get("pattern"))
+        #print(f"new keys for the triple: ",G.nodes[pattern_father].get("sub_key"))
         #triple_key = ucc.compute_keys(matched_data)
-        #print("chiavi valide con ucc",triple_key)
+        #print("valid keys with ucc",triple_key)
         print("\n")
     return G
 
 
 # ============================================================
-#  CASE 1 — Concatenazione (tutte le foglie hanno chiavi)
+#  CASE 1 — Concatenation (all leaves have keys)
 # ============================================================
 def concat_keys_from_leaves(G, nodo, foglie_desc):
     if not foglie_desc:
-        print("   ⚠️ Nessuna foglia discendente → skip concatenazione")
+        print("   ⚠️ No descendant leaf → skipping concatenation")
         return
-    print("   ✅ Tutte le foglie discendenti hanno chiavi → CONCAT su foglie")
+    print("   ✅ All descendant leaves have keys → CONCAT on leaves")
 
     key_lists = [G.nodes[f]["sub_key"] for f in foglie_desc]
     new_keys = []
@@ -253,11 +253,11 @@ def concat_keys_from_leaves(G, nodo, foglie_desc):
         new_keys.append(tuple(flat))
 
     G.nodes[nodo]["sub_key"] = new_keys
-    #print(f"   ➕ Chiave composta creata per {nodo}: {new_keys}")
+    #print(f"   ➕ Composite key created for {nodo}: {new_keys}")
 
 
 # ============================================================
-#  CASE 2 — Validazione classica
+#  CASE 2 — Classic validation
 # ============================================================
 def validate_or_propagate(G, nodo, figli, minimal,driver):
     subkeys_list = []
@@ -270,7 +270,7 @@ def validate_or_propagate(G, nodo, figli, minimal,driver):
         else:
             subkeys_list += G.nodes[figlio].get("sub_key", [])
 
-    #print(f"   Chiavi raccolte per validazione: {subkeys_list}")
+    #print(f"   Keys collected for validation: {subkeys_list}")
 
     if minimal:
         print("   🔍 validate_minimal_subkeys()")
@@ -283,7 +283,7 @@ def validate_or_propagate(G, nodo, figli, minimal,driver):
 
 
 # ============================================================
-#  CASE 3 — Fallback combinatorio (solo se validazione fallisce)
+#  CASE 3 — Combinatorial fallback (only if validation fails)
 # ============================================================
 from itertools import combinations
 
@@ -296,7 +296,7 @@ def compute_keys_by_structure(G, minimal,driver,tempi,ucc_alg):
     foglie = {n for n, d in G.nodes(data=True) if d.get("label") in ("node", "edge")}
     G_inv = G.reverse(copy=True)
 
-    # Livelli bottom-up
+    # Bottom-up levels
     livelli = {}
     for nodo in nx.topological_sort(G_inv):
         if nodo in foglie:
@@ -309,7 +309,7 @@ def compute_keys_by_structure(G, minimal,driver,tempi,ucc_alg):
     nodi_ordinati = sorted(livelli, key=lambda n: livelli[n])
 
     # --------------------------------------------------------
-    # LOGICA DI CALCOLO CHIAVI PER OGNI NODO
+    # KEY COMPUTATION LOGIC FOR EACH NODE
     # --------------------------------------------------------
     def calcola_chiavi(nodo, driver, tempi,ucc_alg):
         label = G.nodes[nodo].get("label")
@@ -321,9 +321,9 @@ def compute_keys_by_structure(G, minimal,driver,tempi,ucc_alg):
         foglie_desc = [d for d in disc if d in foglie]
 
         #print(f"\n➡️ Node: {nodo}")
-        #print(f"   Livello: {livelli[nodo]}")
-        #print(f"   Figli: {figli}")
-        #print(f"   Foglie discendenti: {foglie_desc}")
+        #print(f"   Level: {livelli[nodo]}")
+        #print(f"   Children: {figli}")
+        #print(f"   Descendant leaves: {foglie_desc}")
 
         all_foglie_have_keys = all(
             len(G.nodes[f].get("sub_key", [])) > 0
@@ -331,7 +331,7 @@ def compute_keys_by_structure(G, minimal,driver,tempi,ucc_alg):
         )
 
         # =========================
-        # CASO 1
+        # CASE 1
         # =========================
         if all_foglie_have_keys:
             start = time.time()
@@ -340,7 +340,7 @@ def compute_keys_by_structure(G, minimal,driver,tempi,ucc_alg):
             return result
 
         # =========================
-        # CASO 2
+        # CASE 2
         # =========================
         start = time.time()
         subkeys_list, matched_data = validate_or_propagate(
@@ -349,20 +349,20 @@ def compute_keys_by_structure(G, minimal,driver,tempi,ucc_alg):
         tempi.ex_case2 += round(time.time() - start,2)
 
         # =========================
-        # CASO 3 (fallback)
+        # CASE 3 (fallback)
         # =========================
         if G.nodes[nodo].get("empty_scope"):
-            print("   ⚠️ Scope vuoto → nessun fallback, nessuna chiave")
+            print("   ⚠️ Empty scope → no fallback, no keys")
         elif len(G.nodes[nodo].get("sub_key", [])) == 0:
-            print("   ⚠️ Nessuna chiave trovata → attivo FALLBACK combinatorio")
+            print("   ⚠️ No key found → activating combinatorial FALLBACK")
 
             start = time.time()
             G.nodes[nodo]["sub_key"] = ucc.compute_keys(matched_data,ucc_alg)
             tempi.ex_case3 += round(time.time() - start,2)
 
-        #print(f"   ✅ Chiavi finali: {G.nodes[nodo].get('sub_key', [])}")
+        #print(f"   ✅ Final keys: {G.nodes[nodo].get('sub_key', [])}")
 
-    # Esegui bottom-up
+    # Run bottom-up
     for nodo in nodi_ordinati:
         calcola_chiavi(nodo,driver,tempi,ucc_alg)
 
@@ -376,12 +376,12 @@ def validate_minimal_subkeys(G, pattern_father, subkey_set,driver):
     filters = G.nodes[pattern_father].get("filters", [])
     #matched_data = n4j.matching_pattern_for_validation(pattern_father, are_external, [],driver)
     #print(matched_data)
-    matched_data = None  # Non serve qui
+    matched_data = None  # Not needed here
     # ============================================================
-    # CASO 1 — Nessuna chiave esterna
+    # CASE 1 — No external keys
     # ============================================================
     #if len(info_for_ext_match) == 0:
-    # Elimina duplicati tra le chiavi (come liste, ignorando l'ordine)
+    # Remove duplicates among the keys (as lists, ignoring order)
     subkey_set_unique = []
     seen = set()
     for item in subkey_set:
@@ -389,50 +389,50 @@ def validate_minimal_subkeys(G, pattern_father, subkey_set,driver):
         if t not in seen:
             seen.add(t)
             subkey_set_unique.append(item)
-        # === Primo tentativo: validazione rapida con APOC ===
+        # === First attempt: fast validation with APOC ===
 
     try:
         apoc_results, n_rows = n4j.check_key_uniqueness_apoc(pattern_father, subkey_set_unique, driver, filters)
     except Exception as e:
-        print(f"[WARN] Errore in check_key_uniqueness_apoc: {e}")
+        print(f"[WARN] Error in check_key_uniqueness_apoc: {e}")
         apoc_results, n_rows = {}, None
 
-    # scope senza match (es. filtro troppo selettivo): nessuna chiave significativa
+    # scope without matches (e.g. filter too selective): no meaningful key
     if n_rows == 0:
-        print(f"[WARN] Nessun match per {pattern_father + qf.filters_label(filters)}: "
-              f"scope vuoto, nessuna chiave riportata")
+        print(f"[WARN] No match for {pattern_father + qf.filters_label(filters)}: "
+              f"empty scope, no key reported")
         G.nodes[pattern_father]["empty_scope"] = True
         return G, None
 
     valid_keys = [list(k) for k, is_unique in apoc_results.items() if is_unique]
 
     if valid_keys:
-        print(f"[FAST] {len(valid_keys)} chiavi uniche trovate via APOC per {pattern_father}")
+        print(f"[FAST] {len(valid_keys)} unique keys found via APOC for {pattern_father}")
         chiavi_minimali = valid_keys
         for key in chiavi_minimali:
             G.nodes[pattern_father].get("sub_key").append(key)
     else:
-        # 🔸 Fallback solo se tutte le candidate sono fallite
-        print(f"[SLOW] Nessuna chiave unica via APOC, eseguo query completa...")
+        # 🔸 Fallback only if all the candidates failed
+        print(f"[SLOW] No unique key via APOC, running full query...")
         matched_data = n4j.matching_pattern_for_validation(pattern_father, are_external, [], driver, filters)
-        # la query completa può non restituire nulla (filtro troppo selettivo, o APOC fallito):
-        # niente righe -> niente UCC da calcolare (HPIValid non produce il file .hg)
+        # the full query may return nothing (filter too selective, or APOC failed):
+        # no rows -> no UCC to compute (HPIValid does not produce the .hg file)
         if matched_data is None or matched_data.shape[0] == 0 or matched_data.shape[1] == 0:
-            print(f"[WARN] Nessun match per {pattern_father + qf.filters_label(filters)}: "
-                  f"scope vuoto, nessuna chiave riportata")
+            print(f"[WARN] No match for {pattern_father + qf.filters_label(filters)}: "
+                  f"empty scope, no key reported")
             G.nodes[pattern_father]["empty_scope"] = True
             return G, None
     return G, matched_data
 
 
-    print(f"tripla considerata:", G.nodes[pattern_father].get("pattern"))
-    print(f"nuove chiavi per la tripla: ", G.nodes[pattern_father].get("sub_key"))
+    print(f"triple considered:", G.nodes[pattern_father].get("pattern"))
+    print(f"new keys for the triple: ", G.nodes[pattern_father].get("sub_key"))
     #triple_key = ucc.compute_keys(matched_data)
-    #print("chiavi valide con ucc", triple_key)
+    #print("valid keys with ucc", triple_key)
     print("\n")
     '''
     else:
-        print("ho trovato chiavi esterne")
+        print("found external keys")
         bindings = []
         for tupla in info_for_ext_match:
             if tupla[1] not in pattern_father:
@@ -442,7 +442,7 @@ def validate_minimal_subkeys(G, pattern_father, subkey_set,driver):
         print(bindings)
         matched_data = n4j.matching_pattern_for_validation(pattern_father, are_external, bindings,driver)
 
-        # Pulisci subkey_set da duplicati
+        # Clean subkey_set of duplicates
         seen = set()
         subkey_set_clean = []
         for item in subkey_set:
@@ -466,17 +466,17 @@ def validate_minimal_subkeys(G, pattern_father, subkey_set,driver):
                 if tpl_clean in key:
                     G.nodes[pattern_father].get("info_for_ext_match").append(tupla)
 
-        print(f"tripla considerata:", G.nodes[pattern_father].get("pattern"))
-        #print(f"nuove chiavi per la tripla: ", G.nodes[pattern_father].get("sub_key"))
+        print(f"triple considered:", G.nodes[pattern_father].get("pattern"))
+        #print(f"new keys for the triple: ", G.nodes[pattern_father].get("sub_key"))
         #triple_key = ucc.compute_keys(matched_data)
-        #print("chiavi valide con ucc", triple_key)
+        #print("valid keys with ucc", triple_key)
         print("\n")
     return G,matched_data
     '''
 
 
 def generate_combinations(s):
-    # Rimuovo sotto-liste duplicate nell'input
+    # Remove duplicate sub-lists from the input
     seen = set()
     s_unici = []
     for sublist in s:
@@ -486,7 +486,7 @@ def generate_combinations(s):
             s_unici.append(sublist)
     risultato = []
     risultato.extend(s_unici)
-    # Combino da 2 a n elementi
+    # Combine from 2 to n elements
     for r in range(2, len(s_unici) + 1):
         for combo in itertools.combinations(s_unici, r):
             flat = []
@@ -495,7 +495,7 @@ def generate_combinations(s):
                     if item not in flat:
                         flat.append(item)
             risultato.append(flat)
-    # Rimuovo duplicati ignorando l'ordine
+    # Remove duplicates ignoring order
     unique = set()
     risultato_finale = []
     for combo in risultato:

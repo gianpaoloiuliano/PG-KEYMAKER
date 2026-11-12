@@ -29,10 +29,10 @@ class ExecutionTimes:
 def save_results_from_graph(G, nomedb, numtest, lenpattern, elapsed_time, end_memory, max_memory,tempi,tree,alg,filters_str=""):
     if tree:
         """
-        Estrae dal grafo G tutti i nodi che contengono:
-            - label   → pattern o subpattern
-            - sub_key → lista UCC trovate
-        e salva un file CSV usando pandas, compatibile con quello della strategia HyUCC.
+        Extracts from graph G all the nodes that contain:
+            - label   → pattern or subpattern
+            - sub_key → list of UCCs found
+        and saves a CSV file using pandas, compatible with that of the HyUCC strategy.
         """
 
         #LOG_DIR = f"./evaluation/scalability/pgkeymaker/{lenpattern}"
@@ -46,34 +46,34 @@ def save_results_from_graph(G, nomedb, numtest, lenpattern, elapsed_time, end_me
 
         with open(LOG_FILE, "w", encoding="utf-8") as f:
 
-            # filtri usati (solo se presenti, per non cambiare i file senza filtri)
+            # filters used (only if present, so files without filters stay unchanged)
             if filters_str:
                 f.write(f"filters: {filters_str}\n")
-            # intestazione come HyUCC
+            # header as in HyUCC
             f.write("pattern;keys found\n\n")
 
-            # ciclo su ogni nodo del grafo
+            # loop over every node of the graph
             for node, attr in G.nodes(data=True):
 
                 if "label" not in attr:
                     continue
 
-                # valore di default
+                # default value
                 pattern = attr.get("pattern")
 
-                # se è presente info_for_ext_match, usa quello al posto del pattern
+                # if info_for_ext_match is present, use it instead of the pattern
                 info_ext = attr.get("info_for_ext_match")
                 if info_ext:
                     pattern = info_ext
 
                 keys = attr.get("sub_key", [])
 
-                # trasforma in stringa leggibile
+                # convert to a readable string
                 keys_str = str(keys)
 
                 f.write(f"{pattern};{keys_str}\n")
 
-            # riepilogo finale
+            # final summary
             f.write("\n")
             f.write(f"execution time for tree and leaves: {tempi.ex_leaf:.2f} s\n")
             f.write(f"execution time for external keys: {tempi.ex_external:.2f} s\n")
@@ -84,7 +84,7 @@ def save_results_from_graph(G, nomedb, numtest, lenpattern, elapsed_time, end_me
             #f.write(f"Memory: {end_memory:.2f} MB\n")
             f.write(f"Max memory used: {max_memory:.2f} MB\n")
 
-        print(f"\n📄 File risultati salvato in:\n{LOG_FILE}\n")
+        print(f"\n📄 Results file saved to:\n{LOG_FILE}\n")
 
     else:
         # LOG_DIR = f"./evaluation/scalability/pgkeymaker/{lenpattern}"
@@ -98,34 +98,34 @@ def save_results_from_graph(G, nomedb, numtest, lenpattern, elapsed_time, end_me
 
         with open(LOG_FILE, "w", encoding="utf-8") as f:
 
-            # filtri usati (solo se presenti, per non cambiare i file senza filtri)
+            # filters used (only if present, so files without filters stay unchanged)
             if filters_str:
                 f.write(f"filters: {filters_str}\n")
-            # intestazione come HyUCC
+            # header as in HyUCC
             f.write("pattern;keys found\n\n")
 
-            # ciclo su ogni nodo del grafo
+            # loop over every node of the graph
             for node, attr in G.nodes(data=True):
 
                 if "label" not in attr:
                     continue
 
-                # valore di default
+                # default value
                 pattern = attr.get("pattern")
 
-                # se è presente info_for_ext_match, usa quello al posto del pattern
+                # if info_for_ext_match is present, use it instead of the pattern
                 info_ext = attr.get("info_for_ext_match")
                 if info_ext:
                     pattern = info_ext
 
                 keys = attr.get("sub_key", [])
 
-                # trasforma in stringa leggibile
+                # convert to a readable string
                 keys_str = str(keys)
 
                 f.write(f"{pattern};{keys_str}\n")
 
-            # riepilogo finale
+            # final summary
             f.write("\n")
             f.write(f"execution time for tree and leaves: {tempi.ex_leaf:.2f} s\n")
             f.write(f"execution time for external keys: {tempi.ex_external:.2f} s\n")
@@ -136,11 +136,11 @@ def save_results_from_graph(G, nomedb, numtest, lenpattern, elapsed_time, end_me
             # f.write(f"Memory: {end_memory:.2f} MB\n")
             f.write(f"Max memory used: {max_memory:.2f} MB\n")
 
-        print(f"\n📄 File risultati salvato in:\n{LOG_FILE}\n")
+        print(f"\n📄 Results file saved to:\n{LOG_FILE}\n")
 
 def launch_pgkeymaker(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filters_str=""):
 
-    # Forza UTF-8 e aggiungi Java al PATH della sessione Python
+    # Force UTF-8 and add Java to the PATH of the Python session
     os.environ["PYTHONIOENCODING"] = "utf-8"
     java_path = r"C:\Program Files\Java\jdk-23\bin"
     os.environ["PATH"] = java_path + ";" + os.environ.get("PATH", "")
@@ -152,26 +152,26 @@ def launch_pgkeymaker(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filt
     scope_freq = n4j.count_pattern_occurrences(pattern,driver,filters)
     if filters:
         freq_all = n4j.count_pattern_occurrences(pattern,driver)
-        qf.dbg(f"occorrenze del pattern: {scope_freq} con filtri / {freq_all} senza filtri")
+        qf.dbg(f"pattern occurrences: {scope_freq} with filters / {freq_all} without filters")
     #print(scope_freq)
 
     limit_occurences = 0
 
     if scope_freq < limit_occurences:
-        #print("variabile è true, quindi sono poche occorrenze e posso controllare direttamente")#fai calcolo diretto
+        #print("variable is true, so there are few occurrences and I can check directly")#do direct computation
         keys = ucc.compute_keys(df_complete_pattern)
         print(keys)
     else:
 
 
-        #🕒 Avvio misurazione tempo e memoria
+        #🕒 Start time and memory measurement
         start_time = time.time()
         process = psutil.Process(os.getpid())
         start_memory = process.memory_info().rss / (1024 ** 2)  # in MB
         max_memory = start_memory
         G = sub_ext.build_pattern_graph(pattern, filters)
         # -----------------------------
-        # 🕒 MISURAZIONE ex_leaf
+        # 🕒 ex_leaf MEASUREMENT
         # -----------------------------
         start_leaf_time = time.time()
         #G = sub_ext.build_pattern_graph(pattern)
@@ -180,12 +180,12 @@ def launch_pgkeymaker(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filt
         #print("element_view",element_view.nodes(data=True))
         for leaf in element_view.nodes:
             cur_label = element_view.nodes[leaf].get("original_label")
-            print("pattern in esame",element_view.nodes[leaf].get("pattern") + qf.filters_label(G.nodes[leaf].get("filters")))
-            # due foglie con la stessa label condividono le chiavi solo se hanno gli stessi filtri
+            print("pattern under examination",element_view.nodes[leaf].get("pattern") + qf.filters_label(G.nodes[leaf].get("filters")))
+            # two leaves with the same label share keys only if they have the same filters
             leaf_sig = qf.filter_signature(G.nodes[leaf].get("filters"), G.nodes[leaf]["alias"])
             cache_key = (cur_label, leaf_sig)
             if leaf_sig:
-                qf.dbg(f"cache foglia {leaf}: {'HIT' if cache_key in analyzed else 'MISS'}", level=2)
+                qf.dbg(f"leaf cache {leaf}: {'HIT' if cache_key in analyzed else 'MISS'}", level=2)
             if cache_key not in analyzed:
                 G = n4j.matching_pattern_in_graph(G,leaf,element_view.nodes[leaf].get("label"),driver,ucc_alg)  # querying the graph
                 analyzed[cache_key] = element_view.nodes[leaf].get("pattern")
@@ -199,7 +199,7 @@ def launch_pgkeymaker(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filt
                         G.nodes[leaf][key] = list(value)
                     else:
                         G.nodes[leaf][key] = value
-                # copia sub_key con alias aggiornato
+                # copy sub_key with updated alias
                 src_alias = G.nodes[src_node]["alias"]
                 dst_alias = G.nodes[leaf]["alias"]
 
@@ -208,14 +208,14 @@ def launch_pgkeymaker(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filt
                     for sublist in G.nodes[src_node]["sub_key"]
                 ]
 
-                # marca come visitato
-                #print("aggiornato:",G.nodes[leaf])
-                #print("sorgente:", G.nodes[src_node])
+                # mark as visited
+                #print("updated:",G.nodes[leaf])
+                #print("source:", G.nodes[src_node])
 
         tempi.ex_leaf = round(time.time() - start_leaf_time,2)
-        print(f"⏱️ Tempo ex_leaf: {tempi.ex_leaf:.2f} secondi")
+        print(f"⏱️ ex_leaf time: {tempi.ex_leaf:.2f} seconds")
         G,tempi = validator.check_keys_all_leaf(G,driver,tempi,ucc_alg)
-        # ⏱️ calcolo tempo ex_leaf
+        # ⏱️ ex_leaf time computation
 
         #nodi_triple = [n for n, attr in G.nodes(data=True) if attr.get("label") == "tripla"]
         #nodi_subpattern = [n for n, attr in G.nodes(data=True) if attr.get("label") == "original_pattern"]
@@ -227,17 +227,17 @@ def launch_pgkeymaker(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filt
         print("Case 2:", tempi.ex_case2)
         print("Case 3:", tempi.ex_case3)
 
-        # 🧮 Calcolo finale di tempo e memoria
+        # 🧮 Final computation of time and memory
         end_time = time.time()
         end_memory = process.memory_info().rss / (1024 ** 2)
 
         elapsed_time = end_time - start_time
         total_memory_used = end_memory - start_memory
 
-        print("\n=== RISULTATI COMPLESSIVI ===")
-        print(f"⏱️  Tempo totale esecuzione: {elapsed_time:.2f} secondi")
-        print(f"💾 Memoria finale: {end_memory:.2f} MB")
-        print(f"📈 Memoria massima utilizzata: {max_memory:.2f} MB")
+        print("\n=== OVERALL RESULTS ===")
+        print(f"⏱️  Total execution time: {elapsed_time:.2f} seconds")
+        print(f"💾 Final memory: {end_memory:.2f} MB")
+        print(f"📈 Max memory used: {max_memory:.2f} MB")
         print(ucc_alg)
 
         save_results_from_graph(G, nomedb, numtest,lenpattern, elapsed_time, end_memory, max_memory,tempi,tree,ucc_alg,filters_str)
@@ -246,7 +246,7 @@ def launch_pgkeymaker(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filt
 
 def launch_pgkeymaker_notree(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filters_str=""):
 
-    # Forza UTF-8 e aggiungi Java al PATH della sessione Python
+    # Force UTF-8 and add Java to the PATH of the Python session
     os.environ["PYTHONIOENCODING"] = "utf-8"
     java_path = r"C:\Program Files\Java\jdk-23\bin"
     os.environ["PATH"] = java_path + ";" + os.environ.get("PATH", "")
@@ -260,24 +260,24 @@ def launch_pgkeymaker_notree(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tr
     scope_freq = n4j.count_pattern_occurrences(pattern,driver,filters)
     if filters:
         freq_all = n4j.count_pattern_occurrences(pattern,driver)
-        qf.dbg(f"occorrenze del pattern: {scope_freq} con filtri / {freq_all} senza filtri")
+        qf.dbg(f"pattern occurrences: {scope_freq} with filters / {freq_all} without filters")
     #print(scope_freq)
 
     limit_occurences = 1
 
     if scope_freq < limit_occurences:
-        #print("variabile è true, quindi sono poche occorrenze e posso controllare direttamente")#fai calcolo diretto
+        #print("variable is true, so there are few occurrences and I can check directly")#do direct computation
         keys = ucc.compute_keys(df_complete_pattern)
         print(keys)
     else:
-        #🕒 Avvio misurazione tempo e memoria
+        #🕒 Start time and memory measurement
         start_time = time.time()
         process = psutil.Process(os.getpid())
         start_memory = process.memory_info().rss / (1024 ** 2)  # in MB
         max_memory = start_memory
         G = sub_ext.build_pattern_graph(pattern, filters)
         # -----------------------------
-        # 🕒 MISURAZIONE ex_leaf
+        # 🕒 ex_leaf MEASUREMENT
         # -----------------------------
         start_leaf_time = time.time()
         #G = sub_ext.build_pattern_graph(pattern)
@@ -286,10 +286,10 @@ def launch_pgkeymaker_notree(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tr
         #print("element_view",element_view.nodes(data=True))
         for leaf in element_view.nodes:
             cur_label = element_view.nodes[leaf].get("original_label")
-            print("pattern in esame",element_view.nodes[leaf].get("pattern") + qf.filters_label(G.nodes[leaf].get("filters")))
+            print("pattern under examination",element_view.nodes[leaf].get("pattern") + qf.filters_label(G.nodes[leaf].get("filters")))
             if cur_label not in analyzed:
                 G = n4j.matching_pattern_in_graph(G,leaf,element_view.nodes[leaf].get("label"),driver,ucc_alg)  # querying the graph
-                print("sono in not analyzed")
+                print("in not analyzed branch")
                 #analyzed[cur_label] = element_view.nodes[leaf].get("pattern")
                 #G.nodes[leaf]["visited"] = True
                 #print(analyzed)
@@ -302,7 +302,7 @@ def launch_pgkeymaker_notree(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tr
                         G.nodes[leaf][key] = list(value)
                     else:
                         G.nodes[leaf][key] = value
-                # copia sub_key con alias aggiornato
+                # copy sub_key with updated alias
                 src_alias = G.nodes[src_node]["alias"]
                 dst_alias = G.nodes[leaf]["alias"]
 
@@ -311,14 +311,14 @@ def launch_pgkeymaker_notree(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tr
                     for sublist in G.nodes[src_node]["sub_key"]
                 ]
 
-                # marca come visitato
-                #print("aggiornato:",G.nodes[leaf])
-                #print("sorgente:", G.nodes[src_node])
+                # mark as visited
+                #print("updated:",G.nodes[leaf])
+                #print("source:", G.nodes[src_node])
         '''
         tempi.ex_leaf = round(time.time() - start_leaf_time,2)
-        print(f"⏱️ Tempo ex_leaf: {tempi.ex_leaf:.2f} secondi")
+        print(f"⏱️ ex_leaf time: {tempi.ex_leaf:.2f} seconds")
         G,tempi = validator.check_keys_all_leaf_notree(G,driver,tempi,ucc_alg)
-        # ⏱️ calcolo tempo ex_leaf
+        # ⏱️ ex_leaf time computation
 
         G,tempi = validator.compute_keys_by_structure(G,minimal,driver,tempi,ucc_alg)
         print("ex leaves",tempi.ex_leaf)
@@ -327,32 +327,32 @@ def launch_pgkeymaker_notree(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tr
         print("Case 2:", tempi.ex_case2)
         print("Case 3:", tempi.ex_case3)
 
-        # 🧮 Calcolo finale di tempo e memoria
+        # 🧮 Final computation of time and memory
         end_time = time.time()
         end_memory = process.memory_info().rss / (1024 ** 2)
 
         elapsed_time = end_time - start_time
         total_memory_used = end_memory - start_memory
 
-        print("\n=== RISULTATI COMPLESSIVI ===")
-        print(f"⏱️  Tempo totale esecuzione: {elapsed_time:.2f} secondi")
-        print(f"💾 Memoria finale: {end_memory:.2f} MB")
-        print(f"📈 Memoria massima utilizzata: {max_memory:.2f} MB")
+        print("\n=== OVERALL RESULTS ===")
+        print(f"⏱️  Total execution time: {elapsed_time:.2f} seconds")
+        print(f"💾 Final memory: {end_memory:.2f} MB")
+        print(f"📈 Max memory used: {max_memory:.2f} MB")
 
         save_results_from_graph(G, nomedb, numtest,lenpattern, elapsed_time, end_memory, max_memory,tempi,tree,ucc_alg,filters_str)
 
     driver.close()
 
 
-# Configura la connessione a Neo4j
+# Configure the Neo4j connection
 URI = "neo4j://localhost:7687"
 AUTH = ("neo4j", "gianpaolo")
-# Connessione al database Neo4j
+# Connection to the Neo4j database
 driver = GraphDatabase.driver(URI, auth=AUTH)
 ucc_alg = "hyucc"
 tree = True
 # ------------------------------------------------------------
-# ✅ ESEMPIO DI USO
+# ✅ USAGE EXAMPLE
 # ------------------------------------------------------------
 
 nomedb="finbench_1perc"
@@ -383,9 +383,9 @@ patterns = [
 ]
 '''
 
-# Filtri opzionali: ogni elemento di `patterns` può essere una stringa (nessun filtro)
-# oppure una tupla (pattern, filtri). I filtri sono Cypher libero, spezzato sugli AND;
-# gli aggregati vanno raggruppati su un nodo con "PER <alias>". Esempio:
+# Optional filters: each element of `patterns` can be a string (no filters)
+# or a tuple (pattern, filters). Filters are free-form Cypher, split on the ANDs;
+# aggregates must be grouped on a node with "PER <alias>". Example:
 # patterns = [
 #     ("(p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure)",
 #      "p.GENDER = 'F' AND count(en1) > 5 PER p"),
@@ -425,16 +425,16 @@ patterns =[
 
 #meaningfull fraud (https://scispace.com/pdf/analysis-of-fraud-controls-using-the-paysim-financial-4dvauv8xq7.pdf)
 patterns = [
-    # Controllo 1: soglia sull'importo massimo di un singolo TRANSFER
-    # (l'articolo studia soglie di 300k, 600k, 900k e 1200k; qui la più bassa)
+    # Control 1: threshold on the maximum amount of a single TRANSFER
+    # (the paper studies thresholds of 300k, 600k, 900k and 1200k; here the lowest)
     ("(c1:Client)-[perf:PERFORMED]->(tx:Transfer)-[to:TO]->(c2:Client)","tx.amount >= 300000"),
 
-    # Controllo 2: blocco dei conti che superano tre trasferimenti consecutivi
-    # all'importo massimo in un breve periodo
+    # Control 2: block accounts that exceed three consecutive transfers
+    # at the maximum amount in a short period
     ("(c1:Client)-[perf:PERFORMED]->(tx:Transfer)-[to:TO]->(c2:Client)","tx.amount >= 300000 AND count(DISTINCT tx) > 3 PER c1"),
 
-    # Schema di frode: trasferimento a un mulo, che poi preleva presso un commerciante;
-    # se il saldo supera il massimo, si usano più muli
+    # Fraud scheme: transfer to a mule, who then withdraws at a merchant;
+    # if the balance exceeds the maximum, multiple mules are used
     ("(victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant)","t1.step <= t2.step AND count(DISTINCT mule) > 1 PER victim"),
 ]
 
@@ -452,15 +452,15 @@ patterns = [
 
 #with aggregation
 patterns = [
-    # Fault domain: rack che ospitano molte istanze dello stesso applicativo
+    # Fault domain: racks hosting many instances of the same application
     ("(ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(a:Application:Process)",
      "a.name = 'crm' AND count(m) > 40 PER ra"),
 
-    # Audit di sicurezza: versioni di OS obsolete ancora installate su molte macchine
+    # Security audit: obsolete OS versions still installed on many machines
     ("(m:Machine)-[r:RUNS]-(o:OS:Process)-[i:INSTANCE]-(ver:Version)",
      "ver.name IN ['14.04', '7.1', '6-Squeeze'] AND count(m) > 500 PER ver"),
 
-    # Impatto di un guasto di zona: macchine della zona 1 con più servizi attivi
+    # Impact of a zone failure: machines in zone 1 with multiple active services
     ("(ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process)",
      "ra.zone = 1 AND count(se) > 1 PER m"),
 ]
@@ -553,7 +553,7 @@ patterns = [
      "AND datetime('2021-01-01T00:00:00Z') < edge2.createTime < datetime('2022-01-01T00:00:00Z') "
      "AND edge1.amount > 50 AND edge2.amount > 100"),
 
-    # TCR 1 — Blocked medium related accounts (cammino di 1 trasferimento)
+    # TCR 1 — Blocked medium related accounts (path of 1 transfer)
     ("(account:Account)-[edge1:Transfer]->(other:Account)<-[edge2:SignIn]-(medium:Medium {isBlocked: true})",
      "datetime('2021-01-01T00:00:00Z') < edge1.createTime < datetime('2022-01-01T00:00:00Z') "
      "AND datetime('2021-01-01T00:00:00Z') < edge2.createTime < datetime('2022-01-01T00:00:00Z')"),
@@ -587,12 +587,12 @@ patterns = [
 for pattern in patterns:
     pattern, filters_str = pattern if isinstance(pattern, tuple) else (pattern, "")
     if filters_str:
-        qf.dbg(f"filtri: {filters_str}")
+        qf.dbg(f"filters: {filters_str}")
     if tree:
-        print("lancio con albero")
+        print("launching with tree")
         launch_pgkeymaker(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filters_str)
         numtest +=1
     else:
-        print("lancio senza albero")
+        print("launching without tree")
         launch_pgkeymaker_notree(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tree,filters_str)
         numtest +=1

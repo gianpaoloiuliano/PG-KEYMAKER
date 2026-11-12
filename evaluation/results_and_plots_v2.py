@@ -17,13 +17,13 @@ def rename_ablation_files(folder):
             new_path = os.path.join(folder, new_filename)
 
             os.rename(old_path, new_path)
-            print(f"Rinominato: {filename} -> {new_filename}")
+            print(f"Renamed: {filename} -> {new_filename}")
 
 def parse_filename(filename, allowed_algorithms, allowed_datasets, valid_queries=range(1, 9)):
     """
-    Estrae algoritmo, dataset e query da:
-    results_<algoritmo>_<dataset>_<query>.txt
-    dove algoritmo e dataset possono contenere "_"
+    Extracts algorithm, dataset and query from:
+    results_<algorithm>_<dataset>_<query>.txt
+    where algorithm and dataset may contain "_"
     """
 
     if not filename.startswith("results_") or not filename.endswith(".txt"):
@@ -32,7 +32,7 @@ def parse_filename(filename, allowed_algorithms, allowed_datasets, valid_queries
     name = filename.replace("results_", "").replace(".txt", "")
     parts = name.split("_")
 
-    # ultima parte = query
+    # last part = query
     if not parts[-1].isdigit():
         return None
 
@@ -42,7 +42,7 @@ def parse_filename(filename, allowed_algorithms, allowed_datasets, valid_queries
 
     body = parts[:-1]
 
-    # prova tutte le separazioni possibili
+    # try all possible splits
     for i in range(1, len(body)):
         algoritmo = "_".join(body[:i])
         dataset = "_".join(body[i:])
@@ -56,7 +56,7 @@ def create_results_file_baseline(folder, allowed_algorithms, allowed_datasets, o
 
     tempo_internal_re = re.compile(r"internal keys discovery time:\s*([\d\.]+)\s*s", re.IGNORECASE)
     tempo_external_re = re.compile(r"external keys discovery time:\s*([\d\.]+)\s*s", re.IGNORECASE)
-    memoria_re = re.compile(r"memoria massima totale:\s*([\d\.]+)\s*MB", re.IGNORECASE)
+    memory_re = re.compile(r"(?:max total memory|memoria massima totale):\s*([\d\.]+)\s*MB", re.IGNORECASE)
 
     records = []
 
@@ -75,11 +75,11 @@ def create_results_file_baseline(folder, allowed_algorithms, allowed_datasets, o
 
         tempo_int_match = tempo_internal_re.search(content)
         tempo_ext_match = tempo_external_re.search(content)
-        memoria_match = memoria_re.search(content)
+        memory_match = memory_re.search(content)
 
         tempo_internal = float(tempo_int_match.group(1)) if tempo_int_match else 0.0
         tempo_external = float(tempo_ext_match.group(1)) if tempo_ext_match else 0.0
-        memoria = float(memoria_match.group(1)) if memoria_match else None
+        memory_value = float(memory_match.group(1)) if memory_match else None
 
         tempo_totale = tempo_internal + tempo_external
 
@@ -90,19 +90,19 @@ def create_results_file_baseline(folder, allowed_algorithms, allowed_datasets, o
             "tempo_internal": tempo_internal,
             "tempo_external": tempo_external,
             "total_time": tempo_totale,
-            "memory": memoria
+            "memory": memory_value
         })
 
     df = pd.DataFrame(records)
 
-    # rename dataset opzionale
+    # optional dataset rename
     df["dataset"] = df["dataset"].replace("synthea_800_alt", "synthea_800")
 
     df = df.sort_values(["algoritmo", "dataset", "query"])
 
     df.to_csv(output_csv, sep=";", index=False)
 
-    print(f"CSV generato: {output_csv}")
+    print(f"CSV generated: {output_csv}")
     print(df.head())
 
 def create_results_file_stacked(folders, allowed_algorithms, allowed_datasets, output_csv):
@@ -170,12 +170,12 @@ def create_results_file_stacked(folders, allowed_algorithms, allowed_datasets, o
         df[col + "_perc"] = round((df[col] / df["total_time"]) * 100, 2)
     df.to_csv(output_csv, sep=";", index=False)
 
-    print(f"CSV generato: {output_csv}")
+    print(f"CSV generated: {output_csv}")
     print(df.head())
 
 def create_results_file_ablation(folder1, folder2, allowed_algorithms, allowed_datasets, output_csv,
                                    algo_aliases=None):
-    # Regex per i tempi e la memoria
+    # Regexes for times and memory
     tree_re = re.compile(r"execution time for tree and leaves:\s*([\d\.]+)\s*s", re.IGNORECASE)
     external_re = re.compile(r"execution time for external keys:\s*([\d\.]+)\s*s", re.IGNORECASE)
     case1_re = re.compile(r"execution time for case 1:\s*([\d\.]+)\s*s", re.IGNORECASE)
@@ -185,17 +185,17 @@ def create_results_file_ablation(folder1, folder2, allowed_algorithms, allowed_d
 
     records = []
 
-    # Alias nomi algoritmo: i file di other_shapes di hyucc si chiamano PGKEYMAKER_hyucc,
-    # quelli di stacked PGKEYMAKER -> li unifichiamo sotto lo stesso nome
+    # Algorithm name aliases: the hyucc other_shapes files are named PGKEYMAKER_hyucc,
+    # the stacked ones PGKEYMAKER -> we merge them under the same name
     if algo_aliases is None:
         algo_aliases = {"PGKEYMAKER_hyucc": "PGKEYMAKER"}
     parse_algorithms = list(allowed_algorithms) + [alias for alias, target in algo_aliases.items()
                                                    if target in allowed_algorithms]
 
-    # Query "standard" (1-8) + query delle altre forme di pattern (31,32,41,42,51,52)
+    # "Standard" queries (1-8) + queries of the other pattern shapes (31,32,41,42,51,52)
     ablation_queries = set(range(1, 9)) | {31, 32, 41, 42, 51, 52}
 
-    # Cartelle da cui leggere: folder1 e folder2 + la cartella "other_shapes" accanto a ciascuna
+    # Folders to read from: folder1 and folder2 + the "other_shapes" folder next to each
     # (es. .../pgkeymaker_hpivalid/stacked -> .../pgkeymaker_hpivalid/other_shapes)
     folders = []
     for f in [folder1, folder2]:
@@ -204,7 +204,7 @@ def create_results_file_ablation(folder1, folder2, allowed_algorithms, allowed_d
         if os.path.isdir(other_shapes):
             folders.append(other_shapes)
         else:
-            print(f"Attenzione: cartella non trovata, saltata: {other_shapes}")
+            print(f"Warning: folder not found, skipped: {other_shapes}")
 
     for folder in folders:
         for file in os.listdir(folder):
@@ -219,7 +219,7 @@ def create_results_file_ablation(folder1, folder2, allowed_algorithms, allowed_d
             with open(filepath, "r", encoding="utf-8") as f:
                 content = f.read()
 
-            # Estrazione tempi e memoria
+            # Extract times and memory
             tree_val = float(tree_re.search(content).group(1)) if tree_re.search(content) else 0.0
             external_val = float(external_re.search(content).group(1)) if external_re.search(content) else 0.0
             case1_val = float(case1_re.search(content).group(1)) if case1_re.search(content) else 0.0
@@ -242,7 +242,7 @@ def create_results_file_ablation(folder1, folder2, allowed_algorithms, allowed_d
                 "memory": memory_val
             })
 
-    # Creazione DataFrame e percentuali
+    # DataFrame creation and percentages
     df = pd.DataFrame(records)
     print(df)
     df = df.sort_values(["algoritmo", "dataset", "query"])
@@ -252,7 +252,7 @@ def create_results_file_ablation(folder1, folder2, allowed_algorithms, allowed_d
         df[col + "_perc"] = round((df[col] / df["total_time"]) * 100, 2)
 
     df.to_csv(output_csv, sep=";", index=False)
-    print(f"CSV generato: {output_csv}")
+    print(f"CSV generated: {output_csv}")
     print(df.head())
 
 def plot_results_from_csv_grid(csv_path,ncols,nrows):
@@ -261,7 +261,7 @@ def plot_results_from_csv_grid(csv_path,ncols,nrows):
     def dataset_sort_key(ds):
         if ds.startswith("synthea_"):
             return int(ds.split("_")[1])
-        return math.inf  # dataset non synthea vanno in fondo
+        return math.inf  # non-synthea datasets go last
 
     datasets = sorted(df["dataset"].unique(), key=dataset_sort_key)
     algorithms = sorted(df["algoritmo"].unique())
@@ -292,21 +292,21 @@ def plot_results_from_csv_grid(csv_path,ncols,nrows):
         ax.set_title(dataset, fontsize=10)
         ax.set_xticks(range(1, 8))
         #ax.grid(True)
-        ax.set_axisbelow(True)  # la griglia viene disegnata sotto le barre
-        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # opzioni estetiche
+        ax.set_axisbelow(True)  # the grid is drawn below the bars
+        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # aesthetic options
 
-    # nasconde subplot inutilizzati
+    # hide unused subplots
     for ax in axes[len(datasets):]:
         ax.set_visible(False)
 
-    # etichette assi
+    # axis labels
     for ax in axes[::ncols]:
         ax.set_ylabel("Time (s)")
 
     for ax in axes[-ncols:]:
         ax.set_xlabel("Query")
 
-    # legenda unica
+    # single legend
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
         handles,
@@ -324,8 +324,8 @@ def plot_results_from_csv_grid(csv_path,ncols,nrows):
 def plot_bar_results_from_csv_grid(csv_path,ncols,nrows):
     df = pd.read_csv(csv_path, sep=";")
     color_map = {
-        "HyUCC": "#00748f",  # blu
-        "PGKEYMAKER": "#ff0000",  # rosso scuro
+        "HyUCC": "#00748f",  # blue
+        "PGKEYMAKER": "#ff0000",  # dark red
         "PGKEYMAKER (without Tree)":"#00748f"
     }
     df["algoritmo"] = df["algoritmo"].replace({
@@ -335,7 +335,7 @@ def plot_bar_results_from_csv_grid(csv_path,ncols,nrows):
     def dataset_sort_key(ds):
         if ds.startswith("synthea_"):
             return int(ds.split("_")[1])
-        return math.inf  # dataset non synthea vanno in fondo
+        return math.inf  # non-synthea datasets go last
 
     datasets = sorted(df["dataset"].unique(), key=dataset_sort_key)
     algorithms = sorted(df["algoritmo"].unique())
@@ -384,22 +384,22 @@ def plot_bar_results_from_csv_grid(csv_path,ncols,nrows):
         ax.set_title(dataset, fontsize=10)
         ax.set_xticks([p + bar_width / 2 for p in x])
         ax.set_xticklabels(queries)
-        ax.set_axisbelow(True)  # la griglia viene disegnata sotto le barre
-        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # opzioni estetiche
+        ax.set_axisbelow(True)  # the grid is drawn below the bars
+        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # aesthetic options
         #ax.grid(True, axis="y")
 
-    # nasconde subplot inutilizzati
+    # hide unused subplots
     for ax in axes[len(datasets):]:
         ax.set_visible(False)
 
-    # etichette assi
+    # axis labels
     for ax in axes[::ncols]:
         ax.set_ylabel("Time (s)")
 
     for ax in axes[-ncols:]:
         ax.set_xlabel("Query")
 
-    # legenda unica
+    # single legend
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
         handles,
@@ -417,8 +417,8 @@ def plot_bar_results_from_csv_grid(csv_path,ncols,nrows):
 def plot_bar_results_from_csv_grid_ablation(csv_path,ncols,nrows):
     df = pd.read_csv(csv_path, sep=";")
     color_map = {
-        "HyUCC": "#00748f",  # blu
-        "PGKEYMAKER": "#ff7f0e",  # rosso scuro
+        "HyUCC": "#00748f",  # blue
+        "PGKEYMAKER": "#ff7f0e",  # dark red
         "PGKEYMAKER (without Tree)":"#00748f"
     }
     df["algoritmo"] = df["algoritmo"].replace({
@@ -428,7 +428,7 @@ def plot_bar_results_from_csv_grid_ablation(csv_path,ncols,nrows):
     def dataset_sort_key(ds):
         if ds.startswith("synthea_"):
             return int(ds.split("_")[1])
-        return math.inf  # dataset non synthea vanno in fondo
+        return math.inf  # non-synthea datasets go last
 
     datasets = sorted(df["dataset"].unique(), key=dataset_sort_key)
     algorithms = sorted(df["algoritmo"].unique())
@@ -480,22 +480,22 @@ def plot_bar_results_from_csv_grid_ablation(csv_path,ncols,nrows):
         ax.set_title(dataset, fontsize=18)
         ax.set_xticks([p + bar_width / 2 for p in x])
         ax.set_xticklabels(queries)
-        ax.set_axisbelow(True)  # la griglia viene disegnata sotto le barre
-        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # opzioni estetiche
+        ax.set_axisbelow(True)  # the grid is drawn below the bars
+        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # aesthetic options
         #ax.grid(True, axis="y")
 
-    # nasconde subplot inutilizzati
+    # hide unused subplots
     for ax in axes[len(datasets):]:
         ax.set_visible(False)
 
-    # etichette assi
+    # axis labels
     for ax in axes[::ncols]:
         ax.set_ylabel("Time (s)",fontsize=18)
 
     for ax in axes[-ncols:]:
         ax.set_xlabel("Query",fontsize=18)
 
-    # legenda unica
+    # single legend
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
         handles,
@@ -520,7 +520,7 @@ def plot_bar_results_from_csv_grid_ablation_reducted(csv_path,ncols,nrows):
         "PGKEYMAKER_hpivalid": "PGKEYMAKER",
         "PGKEYMAKER-NOTREE":"PGKEYMAKER (without Tree)"
     })
-    # Filtra solo i dataset desiderati
+    # Keep only the desired datasets
     allowed_datasets = ["synthea_100","synthea_200","synthea_300","synthea_400",
                         "synthea_500","synthea_600","synthea_700","synthea_800",
                         "synthea_900","synthea_1000","finbench","network-management"]
@@ -581,22 +581,22 @@ def plot_bar_results_from_csv_grid_ablation_reducted(csv_path,ncols,nrows):
         ax.set_title(dataset.capitalize(), fontsize=18)
         ax.set_xticks([p + bar_width / 2 for p in x])
         ax.set_xticklabels(queries)
-        ax.set_axisbelow(True)  # la griglia viene disegnata sotto le barre
-        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # opzioni estetiche
+        ax.set_axisbelow(True)  # the grid is drawn below the bars
+        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # aesthetic options
         #ax.grid(True, axis="y")
 
-    # nasconde subplot inutilizzati
+    # hide unused subplots
     for ax in axes[len(datasets):]:
         ax.set_visible(False)
 
-    # etichette assi
+    # axis labels
     for ax in axes[::ncols]:
         ax.set_ylabel("Time (s)",fontsize=18)
 
     for ax in axes[-ncols:]:
         ax.set_xlabel("Query",fontsize=18)
 
-    # legenda unica
+    # single legend
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
         handles,
@@ -614,8 +614,8 @@ def plot_bar_results_from_csv_grid_ablation_reducted(csv_path,ncols,nrows):
 
 def plot_bar_results_from_csv_grid_ablation_other_shapes(csv_path, ncols=2, nrows=2):
     """
-    Ablation plot su 4 dataset (griglia 2x2), con le query 1,2,31,32,41,42,51,52
-    (8 gruppi di barre per subplot).
+    Ablation plot on 4 datasets (2x2 grid), with queries 1,2,31,32,41,42,51,52
+    (8 bar groups per subplot).
     """
     df = pd.read_csv(csv_path, sep=";")
     color_map = {
@@ -628,10 +628,10 @@ def plot_bar_results_from_csv_grid_ablation_other_shapes(csv_path, ncols=2, nrow
         "PGKEYMAKER-NOTREE": "PGKEYMAKER (without Tree)"
     })
 
-    # ordine fisso: riga 1 = synthea_1000, finbench; riga 2 = network-management, fraud
+    # fixed order: row 1 = synthea_1000, finbench; row 2 = network-management, fraud
     datasets = ["synthea_1000", "finbench", "network-management", "fraud"]
     queries = [1, 2, 31, 32, 41, 42, 51, 52]
-    hop_labels = ["2 hop", "3 hop", "4 hop", "5 hop"]  # una label ogni 2 query
+    hop_labels = ["2 hop", "3 hop", "4 hop", "5 hop"]  # one label for every 2 queries
 
     df = df[df["dataset"].isin(datasets) & df["query"].isin(queries)]
     algorithms = sorted(df["algoritmo"].unique())
@@ -645,7 +645,7 @@ def plot_bar_results_from_csv_grid_ablation_other_shapes(csv_path, ncols=2, nrow
     for ax, dataset in zip(axes, datasets):
         df_ds = df[df["dataset"] == dataset]
         for i, algo in enumerate(algorithms):
-            # reindex: se manca una query la barra resta vuota (niente disallineamenti)
+            # reindex: if a query is missing the bar stays empty (no misalignment)
             values = (df_ds[df_ds["algoritmo"] == algo]
                       .drop_duplicates("query")
                       .set_index("query")["total_time"]
@@ -654,12 +654,12 @@ def plot_bar_results_from_csv_grid_ablation_other_shapes(csv_path, ncols=2, nrow
                    width=bar_width, color=color_map.get(algo, "black"), label=algo)
 
         ax.set_title(dataset.capitalize(), fontsize=18)
-        # una sola label per coppia di query (stessa lunghezza): 2 hop, 3 hop, 4 hop, 5 hop
+        # a single label per query pair (same length): 2 hop, 3 hop, 4 hop, 5 hop
         pair_centers = [2 * k + 0.5 + bar_width / 2 for k in range(len(queries) // 2)]
         ax.set_xticks(pair_centers)
         ax.set_xticklabels(hop_labels, fontsize=14)
         ax.tick_params(axis="x", length=0)
-        # separatori tratteggiati tra una lunghezza e l'altra, per far capire le coppie
+        # dashed separators between one length and the next, to make the pairs clear
         for k in range(1, len(queries) // 2):
             ax.axvline(2 * k - 0.5 + bar_width / 2, color="gray", linestyle=":", linewidth=1)
         ax.set_axisbelow(True)
@@ -688,7 +688,7 @@ def plot_bar_results_from_csv_grid_ablation_reducted_3ds(csv_path,ncols,nrows):
         "PGKEYMAKER_hpivalid": "PGKEYMAKER",
         "PGKEYMAKER-NOTREE":"PGKEYMAKER (without Tree)"
     })
-    # Filtra solo i dataset desiderati
+    # Keep only the desired datasets
     allowed_datasets = ["finbench", "synthea_100", "synthea_1000"]
     df = df[df["dataset"].isin(allowed_datasets)]
 
@@ -747,22 +747,22 @@ def plot_bar_results_from_csv_grid_ablation_reducted_3ds(csv_path,ncols,nrows):
         ax.set_title(dataset.capitalize(), fontsize=25)
         ax.set_xticks([p + bar_width / 2 for p in x])
         ax.set_xticklabels(queries)
-        ax.set_axisbelow(True)  # la griglia viene disegnata sotto le barre
-        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # opzioni estetiche
+        ax.set_axisbelow(True)  # the grid is drawn below the bars
+        ax.grid(True, axis="y", linestyle="--", alpha=0.7)  # aesthetic options
         #ax.grid(True, axis="y")
 
-    # nasconde subplot inutilizzati
+    # hide unused subplots
     for ax in axes[len(datasets):]:
         ax.set_visible(False)
 
-    # etichette assi
+    # axis labels
     for ax in axes[::ncols]:
         ax.set_ylabel("Time (s)",fontsize=25)
 
     for ax in axes[-ncols:]:
         ax.set_xlabel("Query",fontsize=25)
 
-    # legenda unica
+    # single legend
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
         handles,
@@ -781,13 +781,13 @@ def plot_bar_results_from_csv_grid_ablation_reducted_3ds(csv_path,ncols,nrows):
 def plot_bar_results_from_csv_grid_reducted(csv_path, ncols, nrows):
     df = pd.read_csv(csv_path, sep=";")
     color_map = {
-        "HyUCC": "#00748f",  # blu
-        "PGKEYMAKER": "#ff0000"  # rosso scuro
+        "HyUCC": "#00748f",  # blue
+        "PGKEYMAKER": "#ff0000"  # dark red
     }
     df["algoritmo"] = df["algoritmo"].replace({
         "HyUCC_bs1": "HyUCC",
     })
-    # Filtra solo i dataset desiderati
+    # Keep only the desired datasets
     allowed_datasets = ["finbench", "fraud", "synthea_1000"]
     df = df[df["dataset"].isin(allowed_datasets)]
 
@@ -850,19 +850,19 @@ def plot_bar_results_from_csv_grid_reducted(csv_path, ncols, nrows):
         ax.set_axisbelow(True)
         ax.grid(True, axis="y", linestyle="--", alpha=0.7)
 
-    # Nasconde eventuali subplot inutilizzati
+    # Hide any unused subplots
     for ax in axes[len(datasets):]:
         ax.set_visible(False)
 
-    # Etichette asse Y
+    # Y axis labels
     for ax in axes[::ncols]:
         ax.set_ylabel("Time (s)")
 
-    # Etichette asse X
+    # X axis labels
     for ax in axes[-ncols:]:
         ax.set_xlabel("Query")
 
-    # Legenda unica
+    # Single legend
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
         handles,
@@ -881,7 +881,7 @@ def plot_bar_results_from_csv_grid_reducted(csv_path, ncols, nrows):
 def plot_scalability_synthea(pgkeymaker_csv, hyucc_csv, hpivalid_csv, pgk_hpivalid_csv):
 
     # =====================================================
-    # LETTURA FILE
+    # FILE READING
     # =====================================================
     df_pg = pd.read_csv(pgkeymaker_csv, sep=";")
     df_hy = pd.read_csv(hyucc_csv, sep=";")
@@ -892,7 +892,7 @@ def plot_scalability_synthea(pgkeymaker_csv, hyucc_csv, hpivalid_csv, pgk_hpival
     df_hy["dataset"] = df_hy["dataset"].replace("synthea_800_alt", "synthea_800")
 
     # =====================================================
-    # PULIZIA BASE
+    # BASIC CLEANING
     # =====================================================
     for df in [df_pg, df_hy]:
         df.columns = df.columns.str.strip()
@@ -900,15 +900,15 @@ def plot_scalability_synthea(pgkeymaker_csv, hyucc_csv, hpivalid_csv, pgk_hpival
         df["algoritmo"] = df["algoritmo"].astype(str).str.strip()
 
     # =====================================================
-    # UNIONE DEI DATASET
+    # MERGING DATASETS
     # =====================================================
     df = pd.concat([df_pg, df_hy, df_hpi,df_pgk2], ignore_index=True)
 
     color_map = {
-        "HyUCC": "#56B4E9",  # blu
-        "PGKEYMAKER (HyUCC)": "#D55E00",  # arancione
-        "HPIValid": "#009E73",  # verde
-        "PGKEYMAKER": "#E69F00" # rosso
+        "HyUCC": "#56B4E9",  # blue
+        "PGKEYMAKER (HyUCC)": "#D55E00",  # orange
+        "HPIValid": "#009E73",  # green
+        "PGKEYMAKER": "#E69F00" # red
     }
 
     df["algoritmo"] = df["algoritmo"].replace({
@@ -918,28 +918,28 @@ def plot_scalability_synthea(pgkeymaker_csv, hyucc_csv, hpivalid_csv, pgk_hpival
     })
 
     marker_map = {
-        "HyUCC": "o",  # cerchio
-        "PGKEYMAKER (HyUCC)": "^",  # triangolo
-        "HPIValid": "s",  # quadrato
-        "PGKEYMAKER": "D"  # rombo
+        "HyUCC": "o",  # circle
+        "PGKEYMAKER (HyUCC)": "^",  # triangle
+        "HPIValid": "s",  # square
+        "PGKEYMAKER": "D"  # diamond
     }
 
     print(df["algoritmo"])
     # =====================================================
-    # FILTRA SOLO SYNTHETIC
+    # KEEP ONLY SYNTHETIC
     # =====================================================
     df = df[df["dataset"].str.startswith("synthea_")]
 
     # =====================================================
-    # ESTRAI SIZE
+    # EXTRACT SIZE
     # =====================================================
     df["size"] = df["dataset"].str.split("_").str[1].astype(int)
 
-    print("Size trovate:", sorted(df["size"].unique()))
-    print("Algoritmi trovati:", df["algoritmo"].unique())
+    print("Sizes found:", sorted(df["size"].unique()))
+    print("Algorithms found:", df["algoritmo"].unique())
 
     # =====================================================
-    # ORDINA
+    # SORT
     # =====================================================
     df = df.sort_values(["query", "algoritmo", "size"])
 
@@ -1014,13 +1014,13 @@ def plot_scalability_synthea(pgkeymaker_csv, hyucc_csv, hpivalid_csv, pgk_hpival
         ax.grid(True, linestyle="--", alpha=0.3)
 
     # =====================================================
-    # RIMOZIONE SUBPLOT VUOTI
+    # REMOVING EMPTY SUBPLOTS
     # =====================================================
     for i in range(n_queries, rows * cols):
         fig.delaxes(axes[i])
 
     # =====================================================
-    # LEGENDA UNICA
+    # SINGLE LEGEND
     # =====================================================
     handles, labels = axes[0].get_legend_handles_labels()
 
@@ -1039,11 +1039,11 @@ def plot_scalability_synthea(pgkeymaker_csv, hyucc_csv, hpivalid_csv, pgk_hpival
 
 def plot_stacked_execution_times(csv_path):
     """
-    Crea stacked bar chart 2x6 (dataset come subplot).
-    Ogni barra rappresenta una query.
+    Creates a 2x6 stacked bar chart (datasets as subplots).
+    Each bar represents a query.
     """
 
-    # Carica dati
+    # Load data
     df = pd.read_csv(csv_path, sep=";")
     df = df.sort_values(["dataset", "query"])
 
@@ -1078,11 +1078,11 @@ def plot_stacked_execution_times(csv_path):
         ax.set_xticklabels(queries, rotation=45)
         ax.set_ylabel("Time (s)")
 
-    # Spegne eventuali subplot inutilizzati
+    # Turn off any unused subplots
     for j in range(len(datasets), rows * cols):
         fig.delaxes(axes[j])
 
-    # Legenda globale
+    # Global legend
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper center", ncol=4)
 
@@ -1092,7 +1092,7 @@ def plot_stacked_execution_times(csv_path):
 def plot_stacked_execution_times_percentages(csv_path):
 
     df = pd.read_csv(csv_path, sep=";")
-    # Rinomina dataset
+    # Rename dataset
     df["dataset"] = df["dataset"].replace("synthea_800_alt", "synthea_800")
     df = df.sort_values(["dataset", "query"])
 
@@ -1122,11 +1122,11 @@ def plot_stacked_execution_times_percentages(csv_path):
         case3 = df_dataset["case3_time_perc"].values
 
         colors = [
-            "#ff7f0e",  # Tree construction (principale)
+            "#ff7f0e",  # Tree construction (main)
             "#ffbb78",  # External keys
-            "#ffd2a8",  # Concatenation (più chiaro)
-            "#ffe3c8",  # Validation (ancora più chiaro)
-            "#fff2e6",  # Exhaustive discovery (quasi pastel)
+            "#ffd2a8",  # Concatenation (lighter)
+            "#ffe3c8",  # Validation (even lighter)
+            "#fff2e6",  # Exhaustive discovery (almost pastel)
         ]
 
         hatches = [
@@ -1147,21 +1147,21 @@ def plot_stacked_execution_times_percentages(csv_path):
         ax.set_xticks(x)
         ax.set_xticklabels(queries, rotation=45,fontsize=15)
         ax.set_ylim(0, 105)
-        ax.set_yticks(np.arange(0, 101, 20))  # tick solo fino a 100
+        ax.set_yticks(np.arange(0, 101, 20))  # ticks only up to 100
 
-        # Y label solo nel primo grafico di ogni riga
+        # Y label only on the first plot of each row
         if i % cols == 0:
             ax.set_ylabel("Execution Time (%)",fontsize=15)
 
-        # X label solo nella seconda riga
+        # X label only on the second row
         if i >= cols:
             ax.set_xlabel("Query",fontsize=15)
 
-    # Spegne eventuali subplot inutilizzati
+    # Turn off any unused subplots
     for j in range(len(datasets), rows * cols):
         fig.delaxes(axes[j])
 
-    # Legenda globale
+    # Global legend
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper center", ncol=5,bbox_to_anchor=(0.5, 0.98),fontsize=15)
 
@@ -1172,11 +1172,11 @@ def plot_stacked_execution_times_percentages(csv_path):
 def plot_stacked_execution_times_percentages_reducted(csv_path):
 
     df = pd.read_csv(csv_path, sep=";")
-    # Rinomina dataset
+    # Rename dataset
     df["dataset"] = df["dataset"].replace("synthea_800_alt", "synthea_800")
     df = df.sort_values(["dataset", "query"])
 
-    # Filtra solo i dataset desiderati
+    # Keep only the desired datasets
     allowed_datasets = ["finbench", "fraud", "synthea_100", "synthea_1000"]
     df = df[df["dataset"].isin(allowed_datasets)]
 
@@ -1206,11 +1206,11 @@ def plot_stacked_execution_times_percentages_reducted(csv_path):
         case3 = df_dataset["case3_time_perc"].values
 
         colors = [
-            "#ff7f0e",  # Tree construction (principale)
+            "#ff7f0e",  # Tree construction (main)
             "#ffbb78",  # External keys
-            "#ffd2a8",  # Concatenation (più chiaro)
-            "#ffe3c8",  # Validation (ancora più chiaro)
-            "#fff2e6",  # Exhaustive discovery (quasi pastel)
+            "#ffd2a8",  # Concatenation (lighter)
+            "#ffe3c8",  # Validation (even lighter)
+            "#fff2e6",  # Exhaustive discovery (almost pastel)
         ]
 
         hatches = [
@@ -1231,10 +1231,10 @@ def plot_stacked_execution_times_percentages_reducted(csv_path):
         ax.set_xticks(x)
         ax.set_xticklabels(queries, rotation=45,fontsize=22)
         ax.set_ylim(0, 105)
-        ax.set_yticks(np.arange(0, 101, 20))  # tick solo fino a 100
+        ax.set_yticks(np.arange(0, 101, 20))  # ticks only up to 100
 
         '''
-        # Y label solo nel primo grafico di ogni riga
+        # Y label only on the first plot of each row
         if i % cols == 0:
             ax.set_ylabel("Execution Time (%)",fontsize=30)
         '''
@@ -1242,14 +1242,14 @@ def plot_stacked_execution_times_percentages_reducted(csv_path):
         if i >= cols:
            ax.set_xlabel("Query",fontsize=30)
 
-    # Spegne eventuali subplot inutilizzati
+    # Turn off any unused subplots
     for j in range(len(datasets), rows * cols):
         fig.delaxes(axes[j])
 
-    # Legenda globale
+    # Global legend
     handles, labels = axes[0].get_legend_handles_labels()
     #fig.legend(handles, labels, loc="upper center", ncol=3,bbox_to_anchor=(0.5, 0.98),fontsize=25)
-    # prima riga (2 elementi)
+    # first row (2 items)
     fig.legend(
         handles[:2], labels[:2],
         loc="upper center",
@@ -1258,7 +1258,7 @@ def plot_stacked_execution_times_percentages_reducted(csv_path):
         fontsize=25
     )
 
-    # seconda riga (3 elementi)
+    # second row (3 items)
     fig.legend(
         handles[2:], labels[2:],
         loc="upper center",
@@ -1273,11 +1273,11 @@ def plot_stacked_execution_times_percentages_reducted(csv_path):
 def plot_stacked_execution_times_percentages_reducted_3ds(csv_path):
 
     df = pd.read_csv(csv_path, sep=";")
-    # Rinomina dataset
+    # Rename dataset
     df["dataset"] = df["dataset"].replace("synthea_800_alt", "synthea_800")
     df = df.sort_values(["dataset", "query"])
 
-    # Filtra solo i dataset desiderati
+    # Keep only the desired datasets
     allowed_datasets = ["finbench","synthea_100", "synthea_1000"]
     df = df[df["dataset"].isin(allowed_datasets)]
 
@@ -1307,11 +1307,11 @@ def plot_stacked_execution_times_percentages_reducted_3ds(csv_path):
         case3 = df_dataset["case3_time_perc"].values
 
         colors = [
-            "#ff7f0e",  # Tree construction (principale)
+            "#ff7f0e",  # Tree construction (main)
             "#ffbb78",  # External keys
-            "#ffd2a8",  # Concatenation (più chiaro)
-            "#ffe3c8",  # Validation (ancora più chiaro)
-            "#fff2e6",  # Exhaustive discovery (quasi pastel)
+            "#ffd2a8",  # Concatenation (lighter)
+            "#ffe3c8",  # Validation (even lighter)
+            "#fff2e6",  # Exhaustive discovery (almost pastel)
         ]
 
         hatches = [
@@ -1332,24 +1332,24 @@ def plot_stacked_execution_times_percentages_reducted_3ds(csv_path):
         ax.set_xticks(x)
         ax.set_xticklabels(queries, rotation=45,fontsize=22)
         ax.set_ylim(0, 105)
-        ax.set_yticks(np.arange(0, 101, 20))  # tick solo fino a 100
+        ax.set_yticks(np.arange(0, 101, 20))  # ticks only up to 100
 
         '''
-        # Y label solo nel primo grafico di ogni riga
+        # Y label only on the first plot of each row
         if i % cols == 0:
             ax.set_ylabel("Execution Time (%)",fontsize=30)
         '''
         fig.supylabel("Execution Time (%)", fontsize=25, x=0.02, y=0.46)
         ax.set_xlabel("Query",fontsize=30)
 
-    # Spegne eventuali subplot inutilizzati
+    # Turn off any unused subplots
     for j in range(len(datasets), rows * cols):
         fig.delaxes(axes[j])
 
-    # Legenda globale
+    # Global legend
     handles, labels = axes[0].get_legend_handles_labels()
     #fig.legend(handles, labels, loc="upper center", ncol=3,bbox_to_anchor=(0.5, 0.98),fontsize=25)
-    # prima riga (2 elementi)
+    # first row (2 items)
     fig.legend(
         handles[:2], labels[:2],
         loc="upper center",
@@ -1358,7 +1358,7 @@ def plot_stacked_execution_times_percentages_reducted_3ds(csv_path):
         fontsize=25
     )
 
-    # seconda riga (3 elementi)
+    # second row (3 items)
     fig.legend(
         handles[2:], labels[2:],
         loc="upper center",
@@ -1501,15 +1501,15 @@ def plot_stacked_execution_times_percentages_complete(csv_path):
             ax.grid(axis="y", linestyle="--", alpha=0.4)
             ax.set_axisbelow(True)
 
-            # ylabel solo prima colonna
+            # ylabel only on the first column
             if i % cols == 0:
                 ax.set_ylabel("Execution Time (%)", fontsize=15)
 
-            # xlabel solo ultima riga
+            # xlabel only on the last row
             if i // cols == rows - 1:
                 ax.set_xlabel("Query", fontsize=15)
 
-        # elimina eventuali assi inutilizzati
+        # remove any unused axes
         for j in range(len(datasets), len(axes)):
             fig.delaxes(axes[j])
 
@@ -1551,10 +1551,10 @@ def plot_stacked_barchart_comparison(csv_hyucc, csv_pg, ncols, nrows):
     df_h = pd.read_csv(csv_hyucc, sep=";")
     df_p = pd.read_csv(csv_pg, sep=";")
 
-    # normalizza nomi
+    # normalize names
     df_h["algoritmo"] = "HyUCC"
 
-    # --- CALCOLO SEGMENTI ---
+    # --- SEGMENT COMPUTATION ---
     df_h["internal"] = df_h["tempo_internal"]
     df_h["external"] = df_h["tempo_external"]
 
@@ -1573,7 +1573,7 @@ def plot_stacked_barchart_comparison(csv_hyucc, csv_pg, ncols, nrows):
     ])
     df["total"] = df["internal"] + df["external"]
 
-    # --- ORDINAMENTO DATASET ---
+    # --- DATASET ORDERING ---
     def dataset_sort_key(ds):
         if ds.startswith("synthea_"):
             return int(ds.split("_")[1])
@@ -1591,18 +1591,18 @@ def plot_stacked_barchart_comparison(csv_hyucc, csv_pg, ncols, nrows):
     axes = axes.flatten()
     bar_width = 0.35
 
-    # --- LIMITI LOG GLOBALI ---
+    # --- GLOBAL LOG LIMITS ---
     global_min = df["total"].min()
     global_max = df["total"].max()
     ymin = 10 ** math.floor(math.log10(global_min))
     ymax = 10 ** math.ceil(math.log10(global_max))
 
-    # --- COLORI SEGMENTI UNIVOCI ---
+    # --- UNIQUE SEGMENT COLORS ---
     segment_colors = {
-        "HyUCC_internal": "#1f77b4",        # blu
-        "HyUCC_external": "#aec7e8",        # azzurro chiaro
-        "PGKEYMAKER_internal": "#ff7f0e",   # arancio
-        "PGKEYMAKER_external": "#ffbb78"    # arancio chiaro
+        "HyUCC_internal": "#1f77b4",        # blue
+        "HyUCC_external": "#aec7e8",        # light blue
+        "PGKEYMAKER_internal": "#ff7f0e",   # orange
+        "PGKEYMAKER_external": "#ffbb78"    # light orange
     }
 
     for ax, dataset in zip(axes, datasets):
@@ -1635,7 +1635,7 @@ def plot_stacked_barchart_comparison(csv_hyucc, csv_pg, ncols, nrows):
                 label=f"{algo} external" if (dataset == datasets[0] and i == 0) else ""
             )
 
-        # SCALA LOG
+        # LOG SCALE
         ax.set_yscale("log")
         ax.set_ylim(ymin, ymax)
         ax.yaxis.set_major_locator(LogLocator(base=10.0))
@@ -1648,7 +1648,7 @@ def plot_stacked_barchart_comparison(csv_hyucc, csv_pg, ncols, nrows):
         ax.grid(True, axis="y", linestyle="--", alpha=0.7)
         ax.set_axisbelow(True)
 
-    # nascondi subplot vuoti
+    # hide empty subplots
     for ax in axes[len(datasets):]:
         ax.set_visible(False)
 
@@ -1684,10 +1684,10 @@ def plot_stacked_barchart_comparison_reducted(csv_hyucc, csv_pg, csv_hpi,pgk_hpi
     df_hpi = pd.read_csv(csv_hpi, sep=";")
     df_pgk2 = pd.read_csv(pgk_hpivalid_csv, sep=";")
 
-    # normalizza nomi
+    # normalize names
     df_h["algoritmo"] = "HyUCC"
 
-    # --- CALCOLO SEGMENTI ---
+    # --- SEGMENT COMPUTATION ---
     df_h["internal"] = df_h["tempo_internal"]
     df_h["external"] = df_h["tempo_external"]
     df_hpi["internal"] = df_hpi["tempo_internal"]
@@ -1719,10 +1719,10 @@ def plot_stacked_barchart_comparison_reducted(csv_hyucc, csv_pg, csv_hpi,pgk_hpi
         df_pgk2[["algoritmo", "dataset", "query", "internal", "external"]]
     ])
     df["total"] = df["internal"] + df["external"]
-    # --- FILTRO DATASET ---
+    # --- DATASET FILTER ---
     #df = df[df["dataset"].isin(["fraud", "finbench","synthea_100", "synthea_1000"])]
     df = df[df["dataset"].isin(["synthea_400","synthea_500","synthea_600","synthea_700","synthea_800","synthea_900", "synthea_1000"])]
-    # --- ORDINAMENTO DATASET -
+    # --- DATASET ORDERING ---
     def dataset_sort_key(ds):
         if ds.startswith("synthea_"):
             return int(ds.split("_")[1])
@@ -1740,22 +1740,22 @@ def plot_stacked_barchart_comparison_reducted(csv_hyucc, csv_pg, csv_hpi,pgk_hpi
     axes = axes.flatten()
     bar_width = 0.35
 
-    # --- LIMITI LOG GLOBALI ---
+    # --- GLOBAL LOG LIMITS ---
     global_min = df["total"].min()
     global_max = df["total"].max()
     ymin = 10 ** math.floor(math.log10(global_min))
     ymax = 10 ** math.ceil(math.log10(global_max))
 
-    # --- COLORI SEGMENTI UNIVOCI ---
+    # --- UNIQUE SEGMENT COLORS ---
     segment_colors = {
-        "HyUCC_internal": "#1f77b4",        # blu
-        "HyUCC_external": "#aec7e8",        # azzurro chiaro
-        "PGKEYMAKER_internal": "#ff7f0e",   # arancio
-        "PGKEYMAKER_external": "#ffbb78",    # arancio chiaro
-        "HPIValid_internal": "#2ca02c",  # verde (nuova baseline)
-        "HPIValid_external": "#78D278",  # verde (nuova baseline)
-        "PGKEYMAKER_hpivalid_internal": "#FF0E0E",  # rosso
-        "PGKEYMAKER_hpivalid_external": "#FF6A6A",  # rosso chiaro
+        "HyUCC_internal": "#1f77b4",        # blue
+        "HyUCC_external": "#aec7e8",        # light blue
+        "PGKEYMAKER_internal": "#ff7f0e",   # orange
+        "PGKEYMAKER_external": "#ffbb78",    # light orange
+        "HPIValid_internal": "#2ca02c",  # green (new baseline)
+        "HPIValid_external": "#78D278",  # green (new baseline)
+        "PGKEYMAKER_hpivalid_internal": "#FF0E0E",  # red
+        "PGKEYMAKER_hpivalid_external": "#FF6A6A",  # light red
     }
 
     for ax, dataset in zip(axes, datasets):
@@ -1788,15 +1788,15 @@ def plot_stacked_barchart_comparison_reducted(csv_hyucc, csv_pg, csv_hpi,pgk_hpi
                 label=f"{algo} external" if (dataset == datasets[0] and i == 0) else ""
             )
         '''
-        # SCALA LOG
+        # LOG SCALE
         ax.set_yscale("log")
         ax.set_ylim(ymin, ymax)
         ax.yaxis.set_major_locator(LogLocator(base=10.0))
         ax.yaxis.set_major_formatter(LogFormatterMathtext(base=10.0))
         ax.yaxis.set_minor_locator(LogLocator(base=10.0, subs=[]))
         '''
-        ax.set_ylim(0, df["total"].max() * 1.1)  # un 10% sopra il massimo
-        ax.yaxis.set_major_locator(plt.MaxNLocator(integer=False))  # tick automatici
+        ax.set_ylim(0, df["total"].max() * 1.1)  # 10% above the maximum
+        ax.yaxis.set_major_locator(plt.MaxNLocator(integer=False))  # automatic ticks
 
         ax.set_title(dataset.capitalize(), fontsize=18)
         ax.set_xticks(x + bar_width / 2)
@@ -1804,7 +1804,7 @@ def plot_stacked_barchart_comparison_reducted(csv_hyucc, csv_pg, csv_hpi,pgk_hpi
         ax.grid(True, axis="y", linestyle="--", alpha=0.7)
         ax.set_axisbelow(True)
 
-    # nascondi subplot vuoti
+    # hide empty subplots
     for ax in axes[len(datasets):]:
         ax.set_visible(False)
 
@@ -1845,10 +1845,10 @@ def plot_stacked_barchart_comparison_reducted_v2(csv_hyucc, csv_pg, csv_hpi,pgk_
     df_hpi = pd.read_csv(csv_hpi, sep=";")
     df_pgk2 = pd.read_csv(pgk_hpivalid_csv, sep=";")
 
-    # normalizza nomi
+    # normalize names
     df_h["algoritmo"] = "HyUCC"
 
-    # --- CALCOLO SEGMENTI ---
+    # --- SEGMENT COMPUTATION ---
     df_h["internal"] = df_h["tempo_internal"]
     df_h["external"] = df_h["tempo_external"]
 
@@ -1882,13 +1882,13 @@ def plot_stacked_barchart_comparison_reducted_v2(csv_hyucc, csv_pg, csv_hpi,pgk_
 
     df["total"] = df["internal"] + df["external"]
 
-    # --- FILTRO DATASET ---
+    # --- DATASET FILTER ---
     df = df[df["dataset"].isin([
         "synthea_400","synthea_500","synthea_600",
         "synthea_700","synthea_800","synthea_900","synthea_1000"
     ])]
 
-    # --- ORDINAMENTO DATASET ---
+    # --- DATASET ORDERING ---
     def dataset_sort_key(ds):
         if ds.startswith("synthea_"):
             return int(ds.split("_")[1])
@@ -1897,19 +1897,19 @@ def plot_stacked_barchart_comparison_reducted_v2(csv_hyucc, csv_pg, csv_hpi,pgk_
     datasets = sorted(df["dataset"].unique(), key=dataset_sort_key)
     algorithms = sorted(df["algoritmo"].unique())
 
-    # --- FIGURA ---
+    # --- FIGURE ---
     fig, axes = plt.subplots(
         nrows, ncols,
-        figsize=(22, 3),   # migliorato
+        figsize=(22, 3),   # improved
         sharex=True,
         sharey=False
     )
     axes = axes.flatten()
 
-    # larghezza adattiva (FIX fondamentale)
+    # adaptive width (essential FIX)
     bar_width = 0.8 / len(algorithms)
 
-    # --- COLORI ---
+    # --- COLORS ---
     segment_colors = {
         "HyUCC_internal": "#56B4E9",
         "HyUCC_external": "#7EC9F1",
@@ -1934,7 +1934,7 @@ def plot_stacked_barchart_comparison_reducted_v2(csv_hyucc, csv_pg, csv_hpi,pgk_
             internal = df_algo["internal"].values
             external = df_algo["external"].values
 
-            # POSIZIONE CORRETTA (centrata)
+            # CORRECT POSITION (centered)
             xpos = x + (i - len(algorithms)/2) * bar_width + bar_width/2
 
             # INTERNAL
@@ -1954,7 +1954,7 @@ def plot_stacked_barchart_comparison_reducted_v2(csv_hyucc, csv_pg, csv_hpi,pgk_
                 color=segment_colors[f"{algo}_external"]
             )
 
-        # asse X corretto
+        # corrected X axis
         ax.set_xticks(x)
         ax.set_xticklabels(queries)
 
@@ -1962,12 +1962,12 @@ def plot_stacked_barchart_comparison_reducted_v2(csv_hyucc, csv_pg, csv_hpi,pgk_
         ax.set_ylim(0, df["total"].max() * 1.1)
         ax.yaxis.set_major_locator(plt.MaxNLocator())
 
-        # stile
+        # style
         ax.set_title(dataset.capitalize(), fontsize=16)
         ax.grid(True, axis="y", linestyle="--", alpha=0.7)
         ax.set_axisbelow(True)
 
-    # nascondi subplot vuoti
+    # hide empty subplots
     for ax in axes[len(datasets):]:
         ax.set_visible(False)
 
@@ -1978,7 +1978,7 @@ def plot_stacked_barchart_comparison_reducted_v2(csv_hyucc, csv_pg, csv_hpi,pgk_
     for ax in axes[-ncols:]:
         ax.set_xlabel("Query", fontsize=14)
 
-    # --- LEGENDA ---
+    # --- LEGEND ---
     legend_elements = [
         Patch(facecolor="#56B4E9", label="internal keys (HyUCC)"),
         Patch(facecolor="#7EC9F1", label="external keys (HyUCC)"),
@@ -2004,18 +2004,18 @@ def plot_stacked_barchart_comparison_reducted_v2(csv_hyucc, csv_pg, csv_hpi,pgk_
 def plot_bar_ablation_single_dataset(csv_path, dataset_name):
 
     df = pd.read_csv(csv_path, sep=";")
-    # Uniforma nomi algoritmi
+    # Unify algorithm names
     df["algoritmo"] = df["algoritmo"].replace({
         "PGKEYMAKER_hpivalid": "PGKEYMAKER",
         "PGKEYMAKER-NOTREE": "PGKEYMAKER (without Tree)"
     })
 
 
-    # Seleziona solo il dataset interessato
+    # Select only the dataset of interest
     df = df[df["dataset"] == dataset_name]
 
 
-    # Seleziona solo le 4 query desiderate
+    # Select only the 4 desired queries
     queries = sorted(df["query"].unique())[:4]
 
     df = df[df["query"].isin(queries)]
@@ -2067,7 +2067,7 @@ def plot_bar_ablation_single_dataset(csv_path, dataset_name):
         )
 
 
-    # asse X
+    # X axis
     ax.set_xticks(
         [
             p + bar_width / 2
@@ -2214,5 +2214,5 @@ plot_bar_results_from_csv_grid_ablation_other_shapes("./csv/risultati_ablation_h
 #print("numero chiavi baseline:",len(ris_baseline))
 #print("numero chiavi pg:",len(ris_pg))
 
-# esempio
+# example
 #plot_bar_ablation_single_dataset("./csv/risultati_ablation_diff_hops.csv","finbench")

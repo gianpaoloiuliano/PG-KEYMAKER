@@ -21,11 +21,11 @@ def avg_baseline(folder_path,allowed_algorithms,allowed_datasets,allowed_queries
             dataset_query_sum[dataset][query] = 0
             dataset_query_count[dataset][query] = 0
 
-            # costruzione filename
+            # build filename
             filename = "results_" + allowed_algorithms[0] + "_" + dataset + "_" + query + ".txt"
             file_path = os.path.join(folder_path, filename)
             print(file_path)
-            # se il file non esiste, salta
+            # if the file does not exist, skip
             if not os.path.exists(file_path):
                 continue
 
@@ -42,7 +42,7 @@ def avg_baseline(folder_path,allowed_algorithms,allowed_datasets,allowed_queries
                             total_size += len(key)
                             total_keys += 1
 
-            # accumulo
+            # accumulate
             dataset_query_sum[dataset][query] += total_size
             dataset_query_count[dataset][query] += total_keys
 
@@ -52,7 +52,7 @@ def avg_baseline(folder_path,allowed_algorithms,allowed_datasets,allowed_queries
 
     # OUTPUT
 
-    print("\n=== MEDIA PER DATASET E QUERY ===\n")
+    print("\n=== AVERAGE PER DATASET AND QUERY ===\n")
 
     for dataset in allowed_datasets:
         print("Dataset:", dataset)
@@ -69,7 +69,7 @@ def avg_baseline(folder_path,allowed_algorithms,allowed_datasets,allowed_queries
         print()
 
 
-    print("\n=== MEDIA GENERALE PER DATASET ===\n")
+    print("\n=== OVERALL AVERAGE PER DATASET ===\n")
 
     for dataset in allowed_datasets:
         c = dataset_total_count[dataset]
@@ -116,7 +116,7 @@ def avg_pgkeymaker(folder_path,allowed_algorithms,allowed_datasets,allowed_queri
                     if ";" not in line:
                         continue
 
-                    # 👉 parsing PGKeyMaker
+                    # PGKeyMaker parsing
                     keys_part = line.split(";", 1)[1].strip()
 
                     try:
@@ -144,7 +144,7 @@ def avg_pgkeymaker(folder_path,allowed_algorithms,allowed_datasets,allowed_queri
 
     # OUTPUT
 
-    print("\n=== MEDIA PER DATASET E QUERY ===\n")
+    print("\n=== AVERAGE PER DATASET AND QUERY ===\n")
 
     for dataset in allowed_datasets:
         print("Dataset:", dataset)
@@ -161,7 +161,7 @@ def avg_pgkeymaker(folder_path,allowed_algorithms,allowed_datasets,allowed_queri
         print()
 
 
-    print("\n=== MEDIA GENERALE PER DATASET ===\n")
+    print("\n=== OVERALL AVERAGE PER DATASET ===\n")
 
     for dataset in allowed_datasets:
         c = dataset_total_count[dataset]

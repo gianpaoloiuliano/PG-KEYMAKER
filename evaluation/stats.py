@@ -3,31 +3,31 @@ import os
 import re
 import ast
 '''
-# Percorso del file CSV
-file_path = "./csv/risultati_pgkeymaker_stacked.csv"   # cambia con il tuo file
+# CSV file path
+file_path = "./csv/risultati_pgkeymaker_stacked.csv"   # change to your file
 
-# Legge il CSV (separatore ;)
+# Read the CSV (separator ;)
 df = pd.read_csv(file_path, sep=";")
 
-# Assicurati che total_time sia numerico
+# Make sure total_time is numeric
 df["total_time"] = pd.to_numeric(df["total_time"], errors="coerce")
 
-# Raggruppa per dataset e calcola media, min, max
+# Group by dataset and compute mean, min, max
 stats = (
     df.groupby("dataset")["total_time"]
     .agg(media="mean", minimo="min", massimo="max")
     .reset_index()
 )
 
-# Stampa risultato
+# Print result
 print(stats)
 
-# (opzionale) salva su file
+# (optional) save to file
 stats.to_csv("./csv/statistiche_per_pgkeymaker.csv", sep=";", index=False)
 
 for _, row in stats.iterrows():
     print(f"Dataset: {row['dataset']}")
-    print(f"  Media total_time : {row['media']:.4f}")
+    print(f"  Mean total_time : {row['media']:.4f}")
     print(f"  Min total_time   : {row['minimo']:.4f}")
     print(f"  Max total_time   : {row['massimo']:.4f}")
     print()
@@ -50,22 +50,22 @@ def compute_stats(path):
 
 def compare_minimal_keys(hyucc_folder, pgmaker_folder, datasets, verbose=False):
     """
-    Confronta le chiavi minimali HyUCC con quelle trovate da PGKEYMAKER.
+    Compares the minimal HyUCC keys with those found by PGKEYMAKER.
 
     Parameters
     ----------
     hyucc_folder : str
-        Cartella contenente i file results_HyUCC_bs1_*
+        Folder containing the results_HyUCC_bs1_* files
 
     pgmaker_folder : str
-        Cartella contenente i file results_PGKEYMAKER_*
+        Folder containing the results_PGKEYMAKER_* files
 
     datasets : list[str]
-        Lista dei dataset da confrontare.
-        Esempio: ["Fraud", "PaySim", "IBM"]
+        List of datasets to compare.
+        Example: ["Fraud", "PaySim", "IBM"]
 
     verbose : bool
-        Se True stampa il dettaglio del confronto per ogni singolo pattern.
+        If True, prints the comparison details for each individual pattern.
     """
 
     def normalize_pattern(pattern):
@@ -77,17 +77,17 @@ def compare_minimal_keys(hyucc_folder, pgmaker_folder, datasets, verbose=False):
 
     def load_hyucc(file):
         """
-        Il formato reale del file HyUCC è:
+        The actual format of the HyUCC file is:
 
-            ### PATTERN <pattern generale della query>
-            <sotto-pattern1> - INTERNAL_KEYS [ ... ]
-            <sotto-pattern2> - INTERNAL_KEYS [ ... ]
+            ### PATTERN <general pattern of the query>
+            <sub-pattern1> - INTERNAL_KEYS [ ... ]
+            <sub-pattern2> - INTERNAL_KEYS [ ... ]
             ...
 
-        Ogni riga "... - INTERNAL_KEYS [...]" ha il proprio sotto-pattern
-        (diverso da quello indicato nell'header "### PATTERN"), quindi va
-        estratto riga per riga, non assumendo che segua immediatamente
-        l'header.
+        Each "... - INTERNAL_KEYS [...]" line has its own sub-pattern
+        (different from the one given in the "### PATTERN" header), so it must be
+        extracted line by line, not assuming it immediately follows
+        the header.
         """
         result = {}
 
@@ -124,7 +124,7 @@ def compare_minimal_keys(hyucc_folder, pgmaker_folder, datasets, verbose=False):
                     continue
 
                 if ";" not in line:
-                    # righe finali di log (execution time, memoria, ecc.)
+                    # trailing log lines (execution time, memory, etc.)
                     continue
 
                 pattern, keys = line.split(";", 1)
@@ -167,7 +167,7 @@ def compare_minimal_keys(hyucc_folder, pgmaker_folder, datasets, verbose=False):
             )
 
             if not (os.path.exists(hyucc_file) and os.path.exists(pg_file)):
-                print(f"Query {query}: file mancante")
+                print(f"Query {query}: missing file")
                 continue
 
             baseline = load_hyucc(hyucc_file)
@@ -176,7 +176,7 @@ def compare_minimal_keys(hyucc_folder, pgmaker_folder, datasets, verbose=False):
             baseline_count = 0
             common_count = 0
             pgmaker_count = sum(len(keys) for keys in mine.values())
-            print(f"Query {query}: PGKEYMAKER chiavi totali = {pgmaker_count}")
+            print(f"Query {query}: PGKEYMAKER total keys = {pgmaker_count}")
             for pattern in baseline:
 
                 base = baseline[pattern]
@@ -187,7 +187,7 @@ def compare_minimal_keys(hyucc_folder, pgmaker_folder, datasets, verbose=False):
 
                 if verbose:
                     p_perc = 100 * len(base & found) / len(base) if base else 0
-                    status = "" if pattern in mine else "  [pattern assente in PGKEYMAKER]"
+                    status = "" if pattern in mine else "  [pattern missing in PGKEYMAKER]"
                     print(
                         f"    {pattern[:55]:55s} "
                         f"{len(base & found):4d}/{len(base):4d} ({p_perc:6.2f}%){status}"
@@ -210,7 +210,7 @@ def compare_minimal_keys(hyucc_folder, pgmaker_folder, datasets, verbose=False):
 
         print(
             f"--> Dataset {dataset}: "
-            f"{dataset_common}/{dataset_baseline} ({dataset_perc:.2f}%)" f"| PGKEYMAKER totale: {pgmaker_count}"
+            f"{dataset_common}/{dataset_baseline} ({dataset_perc:.2f}%)" f"| PGKEYMAKER total: {pgmaker_count}"
         )
 
         grand_common += dataset_common
@@ -224,17 +224,17 @@ def compare_minimal_keys(hyucc_folder, pgmaker_folder, datasets, verbose=False):
         if grand_baseline else 0
     )
 
-    print(f"TOTALE: {grand_common}/{grand_baseline} ({total_perc:.2f}%)")
-    print(f"TOTALE chiavi PGKEYMAKER: {grand_pgmaker}")
+    print(f"TOTAL: {grand_common}/{grand_baseline} ({total_perc:.2f}%)")
+    print(f"TOTAL PGKEYMAKER keys: {grand_pgmaker}")
 
     return grand_common, grand_baseline
 
 '''
-# calcola statistiche
+# compute statistics
 stats1 = compute_stats(file1)
 stats2 = compute_stats(file2)
 
-# rinomina colonne per distinguere
+# rename columns to tell them apart
 stats1 = stats1.rename(columns={
     "media": "media_A",
     "minimo": "min_A",
@@ -247,28 +247,28 @@ stats2 = stats2.rename(columns={
     "massimo": "max_B"
 })
 
-# merge sui dataset
+# merge on dataset
 merged = pd.merge(stats1, stats2, on="dataset")
 
-# differenze assolute
+# absolute differences
 merged["diff_media"] = merged["media_B"] - merged["media_A"]
 merged["diff_min"] = merged["min_B"] - merged["min_A"]
 merged["diff_max"] = merged["max_B"] - merged["max_A"]
 
-# differenze percentuali
+# percentage differences
 merged["diff_media_%"] = (merged["diff_media"] / merged["media_A"]) * 100
 merged["diff_min_%"] = (merged["diff_min"] / merged["min_A"]) * 100
 merged["diff_max_%"] = (merged["diff_max"] / merged["max_A"]) * 100
 
 print(merged)
 
-# salva
+# save
 #merged.to_csv("./csv/confronto.csv", sep=";", index=False)
 
 for _, r in merged.iterrows():
     print(f"Dataset: {r['dataset']}")
-    print(f"  Media A: {r['media_A']:.4f}")
-    print(f"  Media B: {r['media_B']:.4f}")
+    print(f"  Mean A: {r['media_A']:.4f}")
+    print(f"  Mean B: {r['media_B']:.4f}")
     print(f"  Diff   : {r['diff_media']:.4f} ({r['diff_media_%']:.2f}%)")
     print()
 
@@ -288,23 +288,23 @@ stats2 = compute_stats(file2).rename(columns={"mean_time": "time_B"})
 
 merged = pd.merge(stats1, stats2, on="dataset")
 
-# metriche
+# metrics
 merged["speedup"] = merged["time_A"] / merged["time_B"]
 merged["improvement_%"] = (merged["time_A"] - merged["time_B"]) / merged["time_A"] * 100
 merged["time_saved"] = merged["time_A"] - merged["time_B"]
 
-# arrotonda tutto a 2 decimali
+# round everything to 2 decimals
 merged = merged.round(2)
 
 print(merged.sort_values("speedup", ascending=False))
 
-# statistiche globali
-print("\nStatistiche globali:")
-print("Speedup medio:", round(merged["speedup"].mean(), 2))
-print("Miglioramento medio %:", round(merged["improvement_%"].mean(), 2))
-print("Tempo medio risparmiato:", round(merged["time_saved"].mean(), 2))
+# global statistics
+print("\nGlobal statistics:")
+print("Average speedup:", round(merged["speedup"].mean(), 2))
+print("Average improvement %:", round(merged["improvement_%"].mean(), 2))
+print("Average time saved:", round(merged["time_saved"].mean(), 2))
 
-# salva CSV
+# save CSV
 #output_file = "./csv/confronto_speedup.csv"
 #merged.to_csv(output_file, sep=";", index=False)
 '''

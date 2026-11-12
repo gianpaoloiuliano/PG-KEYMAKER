@@ -1,16 +1,16 @@
 """
 neo4j_connector.py
 ==================
-Connessione a Neo4j ed esecuzione delle query Cypher necessarie alla baseline:
+Connection to Neo4j and execution of the Cypher queries needed by the baseline:
 
-  1. scoperta delle proprieta' (attributi) presenti su ciascun label di nodo
-     e su ciascun tipo di relazione dello scope;
-  2. estrazione della tabella dei match per un dato sotto-pattern, come
-     pandas.DataFrame con una colonna per ogni attributo di ogni variabile.
+  1. discovery of the properties (attributes) present on each node label
+     and on each relationship type of the scope;
+  2. extraction of the match table for a given sub-pattern, as a
+     pandas.DataFrame with one column for each attribute of each variable.
 
-La generazione della query Cypher per un sotto-pattern e' funzione pura
-(`build_match_clause`, `build_subpattern_query`) e quindi testabile senza un
-database attivo.
+The generation of the Cypher query for a sub-pattern is a pure function
+(`build_match_clause`, `build_subpattern_query`) and is therefore testable
+without a running database.
 """
 
 import os
@@ -22,18 +22,18 @@ from neo4j import GraphDatabase
 
 from subpattern_enum import SubPattern
 
-# query_filters sta nella root del progetto (tre livelli sopra questa cartella);
-# append e non insert, così i moduli locali (parser, ...) restano prioritari
+# query_filters lives in the project root (three levels above this folder);
+# append rather than insert, so that local modules (parser, ...) keep priority
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..")))
 import query_filters as qf
 
 
 # ----------------------------------------------------------------------------
-# Generazione query (funzioni pure)
+# Query generation (pure functions)
 # ----------------------------------------------------------------------------
 
 def build_match_clause(subpattern: SubPattern) -> str:
-    """Costruisce la parte MATCH (il path) per un sotto-pattern."""
+    """Builds the MATCH part (the path) for a sub-pattern."""
     nodes = subpattern.nodes
     rels = subpattern.relationships
     parts = [f"({nodes[0].var}{nodes[0].cypher_label_str()})"]
@@ -55,11 +55,11 @@ def collect_columns(
     rel_props: Dict[str, List[str]],
 ) -> List[Tuple[str, str]]:
     """
-    Lista ordinata (variabile, proprieta') per tutti gli attributi del
-    sotto-pattern: prima i nodi (in ordine), poi le relazioni.
+    Ordered list of (variable, property) for all attributes of the
+    sub-pattern: first the nodes (in order), then the relationships.
 
-    Per nodi multi-label, la chiave in node_props e' la stringa
-    ':Label1:Label2' (come restituita da cypher_label_str).
+    For multi-label nodes, the key in node_props is the string
+    ':Label1:Label2' (as returned by cypher_label_str).
     """
     columns: List[Tuple[str, str]] = []
     for node in subpattern.nodes:
@@ -76,14 +76,14 @@ def build_subpattern_query(
     subpattern: SubPattern, columns: List[Tuple[str, str]], filters=None
 ) -> str:
     """
-    Costruisce la query Cypher completa per estrarre i match di un sotto-pattern.
+    Builds the complete Cypher query to extract the matches of a sub-pattern.
 
-    Le proprieta' sono quotate con backtick per robustezza (nomi con spazi/caratteri
-    speciali). Ogni colonna riceve un alias 'col{i}' che verra' poi rimappato a
-    'var.prop' lato pandas.
+    Properties are quoted with backticks for robustness (names with spaces or
+    special characters). Each column gets an alias 'col{i}' that is later
+    remapped to 'var.prop' on the pandas side.
 
-    `filters` sono i filtri (query_filters.Filter) applicabili al sotto-pattern:
-    la parte MATCH ... WHERE ... e' costruita da query_filters.build_match_block.
+    `filters` are the filters (query_filters.Filter) applicable to the sub-pattern:
+    the MATCH ... WHERE ... part is built by query_filters.build_match_block.
     """
     match = build_match_clause(subpattern)
     match_block = qf.build_match_block(match, filters)
@@ -92,19 +92,19 @@ def build_subpattern_query(
             f"{var}.`{prop}` AS col{i}" for i, (var, prop) in enumerate(columns)
         )
         return f"{match_block}\nRETURN {returns}"
-    # Nessun attributo: serve solo il conteggio dei match (per il supporto).
+    # No attributes: only the match count is needed (for the support).
     return f"{match_block}\nRETURN count(*) AS support"
 
 
 # ----------------------------------------------------------------------------
-# Normalizzazione valori
+# Value normalization
 # ----------------------------------------------------------------------------
 
 def _hashable(value):
     """
-    Rende i valori hashable/comparabili per drop_duplicates.
-    Le proprieta' di Neo4j possono essere liste (array properties): convertite
-    in tuple. Eventuali dict (improbabili come property value) -> tuple ordinata.
+    Makes values hashable/comparable for drop_duplicates.
+    Neo4j properties can be lists (array properties): converted to tuples.
+    Any dicts (unlikely as property values) -> sorted tuple.
     """
     if isinstance(value, list):
         return tuple(_hashable(v) for v in value)
@@ -114,7 +114,7 @@ def _hashable(value):
 
 
 # ----------------------------------------------------------------------------
-# Connettore
+# Connector
 # ----------------------------------------------------------------------------
 
 class Neo4jConnector:
@@ -122,8 +122,8 @@ class Neo4jConnector:
                  sample_limit: int = 1000):
         self._driver = GraphDatabase.driver(uri, auth=(user, password))
         self._sample_limit = sample_limit
-        # cache delle proprieta' scoperte — chiave: cypher_label_str per nodi,
-        # rel_type per relazioni
+        # cache of discovered properties — key: cypher_label_str for nodes,
+        # rel_type for relationships
         self._node_prop_cache: Dict[str, List[str]] = {}
         self._rel_prop_cache: Dict[str, List[str]] = {}
 
@@ -136,14 +136,14 @@ class Neo4jConnector:
     def __exit__(self, exc_type, exc, tb):
         self.close()
 
-    # --- scoperta proprieta' -------------------------------------------------
+    # --- property discovery -------------------------------------------------
 
     def node_properties(self, node) -> List[str]:
         """
-        Unione delle property key presenti sui nodi che matchano tutte le label
-        del nodo (campionato). Accetta un oggetto Node.
+        Union of the property keys present on the nodes that match all the
+        labels of the node (sampled). Accepts a Node object.
 
-        La chiave di cache e' cypher_label_str(), es. ':Application:Process'.
+        The cache key is cypher_label_str(), e.g. ':Application:Process'.
         """
         cache_key = node.cypher_label_str()
         if cache_key in self._node_prop_cache:
@@ -159,7 +159,7 @@ class Neo4jConnector:
         return props
 
     def rel_properties(self, rel_type: str) -> List[str]:
-        """Unione delle property key presenti sulle relazioni di un tipo (campionato)."""
+        """Union of the property keys present on the relationships of a type (sampled)."""
         if rel_type in self._rel_prop_cache:
             return self._rel_prop_cache[rel_type]
         query = (
@@ -174,8 +174,8 @@ class Neo4jConnector:
     def discover_properties(self, subpattern: SubPattern
                             ) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
         """
-        Mappa cypher_label_str->props e rel_type->props per le variabili
-        del sotto-pattern.
+        Maps cypher_label_str->props and rel_type->props for the variables
+        of the sub-pattern.
         """
         node_props = {
             n.cypher_label_str(): self.node_properties(n)
@@ -187,17 +187,17 @@ class Neo4jConnector:
         }
         return node_props, rel_props
 
-    # --- estrazione match ----------------------------------------------------
+    # --- match extraction ----------------------------------------------------
 
     def match_subpattern(self, subpattern: SubPattern, filters=None
                          ) -> Tuple[pd.DataFrame, str, int]:
         """
-        Esegue la query del sotto-pattern e restituisce:
-          (DataFrame dei match, query Cypher usata, numero di match).
+        Runs the sub-pattern query and returns:
+          (DataFrame of the matches, Cypher query used, number of matches).
 
-        Le colonne del DataFrame sono rinominate 'var.prop'. Se il sotto-pattern
-        non ha alcun attributo, il DataFrame ha 0 colonne ma il numero di righe
-        riflette comunque il supporto (per il filtraggio min-support).
+        The DataFrame columns are renamed 'var.prop'. If the sub-pattern
+        has no attributes, the DataFrame has 0 columns but the number of rows
+        still reflects the support (for min-support filtering).
         """
         node_props, rel_props = self.discover_properties(subpattern)
         columns = collect_columns(subpattern, node_props, rel_props)
@@ -208,7 +208,7 @@ class Neo4jConnector:
             if not columns:
                 rec = result.single()
                 support = int(rec["support"]) if rec else 0
-                empty = pd.DataFrame(index=range(support))  # 0 colonne, `support` righe
+                empty = pd.DataFrame(index=range(support))  # 0 columns, `support` rows
                 return empty, query, support
 
             records = []

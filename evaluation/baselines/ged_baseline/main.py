@@ -3,7 +3,7 @@ import sys
 from ged_adapter import Neo4jConnector, run_discovery, render_report
 
 # ==========================
-# CONFIGURAZIONE
+# CONFIGURATION
 # ==========================
 
 URI = "bolt://localhost:7687"
@@ -39,7 +39,7 @@ def main():
         try:
             connector = Neo4jConnector(URI, USER, PASSWORD)
         except Exception as e:
-            print(f"[errore] connessione a Neo4j fallita: {e}", file=sys.stderr)
+            print(f"[error] Neo4j connection failed: {e}", file=sys.stderr)
             sys.exit(1)
 
         try:
@@ -50,7 +50,7 @@ def main():
                 filters_str=filters_str,
             )
         except Exception as e:
-            print(f"[errore] durante la scoperta: {e}", file=sys.stderr)
+            print(f"[error] during discovery: {e}", file=sys.stderr)
             connector.close()
             sys.exit(1)
         finally:
@@ -60,7 +60,7 @@ def main():
 
         print(report)
 
-        OUTPUT = f"../../scalability/baseline_ged/{typology}/results_ged_{dataset}_{num_query}.txt"  # oppure None se non vuoi salvare
+        OUTPUT = f"../../scalability/baseline_ged/{typology}/results_ged_{dataset}_{num_query}.txt"  # or None if you do not want to save
 
         if OUTPUT:
             try:
@@ -69,9 +69,9 @@ def main():
                     if filters_str:
                         f.write(f"filters: {filters_str}\n")
                     f.write(report + "\n")
-                print(f"\n[info] Report salvato in {OUTPUT}")
+                print(f"\n[info] Report saved to {OUTPUT}")
             except OSError as e:
-                print(f"[errore] impossibile scrivere {OUTPUT}: {e}", file=sys.stderr)
+                print(f"[error] unable to write {OUTPUT}: {e}", file=sys.stderr)
 
         num_query = num_query + 1
 

@@ -12,20 +12,20 @@ def generate_query_from_pattern(pattern_str, filters=None):
     has_node = '(' in pattern_str
     has_rel = '[' in pattern_str
 
-    # Caso: solo relazione (es. "[r:REL_TYPE]") → completa con nodi
+    # Case: relationship only (e.g. "[r:REL_TYPE]") → complete with nodes
     if has_rel and not has_node:
         pattern_str = f"(a)-{pattern_str}-(b)"
 
-        # Estrai alias relazione
+        # Extract relationship alias
         match = re.search(r'\[([a-zA-Z_][\w]*)\s*:', pattern_str)
         alias = match.group(1) if match else 'r'
 
-        # Aggiungi filtro per evitare duplicati (id(a) < id(b)), in AND con gli eventuali filtri
+        # Add filter to avoid duplicates (id(a) < id(b)), ANDed with any filters
         match_clause = qf.build_match_block(pattern_str, filters, extra_where="id(a) < id(b)")
         query = match_clause + "\n" + f"RETURN {alias}"
         return query
 
-    # Caso: solo nodo
+    # Case: node only
     if has_node and not has_rel:
         match_clause = qf.build_match_block(pattern_str, filters)
         alias_pattern = re.compile(r'\((\w+)\s*:?[\w]*\)')
@@ -34,7 +34,7 @@ def generate_query_from_pattern(pattern_str, filters=None):
         query = match_clause + " " + return_clause
         return query
 
-    # Caso: cammino completo (nodi + archi)
+    # Case: full path (nodes + edges)
     match_clause = qf.build_match_block(pattern_str, filters)
     alias_pattern = re.compile(r'[\(\[]\s*(\w+)(?:\s*:[^\)\]]+)?\s*[\)\]]')
     alias_order = alias_pattern.findall(pattern_str)
@@ -50,23 +50,23 @@ def matching_pattern_in_graph(subpattern_graph,pattern,label,driver,ucc_alg):
     with driver.session() as session:
         result = session.run(query)
 
-        # Lista per raccogliere i dati
+        # List to collect the data
         records_list = []
 
         for record in result:
             row_data = {}
             for key, value in record.items():
-                if hasattr(value, '_properties'):  # Se è un nodo o una relazione, estrai le proprietà
+                if hasattr(value, '_properties'):  # If it is a node or a relationship, extract its properties
                     for prop_key, prop_value in value._properties.items():
                         row_data[f"{key}.{prop_key}"] = prop_value
                 else:
-                    row_data[key] = value  # Se è un valore normale, lo aggiunge direttamente
+                    row_data[key] = value  # If it is a plain value, add it directly
             records_list.append(row_data)
 
-        # Creazione DataFrame
+        # DataFrame creation
         df = pd.DataFrame(records_list)
         if filters:
-            qf.dbg(f"foglia {pattern}: {len(df)} righe filtrate", level=2)
+            qf.dbg(f"leaf {pattern}: {len(df)} filtered rows", level=2)
         #print(df)
         #subpattern_graph.nodes[pattern]["matching_res"] = df
         #print(df)
@@ -77,14 +77,14 @@ def matching_pattern_in_graph(subpattern_graph,pattern,label,driver,ucc_alg):
                 #print("keys", keys)
                 subpattern_graph.nodes[pattern]["sub_key"] = keys
             except flowserv.error.FlowservError as e:
-                #print("eccezione lanciata: non ci sono ucc, no chiavi!")
+                #print("exception raised: there are no uccs, no keys!")
                 subpattern_graph.nodes[pattern]["sub_key"] = []
         else:
             subpattern_graph.nodes[pattern]["sub_key"] = []
 
         return subpattern_graph
-    #print(f"risultato del matching: {df}")
-    #print(f"chiavi trovate: ",keys)
+    #print(f"matching result: {df}")
+    #print(f"keys found: ",keys)
 
 
 def create_query_for_external_key(target_label: str, max_depth: int = 2) -> str:
@@ -97,7 +97,7 @@ def create_query_for_external_key(target_label: str, max_depth: int = 2) -> str:
         target_label = target_label.strip('()')
 
     return f"""
-    // 1️⃣ BFS dai target fino a max_depth
+    // 1️⃣ BFS from the targets up to max_depth
     MATCH (t:{target_label})
     MATCH path = (t)-[*1..{max_depth}]-(n)
     WITH
@@ -107,17 +107,17 @@ def create_query_for_external_key(target_label: str, max_depth: int = 2) -> str:
         labels(n)[0] AS neighborLabel,
         type(relationships(path)[-1]) AS relType
 
-    // 2️⃣ target → neighbor (funzionalità)
+    // 2️⃣ target → neighbor (functionality)
     WITH neighborLabel, relType, depth, t, collect(DISTINCT n) AS ns
     WHERE size(ns) = 1
 
     UNWIND ns AS n
 
-    // 3️⃣ neighbor → target (iniettività)
+    // 3️⃣ neighbor → target (injectivity)
     WITH neighborLabel, relType, depth, n, collect(DISTINCT t) AS ts
     WHERE size(ts) = 1
 
-    // 4️⃣ profondità minima valida
+    // 4️⃣ minimum valid depth
     RETURN
         neighborLabel,
         relType,
@@ -128,8 +128,8 @@ def create_query_for_external_key(target_label: str, max_depth: int = 2) -> str:
 
 def count_pattern_occurrences(pattern, driver, filters=None):
     """
-    Esegue un MATCH su Neo4j usando il pattern fornito (e gli eventuali filtri)
-    e ritorna il numero di occorrenze trovate.
+    Runs a MATCH on Neo4j using the given pattern (and any filters)
+    and returns the number of occurrences found.
     """
     query = qf.build_match_block(pattern, filters) + " RETURN count(*) AS occurrences"
     #print(query)
@@ -156,37 +156,37 @@ def matching_external_candidates_in_graph_v2(target_label,driver,ucc_alg):
             print(f"Label: {label}, Min Depth: {depth}, relTypes: {allpaths}")
             df = execute_specific_path_matching(target_label, label, allpaths, driver)
             if df.shape[1] == 1:
-                print("entrato nel if")
+                print("entered the if")
                 col = df.columns[0]
                 print(col)
                 key = []
                 if df[col].is_unique:
-                    # La colonna è una chiave
+                    # The column is a key
                     key.append([col])
             else:
                 key = ucc.compute_keys(df,ucc_alg)
             #print("keys:",key)
             if len(key) > 0:
-                #print("keys esterne: ",key)
+                #print("external keys: ",key)
                 ext_entities.append((label, allpaths, key))
                 return ext_entities
             else:
-                print("nessuna chiave trovata, continua")
+                print("no key found, continuing")
     return ext_entities
 
 
 def execute_specific_path_matching(source_label: str, neighbor_label: str, rel_type: str,driver):
     """
-    Esegue il matching del path minimo tra source e neighbor usando un arco specifico.
+    Runs the matching of the minimal path between source and neighbor using a specific edge.
 
     Args:
-        source_label: label del nodo sorgente (es. 'Encounter')
-        neighbor_label: label del nodo vicino (es. 'Patient')
-        rel_type: tipo della relazione (es. 'HAS_PATIENT')
-        driver: istanza Neo4j driver
+        source_label: label of the source node (e.g. 'Encounter')
+        neighbor_label: label of the neighbor node (e.g. 'Patient')
+        rel_type: relationship type (e.g. 'HAS_PATIENT')
+        driver: Neo4j driver instance
 
     Returns:
-        pd.DataFrame con le proprietà dei nodi e della relazione
+        pd.DataFrame with the properties of the nodes and of the relationship
     """
     path_pattern = f"{source_label}-[:{rel_type}]-({neighbor_label}:{neighbor_label})"
 
@@ -213,63 +213,63 @@ def execute_specific_path_matching(source_label: str, neighbor_label: str, rel_t
 
 def matching_pattern_for_validation(pattern,external_mode,external_specs,driver,filters=None):
     if not external_mode:
-        #print("non ci sono key esterne, faccio match normale")
+        #print("there are no external keys, doing a normal match")
         query = generate_query_from_pattern(pattern, filters)
         #print(query)
         #print(query)
         with driver.session() as session:
             result = session.run(query)
 
-            # Lista per raccogliere i dati
+            # List to collect the data
             records_list = []
 
             for record in result:
                 row_data = {}
                 for key, value in record.items():
-                    if hasattr(value, '_properties'):  # Se è un nodo o una relazione, estrai le proprietà
+                    if hasattr(value, '_properties'):  # If it is a node or a relationship, extract its properties
                         for prop_key, prop_value in value._properties.items():
                             row_data[f"{key}.{prop_key}"] = prop_value
                     else:
-                        row_data[key] = value  # Se è un valore normale, lo aggiunge direttamente
+                        row_data[key] = value  # If it is a plain value, add it directly
                 records_list.append(row_data)
 
-            # Creazione DataFrame
+            # DataFrame creation
             df = pd.DataFrame(records_list)
     else:
-        #print("ci sono key esterne, query di rinforzo")
+        #print("there are external keys, reinforcement query")
         query = build_query_with_multiple_targets_and_external_nodes(pattern,external_specs,filters)
         #print(query)
         with driver.session() as session:
             result = session.run(query)
 
-            # Lista per raccogliere i dati
+            # List to collect the data
             records_list = []
 
             for record in result:
                 row_data = {}
                 for key, value in record.items():
-                    if hasattr(value, '_properties'):  # Se è un nodo o una relazione, estrai le proprietà
+                    if hasattr(value, '_properties'):  # If it is a node or a relationship, extract its properties
                         for prop_key, prop_value in value._properties.items():
                             row_data[f"{key}.{prop_key}"] = prop_value
                     else:
-                        row_data[key] = value  # Se è un valore normale, lo aggiunge direttamente
+                        row_data[key] = value  # If it is a plain value, add it directly
                 records_list.append(row_data)
 
-            # Creazione DataFrame
+            # DataFrame creation
             df = pd.DataFrame(records_list)
 
     if filters:
-        qf.dbg(f"validazione {pattern}: {len(df)} righe filtrate", level=2)
+        qf.dbg(f"validation {pattern}: {len(df)} filtered rows", level=2)
     return df
 
 
 def build_query_with_multiple_targets_and_external_nodes(pattern, external_bindings, filters=None):
     """
     pattern: '(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure)'
-    external_bindings: es. [('en', 'Patient', ['id','SSN', ...])]
+    external_bindings: e.g. [('en', 'Patient', ['id','SSN', ...])]
     """
 
-    # Trova tutte le variabili del pattern padre
+    # Find all the variables of the parent pattern
     pattern_vars = re.findall(r'[\(\[](\w+)[\:\]\)]', pattern)
 
     match_lines = [qf.build_match_block(pattern, filters)]
@@ -277,14 +277,14 @@ def build_query_with_multiple_targets_and_external_nodes(pattern, external_bindi
 
     for target_var, external_label, props in external_bindings:
 
-        ext_var = external_label.lower()  # es: 'Patient' -> 'patient'
+        ext_var = external_label.lower()  # e.g. 'Patient' -> 'patient'
 
-        # Aggiunge:
+        # Adds:
         # MATCH (en)--(patient:Patient)
         match_lines.append(f"MATCH ({target_var})--({ext_var}:{external_label})")
 
-        # Aggiunge il nodo esterno tra i risultati
-        # solo se non esiste già
+        # Add the external node to the results
+        # only if it does not already exist
         if ext_var not in return_items:
             return_items.append(ext_var)
 
@@ -294,22 +294,22 @@ def build_query_with_multiple_targets_and_external_nodes(pattern, external_bindi
 
 def check_key_uniqueness_apoc(pattern_father, key_sets, driver, filters=None):
     """
-    Usa APOC per testare in batch quali combinazioni di attributi sono chiavi uniche.
-    pattern_father: es. '(p:Persona)-[:STUDIA]->(l:Libro)'
+    Uses APOC to test in batch which attribute combinations are unique keys.
+    pattern_father: e.g. '(p:Persona)-[:STUDIA]->(l:Libro)'
     key_sets: [['p.nome'], ['p.nome','p.cognome'], ...]
-    Ritorna (risultati, n_rows): una chiave è valida solo se il match non è vuoto,
-    non ha duplicati e nessuna riga ha valori nulli sui suoi attributi (MANDATORY).
-    filters: filtri applicabili al pattern (query_filters.Filter); la parte
-             MATCH ... WHERE ... è costruita in Python e passata come $match_block
+    Returns (results, n_rows): a key is valid only if the match is non-empty,
+    has no duplicates and no row has null values on its attributes (MANDATORY).
+    filters: filters applicable to the pattern (query_filters.Filter); the
+             MATCH ... WHERE ... part is built in Python and passed as $match_block
     """
     match_block = qf.build_match_block(pattern_father, filters)
     query = """
     UNWIND $key_sets AS key_attrs
-    // Crea le versioni aliasate (p.nome -> p_nome)
+    // Create the aliased versions (p.nome -> p_nome)
     WITH key_attrs, 
          [x IN key_attrs | x + " AS " + replace(x, ".", "_")] AS aliased,
          [x IN key_attrs | replace(x, ".", "_")] AS alias_names
-    // Costruisci la query Cypher dinamica
+    // Build the dynamic Cypher query
     WITH key_attrs, 
          $match_block +
          " WITH " + apoc.text.join(aliased, ", ") +
@@ -329,11 +329,11 @@ def check_key_uniqueness_apoc(pattern_father, key_sets, driver, filters=None):
         res = session.run(query, {"key_sets": key_sets, "match_block": match_block})
         rows = list(res)
     results = {tuple(r["key_attrs"]): r["is_unique"] for r in rows}
-    # il match è lo stesso per tutti i candidati: n è identico
+    # the match is the same for all candidates: n is identical
     n_rows = rows[0]["n"] if rows else None
     if filters:
         qf.dbg(f"APOC {pattern_father}: {sum(bool(v) for v in results.values())}/{len(results)} "
-               f"candidate uniche ({n_rows} righe)", level=2)
+               f"unique candidates ({n_rows} rows)", level=2)
     return results, n_rows
 
 

@@ -4,7 +4,7 @@ import openclean_metanome.config as config
 from openclean_metanome.algorithm.hyucc import hyucc
 import os, sys, re, time, psutil
 
-# query_filters sta nella root del progetto (due livelli sopra questa cartella)
+# query_filters lives in the project root (two levels above this folder)
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 import query_filters as qf
 
@@ -19,8 +19,8 @@ if sys.platform.startswith("win"):
 # ✅ UCC Discovery
 # ------------------------------------------------------------
 def compute_keys(df):
-    # HyUCC va in errore (ArrayIndexOutOfBounds nel Sampler) su una sola colonna con
-    # duplicati: con una colonna sola la chiave esiste se e solo se i valori sono unici
+    # HyUCC fails (ArrayIndexOutOfBounds in the Sampler) on a single column with
+    # duplicates: with a single column, a key exists if and only if the values are unique
     if df.shape[1] == 1:
         col = df.columns[0]
         return [[col]] if df[col].nunique(dropna=False) == len(df) else []
@@ -38,15 +38,15 @@ def extract_all_valid_subpatterns(pattern):
 def generate_query_from_pattern(pattern_str, filters=None):
     pattern_str = pattern_str.strip()
 
-    # solo nodo
+    # node only
     if pattern_str.startswith("(") and pattern_str.endswith(")"):
         return f"{qf.build_match_block(pattern_str, filters)} RETURN {qf.return_star(pattern_str, filters)}"
 
-    # solo relazione
+    # relationship only
     if pattern_str.startswith("[") and pattern_str.endswith("]"):
         return f"{qf.build_match_block(f'()-{pattern_str}-()', filters)} RETURN {pattern_str[1:pattern_str.find(':')]}"
 
-    # pattern misto
+    # mixed pattern
     return f"{qf.build_match_block(pattern_str, filters)} RETURN {qf.return_star(pattern_str, filters)}"
 
 
@@ -127,19 +127,19 @@ def check_one_to_one(session, target_label, neighbor_label, rel_type):
     return session.run(query).single()["ok"]
 
 # ------------------------------------------------------------
-# ✅ Main processing (CON DEBUG)
+# ✅ Main processing (WITH DEBUG)
 # ------------------------------------------------------------
 def process_pattern(pattern, nomedb, numpattern, lenpattern, filters_str=""):
 
-    print(f"\n🚀 Avvio PATTERN #{numpattern}")
+    print(f"\n🚀 Starting PATTERN #{numpattern}")
     print(f"   Pattern: {pattern}")
     if filters_str:
-        qf.dbg(f"filtri: {filters_str}")
+        qf.dbg(f"filters: {filters_str}")
     filters = qf.parse_filters(filters_str, pattern)
 
     start_time = time.time()
     process = psutil.Process(os.getpid())
-    # tempi separati
+    # separate timers
     internal_time = 0
     external_time = 0
 
@@ -159,7 +159,7 @@ def process_pattern(pattern, nomedb, numpattern, lenpattern, filters_str=""):
             f.write(f"### FILTERS {filters_str}\n")
 
     subpatterns = extract_all_valid_subpatterns(pattern)
-    print(f"   🔹 Subpattern trovati: {len(subpatterns)}")
+    print(f"   🔹 Subpatterns found: {len(subpatterns)}")
 
     with driver.session() as session:
         for i, sub in enumerate(subpatterns, start=1):
@@ -171,11 +171,11 @@ def process_pattern(pattern, nomedb, numpattern, lenpattern, filters_str=""):
             df = session.execute_read(run_query, query)
 
             if df.shape[0] < 2 or df.shape[1] < 1:
-                print("         ⏭️ Dataset troppo piccolo")
+                print("         ⏭️ Dataset too small")
                 continue
 
             # ---- INTERNAL KEYS ----
-            print("         🔍 Calcolo chiavi interne...")
+            print("         🔍 Computing internal keys...")
 
 
             keys = compute_keys(df)
@@ -187,53 +187,53 @@ def process_pattern(pattern, nomedb, numpattern, lenpattern, filters_str=""):
             max_memory = max(max_memory, current_memory)
 
             if keys:
-                print(f"         ✅ INTERNAL_KEYS trovate: {keys}")
+                print(f"         ✅ INTERNAL_KEYS found: {keys}")
                 with open(LOG_FILE, "a", encoding="utf-8") as f:
                     f.write(f"{sub} - INTERNAL_KEYS {keys}\n")
                 continue
 
             # ---- BASELINE 1 / EXTERNAL KEYS ----
             if not is_single_node_pattern(sub):
-                print("         ⏭️ Non single-node pattern")
+                print("         ⏭️ Not a single-node pattern")
                 continue
 
             t0 = time.time()
             target_label = extract_node_label(sub)
             neighbors = find_neighbors(session, target_label)
 
-            print(f"         🔗 Vicini trovati: {len(neighbors)}")
+            print(f"         🔗 Neighbors found: {len(neighbors)}")
 
             for neighbor_label, rel_type in neighbors:
-                print(f"            🔍 Test verso {neighbor_label} VIA {rel_type}")
+                print(f"            🔍 Testing towards {neighbor_label} VIA {rel_type}")
 
                 df_n = build_neighbor_df(
                     session, target_label, neighbor_label, rel_type
                 )
 
                 if df_n.shape[0] < 2 or df_n.shape[1] < 1:
-                    print("               ⏭️ Dataset vicino troppo piccolo")
+                    print("               ⏭️ Neighbor dataset too small")
                     continue
 
-                print("               🔍 Calcolo chiavi esterne...")
+                print("               🔍 Computing external keys...")
                 neighbor_keys = compute_keys(df_n)
 
                 current_memory = process.memory_info().rss / (1024 ** 2)
                 max_memory = max(max_memory, current_memory)
 
                 if not neighbor_keys:
-                    print("               ❌ Nessuna chiave")
+                    print("               ❌ No key")
                     continue
 
                 if not check_coverage(session, target_label, neighbor_label, rel_type):
-                    print("               ❌ Coverage fallita")
+                    print("               ❌ Coverage failed")
                     continue
 
                 if not check_one_to_one(session, target_label, neighbor_label, rel_type):
-                    print("               ❌ One-to-one fallita")
+                    print("               ❌ One-to-one failed")
                     continue
 
 
-                print(f"               ✅ EXTERNAL_KEY trovata: {neighbor_keys}")
+                print(f"               ✅ EXTERNAL_KEY found: {neighbor_keys}")
 
                 with open(LOG_FILE, "a", encoding="utf-8") as f:
                     f.write(
@@ -243,7 +243,7 @@ def process_pattern(pattern, nomedb, numpattern, lenpattern, filters_str=""):
                     )
             external_time += (time.time() - t0)
     # --------------------------------------------------------
-    # 📊 RIEPILOGO FINALE
+    # 📊 FINAL SUMMARY
     # --------------------------------------------------------
     end_time = time.time()
     end_memory = process.memory_info().rss / (1024 ** 2)
@@ -251,17 +251,17 @@ def process_pattern(pattern, nomedb, numpattern, lenpattern, filters_str=""):
 
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write("\n")
-        f.write(f"tempo d'esecuzione totale: {elapsed_time:.3f} s\n")
+        f.write(f"total execution time: {elapsed_time:.3f} s\n")
         f.write(f"internal keys discovery time: {internal_time:.3f} s\n")
         f.write(f"external keys discovery time: {external_time:.3f} s\n")
-        #f.write(f"memoria occupata: {end_memory:.2f} MB\n")
-        f.write(f"memoria massima totale: {max_memory:.2f} MB\n")
+        #f.write(f"memory used: {end_memory:.2f} MB\n")
+        f.write(f"max total memory: {max_memory:.2f} MB\n")
 
-    print(f"\n📄 Log salvato in: {LOG_FILE}")
-    print(f"⏱️ Tempo chiavi interne: {internal_time:.2f} s")
-    print(f"⏱️ Tempo chiavi esterne: {external_time:.2f} s")
-    print(f"⏱️ Tempo totale: {elapsed_time:.2f} s")
-    print(f"🧠 Memoria max: {max_memory:.2f} MB")
+    print(f"\n📄 Log saved to: {LOG_FILE}")
+    print(f"⏱️ Internal keys time: {internal_time:.2f} s")
+    print(f"⏱️ External keys time: {external_time:.2f} s")
+    print(f"⏱️ Total time: {elapsed_time:.2f} s")
+    print(f"🧠 Max memory: {max_memory:.2f} MB")
 
 
 # ------------------------------------------------------------
@@ -304,29 +304,29 @@ patterns = [
     ("(dis:Disease)-[loc:LOCALIZES_DlA]->(a:Anatomy)-[exp:EXPRESSES_AeG]->(g:Gene)","")
 ]
 patterns = [
-    # Polifarmacologia: composti che si legano con alta affinità a molti bersagli e le malattie associate
+    # Polypharmacology: compounds that bind many targets with high affinity, and the associated diseases
     ("(c:Compound)-[b:BINDS_CbG]-(g:Gene)-[a:ASSOCIATES_DaG]-(d:Disease)",
      "b.affinity_nM < 100 AND count(g) > 5 PER c"),
 
-    # Inversione della firma: il farmaco abbassa fortemente un gene che la malattia
-    # alza almeno del doppio; malattie con molti farmaci candidati
+    # Signature reversal: the drug strongly downregulates a gene that the disease
+    # upregulates at least two-fold; diseases with many candidate drugs
     ("(c:Compound)-[cd:DOWNREGULATES_CdG]-(g:Gene)-[du:UPREGULATES_DuG]-(d:Disease)",
      "abs(cd.z_score) >= 5 AND du.log2_fold_change >= 1 AND count(c) > 5 PER d"),
 
-    # Riposizionamento: malattie con più trattamenti per cui esistono composti strutturalmente molto simili
+    # Repositioning: diseases with several treatments for which structurally very similar compounds exist
     ("(c1:Compound)-[r:RESEMBLES_CrC]-(c2:Compound)-[t:TREATS_CtD]-(d:Disease)",
      "r.similarity >= 0.5 AND count(c2) > 2 PER d"),
      
-     # Sindromi complesse: malattie trattate con un ampio quadro sintomatico
+     # Complex syndromes: diseases treated with a broad symptom profile
     ("(c:Compound)-[t:TREATS_CtD]-(d:Disease)-[p:PRESENTS_DpS]-(s:Symptom)",
      "count(s) > 10 PER d"),
 
-    # Comorbidità genetica: malattie che condividono geni supportati da GWAS con molte altre malattie
+    # Genetic comorbidity: diseases sharing GWAS-supported genes with many other diseases
     ("(d1:Disease)-[a1:ASSOCIATES_DaG]-(g:Gene)-[a2:ASSOCIATES_DaG]-(d2:Disease)",
      "a1.unbiased = true AND a2.unbiased = true AND count(d2) > 3 PER d1"),
 
 
-    # Effetti di classe: classi farmacologiche per meccanismo d'azione con molti composti e gli effetti collaterali di questi
+    # Class effects: pharmacologic classes by mechanism of action with many compounds, and their side effects
     ("(pc:PharmacologicClass)-[i:INCLUDES_PCiC]-(c:Compound)-[cs:CAUSES_CcSE]-(se:SideEffect)",
      "pc.class_type = 'Mechanism of Action' AND count(c) > 5 PER pc"),
 ]

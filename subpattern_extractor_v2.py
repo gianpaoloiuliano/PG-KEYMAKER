@@ -6,23 +6,23 @@ import matplotlib.pyplot as plt
 # ---------------------------------------------------------------------------
 # PATTERN TOKENIZER
 # ---------------------------------------------------------------------------
-# Un pattern Cypher-like è una sequenza alternata:
+# A Cypher-like pattern is an alternating sequence:
 #   NODE  CONNECTOR  NODE  CONNECTOR  NODE  ...
 #
-# dove NODE  = "(alias:Label)"
-#       CONNECTOR = uno tra:
+# where NODE  = "(alias:Label)"
+#       CONNECTOR = one of:
 #           -[r:R]-    undirected
 #           -[r:R]->   right-directed
 #           <-[r:R]-   left-directed
 #
-# La regex cattura separatamente:
-#   group 1 → "nodo"      es.  "(a:Account)"
-#   group 2 → "connector" es.  "-[wd:Withdraw]->"  oppure "<-[t:Tran]-"
+# The regex captures separately:
+#   group 1 → "node"      e.g.  "(a:Account)"
+#   group 2 → "connector" e.g.  "-[wd:Withdraw]->"  or "<-[t:Tran]-"
 #
-# NOTA: i token vengono restituiti in ordine, alternati (nodo, conn, nodo, ...)
+# NOTE: tokens are returned in order, alternating (node, conn, node, ...)
 
 _TOKEN_RE = re.compile(
-    r'(\([^)]*\))'           # nodo  →  (alias:Label)  (possibilmente con label multipli)
+    r'(\([^)]*\))'           # node  →  (alias:Label)  (possibly with multiple labels)
     r'|'
     r'(<-\[[^\]]*\]-)'       # ←  left-directed connector
     r'|'
@@ -34,36 +34,36 @@ _TOKEN_RE = re.compile(
 
 def tokenize_pattern(pattern: str) -> list[str]:
     """
-    Scompone un pattern nelle sue parti atomiche:
-      - token di tipo 'node'      → "(alias:Label)"
-      - token di tipo 'connector' → "-[r:R]-"  /  "-[r:R]->"  /  "<-[r:R]-"
+    Splits a pattern into its atomic parts:
+      - tokens of type 'node'      → "(alias:Label)"
+      - tokens of type 'connector' → "-[r:R]-"  /  "-[r:R]->"  /  "<-[r:R]-"
 
-    Ritorna la lista ordinata dei token (nodo, conn, nodo, conn, nodo ...).
-    Lancia ValueError se il pattern non ha forma valida.
+    Returns the ordered list of tokens (node, conn, node, conn, node ...).
+    Raises ValueError if the pattern is not well-formed.
     """
     tokens = [m.group(0) for m in _TOKEN_RE.finditer(pattern)]
 
-    # Validazione minima: deve iniziare e finire con un nodo
+    # Minimal validation: must start and end with a node
     if not tokens:
-        raise ValueError(f"Pattern non riconosciuto: {pattern!r}")
+        raise ValueError(f"Pattern not recognized: {pattern!r}")
     if not (tokens[0].startswith('(') and tokens[-1].startswith('(')):
         raise ValueError(
-            f"Il pattern deve iniziare e finire con un nodo '(...)': {pattern!r}"
+            f"The pattern must start and end with a node '(...)': {pattern!r}"
         )
-    # Lunghezza: 1, 3, 5, 7 ... (dispari)
+    # Length: 1, 3, 5, 7 ... (odd)
     if len(tokens) % 2 == 0:
         raise ValueError(
-            f"Il pattern non è ben formato (atteso numero dispari di token): {pattern!r}"
+            f"The pattern is not well-formed (odd number of tokens expected): {pattern!r}"
         )
     return tokens
 
 
 def connector_direction(connector: str) -> str:
     """
-    Ritorna la direzione di un connector:
-      '>'  → da nodo sinistro a nodo destro   (es. -[r:R]->)
-      '<'  → da nodo destro  a nodo sinistro  (es. <-[r:R]-)
-      ''   → non direzionato                  (es. -[r:R]-)
+    Returns the direction of a connector:
+      '>'  → from left node to right node   (e.g. -[r:R]->)
+      '<'  → from right node to left node   (e.g. <-[r:R]-)
+      ''   → undirected                     (e.g. -[r:R]-)
     """
     if connector.endswith('->'):
         return '>'
@@ -74,10 +74,10 @@ def connector_direction(connector: str) -> str:
 
 def connector_raw_token(connector: str) -> str:
     """
-    Estrae la parte '[alias:Label]' da un connector (strip delle frecce '-' e '<>').
-    Usato solo per costruire la chiave del nodo-arco nel grafo interno.
+    Extracts the '[alias:Label]' part from a connector (stripping the '-' and '<>' arrows).
+    Used only to build the edge-node key in the internal graph.
     """
-    # Togli prefisso "<-" o "-" e suffisso "->" o "-"
+    # Remove prefix "<-" or "-" and suffix "->" or "-"
     inner = re.search(r'\[([^\]]*)\]', connector)
     if inner:
         return f"[{inner.group(1)}]"
@@ -86,8 +86,8 @@ def connector_raw_token(connector: str) -> str:
 
 def tokens_to_pattern(tokens: list[str]) -> str:
     """
-    Ri-assembla i token in un unico pattern stringa
-    (identico all'originale se i token provengono da tokenize_pattern).
+    Re-assembles the tokens into a single pattern string
+    (identical to the original if the tokens come from tokenize_pattern).
     """
     return ''.join(tokens)
 
@@ -98,23 +98,23 @@ def tokens_to_pattern(tokens: list[str]) -> str:
 
 def extract_all_valid_subpatterns(tokens: list[str]) -> list[list[str]]:
     """
-    Dato un pattern come lista di token, restituisce tutti i sotto-pattern validi
-    (almeno una tripla, cioè ≥ 3 token) diversi dal pattern stesso.
+    Given a pattern as a list of tokens, returns all valid sub-patterns
+    (at least one triple, i.e. ≥ 3 tokens) different from the pattern itself.
 
-    Ogni sotto-pattern è restituito come lista di token.
+    Each sub-pattern is returned as a list of tokens.
     """
     subpatterns = []
-    n = len(tokens)  # dispari
+    n = len(tokens)  # odd
 
-    # I nodi si trovano agli indici pari: 0, 2, 4, ...
-    # Un sotto-pattern valido va da indice pari `start` a indice pari `end`
-    for start in range(0, n - 2, 2):          # almeno 1 connector → end ≥ start+2
-        for end in range(start + 2, n, 2):    # end è indice di un nodo
-            sub = tokens[start:end + 1]       # include il nodo finale
+    # Nodes are at even indices: 0, 2, 4, ...
+    # A valid sub-pattern goes from even index `start` to even index `end`
+    for start in range(0, n - 2, 2):          # at least 1 connector → end ≥ start+2
+        for end in range(start + 2, n, 2):    # end is the index of a node
+            sub = tokens[start:end + 1]       # includes the final node
             if len(sub) >= 3 and sub != tokens:
                 subpatterns.append(sub)
 
-    # Deduplicazione (stessa sequenza di token)
+    # Deduplication (same token sequence)
     seen = set()
     unique = []
     for sp in subpatterns:
@@ -131,24 +131,24 @@ def extract_all_valid_subpatterns(tokens: list[str]) -> list[list[str]]:
 # ---------------------------------------------------------------------------
 
 def _node_id(token: str) -> str:
-    """Chiave univoca per un token-nodo."""
+    """Unique key for a node token."""
     return token
 
 
 def _edge_id(connector: str) -> str:
-    """Chiave univoca per un token-connector (strip delle frecce)."""
+    """Unique key for a connector token (arrows stripped)."""
     return connector_raw_token(connector)
 
 
 def _parse_node_token(token: str) -> tuple[str, str]:
     """
-    Da "(alias:Label)" estrae (alias, label_clean).
-    Supporta label multiple tipo ":Label1:Label2" → usa la prima come label.
+    From "(alias:Label)" extracts (alias, label_clean).
+    Supports multiple labels like ":Label1:Label2" → uses the first as the label.
     """
     inner = token.strip('()')
     if ':' in inner:
         alias, rest = inner.split(':', 1)
-        # label pulita: prendi tutto fino al prossimo ':' (label multiple)
+        # clean label: take everything up to the next ':' (multiple labels)
         label_clean = rest.split(':')[0]
     else:
         alias = inner
@@ -158,7 +158,7 @@ def _parse_node_token(token: str) -> tuple[str, str]:
 
 def _parse_edge_token(connector: str) -> tuple[str, str, str]:
     """
-    Da "-[alias:Label]->" estrae (alias, label_clean, direction).
+    From "-[alias:Label]->" extracts (alias, label_clean, direction).
     """
     direction = connector_direction(connector)
     inner = re.search(r'\[([^\]]*)\]', connector)
@@ -176,7 +176,7 @@ def _parse_edge_token(connector: str) -> tuple[str, str, str]:
 
 
 def tokens_alias_index(tokens: list[str]) -> dict[str, int]:
-    """Mappa alias → indice del token nel pattern (pari = nodo, dispari = arco)."""
+    """Maps alias → token index in the pattern (even = node, odd = edge)."""
     index = {}
     for i, tok in enumerate(tokens):
         alias = _parse_node_token(tok)[0] if i % 2 == 0 else _parse_edge_token(tok)[0]
@@ -185,34 +185,34 @@ def tokens_alias_index(tokens: list[str]) -> dict[str, int]:
 
 
 def _applicable(filters, aliases) -> list:
-    """Filtri (query_filters.Filter) i cui alias sono tutti contenuti in `aliases`."""
+    """Filters (query_filters.Filter) whose aliases are all contained in `aliases`."""
     return [f for f in filters if f.aliases <= aliases]
 
 
 def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph:
     """
-    Costruisce il grafo dei sotto-pattern a partire da un pattern Cypher-like.
+    Builds the sub-pattern graph from a Cypher-like pattern.
 
-    Supporta pattern undirected, right-directed, left-directed e misti, es.:
+    Supports undirected, right-directed, left-directed and mixed patterns, e.g.:
       (a:A)-[r:R]-(b:B)
       (a:A)-[r:R]->(b:B)<-[s:S]-(c:C)
       (a:A)<-[r:R]-(b:B)-[s:S]->(c:C)
 
-    Struttura del grafo risultante:
-      - Nodi foglia 'node' e 'edge': componenti atomici del pattern
-      - Nodi 'tripla': sotto-pattern di lunghezza 3
-      - Nodi 'subpattern': sotto-pattern di lunghezza ≥ 5
-      - Nodo 'original_pattern': il pattern originale completo
+    Structure of the resulting graph:
+      - Leaf nodes 'node' and 'edge': atomic components of the pattern
+      - 'tripla' nodes: sub-patterns of length 3 (triples)
+      - 'subpattern' nodes: sub-patterns of length ≥ 5
+      - 'original_pattern' node: the complete original pattern
 
-    Ogni nodo ha gli attributi:
+    Each node has the attributes:
       label, pattern, sub_key, external_key, info_for_ext_match, visited
-    I nodi foglia 'node' hanno in più: original_label, alias
-    I nodi foglia 'edge' hanno in più: original_label, alias, direction
+    Leaf nodes 'node' additionally have: original_label, alias
+    Leaf nodes 'edge' additionally have: original_label, alias, direction
 
-    `filters` è la lista prodotta da query_filters.parse_filters. Ogni nodo
-    riceve gli attributi:
-      aliases → alias contenuti nel nodo
-      filters → i filtri applicabili a quel nodo (tutti i loro alias sono nel nodo)
+    `filters` is the list produced by query_filters.parse_filters. Each node
+    receives the attributes:
+      aliases → aliases contained in the node
+      filters → the filters applicable to that node (all their aliases are in the node)
     """
     filters = filters or []
     G = nx.DiGraph()
@@ -226,12 +226,12 @@ def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph
 
     def _add_leaf_nodes(tokens: list[str]):
         """
-        Aggiunge al grafo i nodi foglia (node + edge) di una tripla o sequenza.
-        Ritorna la lista delle chiavi aggiunte nell'ordine [nodo, arco, nodo, ...].
+        Adds to the graph the leaf nodes (node + edge) of a triple or sequence.
+        Returns the list of added keys in the order [node, edge, node, ...].
         """
         keys = []
         for i, tok in enumerate(tokens):
-            if i % 2 == 0:  # nodo
+            if i % 2 == 0:  # node
                 nid = _node_id(tok)
                 if nid not in G:
                     alias, label_clean = _parse_node_token(tok)
@@ -267,7 +267,7 @@ def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph
         return keys
 
     def recurse(tokens: list[str]):
-        """Costruisce ricorsivamente il grafo per un sotto-pattern."""
+        """Recursively builds the graph for a sub-pattern."""
         key = tuple(tokens)
         if key in visited_patterns:
             return
@@ -277,7 +277,7 @@ def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph
         n_tokens = len(tokens)
 
         if n_tokens == 1:
-            return  # singolo nodo: ignorato
+            return  # single node: ignored
 
         if n_tokens == 3:
             node_label = 'tripla'
@@ -286,7 +286,7 @@ def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph
         else:
             return
 
-        # Aggiungi il nodo-pattern se non esiste
+        # Add the pattern node if it does not exist
         if pattern_str not in G:
             aliases = set(tokens_alias_index(tokens))
             G.add_node(pattern_str,
@@ -300,12 +300,12 @@ def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph
                        visited=False)
 
         if n_tokens == 3:
-            # Aggiungi foglie e archi pattern → foglie
+            # Add leaves and pattern → leaf edges
             leaf_keys = _add_leaf_nodes(tokens)
             for lk in leaf_keys:
                 G.add_edge(pattern_str, lk)
         else:
-            # Aggiungi sotto-pattern figli
+            # Add child sub-patterns
             for sub_tokens in extract_all_valid_subpatterns(tokens):
                 if tuple(sub_tokens) == key:
                     continue
@@ -314,7 +314,7 @@ def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph
                 G.add_edge(pattern_str, sub_str)
 
     # ----------------------------------------------------------------
-    # Radice
+    # Root
     # ----------------------------------------------------------------
     n_root = len(root_tokens)
     if n_root == 3:
@@ -322,7 +322,7 @@ def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph
     elif n_root >= 5 and n_root % 2 == 1:
         root_label = 'original_pattern'
     else:
-        print(f"[WARN] Pattern non valido (lunghezza token: {n_root}): {pattern!r}")
+        print(f"[WARN] Invalid pattern (token length: {n_root}): {pattern!r}")
         return G
 
     root_str = tokens_to_pattern(root_tokens)
@@ -343,17 +343,17 @@ def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph
             sub_str = tokens_to_pattern(sub_tokens)
             G.add_edge(root_str, sub_str)
     else:
-        # Pattern è già una tripla: aggiungi direttamente le foglie
+        # Pattern is already a triple: add the leaves directly
         leaf_keys = _add_leaf_nodes(root_tokens)
         for lk in leaf_keys:
             G.add_edge(root_str, lk)
 
     if filters:
-        from query_filters import dbg  # import locale: query_filters importa questo modulo
+        from query_filters import dbg  # local import: query_filters imports this module
         tot = G.number_of_nodes()
         for k, f in enumerate(filters):
             n_nodes = sum(1 for _, d in G.nodes(data=True) if f in d["filters"])
-            dbg(f"#{k} applicato a {n_nodes}/{tot} nodi dell'albero")
+            dbg(f"#{k} applied to {n_nodes}/{tot} tree nodes")
         for n, d in G.nodes(data=True):
             if d["filters"]:
                 dbg(f"  {d['label']:<16} {n}  →  {[f.text for f in d['filters']]}", level=2)
@@ -367,7 +367,7 @@ def build_pattern_graph(pattern: str, filters: list | None = None) -> nx.DiGraph
 
 if __name__ == '__main__':
     test_patterns = [
-        # undirected (originale)
+        # undirected (original)
         "(a:Account)-[wd:Withdraw]-(a2:Account)-[tran:Transfer]-(a3:Account)",
         # fully directed →
         "(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure)",
@@ -375,9 +375,9 @@ if __name__ == '__main__':
         "(a:A)-[r:R]->(b:B)<-[s:S]-(c:C)",
         # left-directed
         "(a:A)<-[r:R]-(b:B)<-[s:S]-(c:C)",
-        # mixed lungo
+        # long mixed
         "(os:OS:Process)-[ins:INSTANCE]->(ver:Version)<-[ins2:INSTANCE]-(os2:OS:Process)",
-        # lunga con più tipi
+        # long with multiple types
         "(a:A)-[r1:R1]->(b:B)-[r2:R2]-(c:C)<-[r3:R3]-(d:D)",
     ]
 
@@ -388,13 +388,13 @@ if __name__ == '__main__':
             tokens = tokenize_pattern(pat)
             print(f"  Tokens ({len(tokens)}): {tokens}")
             subs = extract_all_valid_subpatterns(tokens)
-            print(f"  Sotto-pattern estratti ({len(subs)}):")
+            print(f"  Extracted sub-patterns ({len(subs)}):")
             for s in subs:
                 print(f"    {tokens_to_pattern(s)}")
             G = build_pattern_graph(pat)
-            print(f"  Grafo: {G.number_of_nodes()} nodi, {G.number_of_edges()} archi")
+            print(f"  Graph: {G.number_of_nodes()} nodes, {G.number_of_edges()} edges")
             for n, d in G.nodes(data=True):
                 if d['label'] == 'edge':
                     print(f"    [edge] {n!r}  direction={d.get('direction', '')!r}")
         except Exception as e:
-            print(f"  ERRORE: {e}")
+            print(f"  ERROR: {e}")

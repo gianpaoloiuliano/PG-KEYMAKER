@@ -3,7 +3,7 @@ import pandas as pd
 import os, sys, re, time, psutil
 import subprocess
 
-# query_filters sta nella root del progetto (due livelli sopra questa cartella)
+# query_filters lives in the project root (two levels above this folder)
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 import query_filters as qf
 
@@ -24,7 +24,7 @@ def save_csv(df, name):
     return path
 
 
-# Nome fisso del CSV, come in metanome_ucc.py: viene sovrascritto a ogni chiamata
+# Fixed CSV name, as in metanome_ucc.py: it is overwritten on every call
 TMP_CSV = "tmp.csv"
 
 
@@ -153,7 +153,7 @@ def process_pattern(pattern, nomedb, numpattern, lenpattern, filters_str=""):
     print(f"\n🚀 PATTERN #{numpattern}")
     print(f"   {pattern}")
     if filters_str:
-        qf.dbg(f"filtri: {filters_str}")
+        qf.dbg(f"filters: {filters_str}")
     filters = qf.parse_filters(filters_str, pattern)
 
     start_time = time.time()
@@ -190,7 +190,7 @@ def process_pattern(pattern, nomedb, numpattern, lenpattern, filters_str=""):
             df = session.execute_read(run_query, query)
 
             if df.shape[0] < 2 or df.shape[1] < 1:
-                print("      ⏭️ troppo piccolo")
+                print("      ⏭️ too small")
                 continue
 
             # ---------------- INTERNAL KEYS ----------------
@@ -251,16 +251,16 @@ def process_pattern(pattern, nomedb, numpattern, lenpattern, filters_str=""):
     elapsed = time.time() - start_time
     with open(LOG_FILE, "a", encoding="utf-8") as f:
         f.write("\n")
-        f.write(f"tempo d'esecuzione totale: {elapsed:.3f} s\n")
+        f.write(f"total execution time: {elapsed:.3f} s\n")
         f.write(f"internal keys discovery time: {internal_time:.3f} s\n")
         f.write(f"external keys discovery time: {external_time:.3f} s\n")
-        f.write(f"memoria massima totale: {max_memory:.2f} MB\n")
+        f.write(f"max total memory: {max_memory:.2f} MB\n")
 
-    print(f"\n📄 Log salvato in: {LOG_FILE}")
-    print(f"⏱️ Tempo chiavi interne: {internal_time:.2f} s")
-    print(f"⏱️ Tempo chiavi esterne: {external_time:.2f} s")
-    print(f"⏱️ Tempo totale: {elapsed:.2f} s")
-    print(f"🧠 Memoria max: {max_memory:.2f} MB")
+    print(f"\n📄 Log saved to: {LOG_FILE}")
+    print(f"⏱️ Internal keys time: {internal_time:.2f} s")
+    print(f"⏱️ External keys time: {external_time:.2f} s")
+    print(f"⏱️ Total time: {elapsed:.2f} s")
+    print(f"🧠 Max memory: {max_memory:.2f} MB")
 
 # ------------------------------------------------------------
 # ✅ Run
@@ -300,29 +300,29 @@ patterns = [
     ("(dis:Disease)-[loc:LOCALIZES_DlA]->(a:Anatomy)-[exp:EXPRESSES_AeG]->(g:Gene)","")
 ]
 patterns = [
-    # Polifarmacologia: composti che si legano con alta affinità a molti bersagli e le malattie associate
+    # Polypharmacology: compounds that bind many targets with high affinity, and the associated diseases
     ("(c:Compound)-[b:BINDS_CbG]-(g:Gene)-[a:ASSOCIATES_DaG]-(d:Disease)",
      "b.affinity_nM < 100 AND count(g) > 5 PER c"),
 
-    # Inversione della firma: il farmaco abbassa fortemente un gene che la malattia
-    # alza almeno del doppio; malattie con molti farmaci candidati
+    # Signature reversal: the drug strongly downregulates a gene that the disease
+    # upregulates at least two-fold; diseases with many candidate drugs
     ("(c:Compound)-[cd:DOWNREGULATES_CdG]-(g:Gene)-[du:UPREGULATES_DuG]-(d:Disease)",
      "abs(cd.z_score) >= 5 AND du.log2_fold_change >= 1 AND count(c) > 5 PER d"),
 
-    # Riposizionamento: malattie con più trattamenti per cui esistono composti strutturalmente molto simili
+    # Repositioning: diseases with several treatments for which structurally very similar compounds exist
     ("(c1:Compound)-[r:RESEMBLES_CrC]-(c2:Compound)-[t:TREATS_CtD]-(d:Disease)",
      "r.similarity >= 0.5 AND count(c2) > 2 PER d"),
      
-     # Sindromi complesse: malattie trattate con un ampio quadro sintomatico
+     # Complex syndromes: diseases treated with a broad symptom profile
     ("(c:Compound)-[t:TREATS_CtD]-(d:Disease)-[p:PRESENTS_DpS]-(s:Symptom)",
      "count(s) > 10 PER d"),
 
-    # Comorbidità genetica: malattie che condividono geni supportati da GWAS con molte altre malattie
+    # Genetic comorbidity: diseases sharing GWAS-supported genes with many other diseases
     ("(d1:Disease)-[a1:ASSOCIATES_DaG]-(g:Gene)-[a2:ASSOCIATES_DaG]-(d2:Disease)",
      "a1.unbiased = true AND a2.unbiased = true AND count(d2) > 3 PER d1"),
 
 
-    # Effetti di classe: classi farmacologiche per meccanismo d'azione con molti composti e gli effetti collaterali di questi
+    # Class effects: pharmacologic classes by mechanism of action with many compounds, and their side effects
     ("(pc:PharmacologicClass)-[i:INCLUDES_PCiC]-(c:Compound)-[cs:CAUSES_CcSE]-(se:SideEffect)",
      "pc.class_type = 'Mechanism of Action' AND count(c) > 5 PER pc"),
 ]

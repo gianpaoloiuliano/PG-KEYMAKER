@@ -1,33 +1,32 @@
 """
 ged_baseline.py
 ===============
-Scoperta delle chiavi minimali esatte sulla tabella dei match di un pattern,
-secondo la fase `mineDependencies` di DisGEDs (Liu et al., Information Systems
-125, 2024) specializzata alle chiavi (modalita' GKey, §6.3 del paper).
+Discovery of the exact minimal keys on the match table of a pattern,
+following the `mineDependencies` phase of DisGEDs (Liu et al., Information
+Systems 125, 2024) specialized to keys (GKey mode, §6.3 of the paper).
 
-Una chiave K corrisponde al GED sul pattern raddoppiato
+A key K corresponds to the GED on the doubled pattern
     (Q[x, x'], {x.A = x'.A | A in K} -> x.id = x'.id)
-Invece di materializzare le coppie di match (n^2 righe) si usa la condizione
-equivalente sui match singoli:
+Instead of materializing the pairs of matches (n^2 rows), the equivalent
+condition on single matches is used:
 
-    K e' chiave  <=>  la partizione dei match per i valori di K ha solo classi
-                      di un elemento (la partizione "stripped" e' vuota).
+    K is a key  <=>  the partition of the matches by the values of K has only
+                     singleton classes (the "stripped" partition is empty).
 
-Componenti (Procedure 2 / Function 2-3 di DisGEDs):
-  - MANDATORY : si scartano a monte le colonne con almeno un valore nullo
-                (stessa regola della baseline GFD)
-  - SINGLETON : le proprieta' a valore lista sono gia' tuple (confrontabili)
-  - partizioni stripped per singolo attributo (classi con >= 2 match)
-  - lattice level-wise: il nodo X1 u X2 (Definition 3) ha come partizione il
-    prodotto delle partizioni dei genitori, in tempo lineare come in TANE
+Components (Procedure 2 / Function 2-3 of DisGEDs):
+  - MANDATORY : columns with at least one null value are discarded upfront
+                (same rule as the GFD baseline)
+  - SINGLETON : list-valued properties are already tuples (comparable)
+  - stripped partitions for each single attribute (classes with >= 2 matches)
+  - level-wise lattice: node X1 u X2 (Definition 3) has as partition the
+    product of the parents' partitions, in linear time as in TANE
     (Huhtala et al., 1999)
-  - validazione: partizione vuota => chiave, non si espande; un candidato e'
-    generato solo se tutti i suoi sottoinsiemi sono non-chiavi, quindi
-    l'output e' gia' l'insieme delle chiavi minimali (equivalente di findCover)
+  - validation: empty partition => key, not expanded; a candidate is
+    generated only if all its subsets are non-keys, so the output is
+    already the set of minimal keys (equivalent of findCover)
 
-Semantica di matching: DisGEDs usa l'omomorfismo, Cypher esclude la ripetizione
-di archi ma ammette nodi ripetuti. Sui pattern a cammino gli insiemi di match
-coincidono.
+Matching semantics: DisGEDs uses homomorphism, Cypher excludes edge repetition
+but allows repeated nodes. On path patterns the sets of matches coincide.
 """
 
 from typing import Callable, Dict, FrozenSet, List, Optional, Tuple
@@ -35,7 +34,7 @@ from typing import Callable, Dict, FrozenSet, List, Optional, Tuple
 import numpy as np
 import pandas as pd
 
-# Partizione stripped: classi (array di indici di riga) con almeno 2 elementi
+# Stripped partition: classes (arrays of row indices) with at least 2 elements
 Partition = List[np.ndarray]
 
 
@@ -44,32 +43,32 @@ Partition = List[np.ndarray]
 # ----------------------------------------------------------------------------
 
 def mandatory_columns(df: pd.DataFrame) -> List[str]:
-    """Colonne senza alcun NULL: le uniche candidabili a far parte di una chiave."""
+    """Columns without any NULL: the only ones that can be part of a key."""
     return [c for c in df.columns if df[c].notna().all()]
 
 
 # ----------------------------------------------------------------------------
-# Partizioni
+# Partitions
 # ----------------------------------------------------------------------------
 
 def _strip_codes(codes: np.ndarray) -> Partition:
-    """Partizione stripped a partire dai codici di classe di ogni riga."""
+    """Stripped partition from the class codes of each row."""
     order = np.argsort(codes, kind="stable").astype(np.int32)
     bounds = np.flatnonzero(np.diff(codes[order])) + 1
     return [cls for cls in np.split(order, bounds) if len(cls) > 1]
 
 
 def single_partition(series: pd.Series) -> Partition:
-    """Partizione stripped dei match per il valore di un attributo."""
+    """Stripped partition of the matches by the value of an attribute."""
     codes, _ = pd.factorize(series, sort=False)
     return _strip_codes(codes)
 
 
 def product(p1: Partition, p2: Partition, probe: np.ndarray) -> Partition:
     """
-    Prodotto di due partizioni stripped (TANE), lineare nella dimensione delle
-    partizioni. `probe` e' un buffer int32 di n_rows elementi a -1, riportato a
-    -1 al termine (evita di riallocarlo a ogni prodotto).
+    Product of two stripped partitions (TANE), linear in the size of the
+    partitions. `probe` is an int32 buffer of n_rows elements set to -1, reset
+    to -1 at the end (avoids reallocating it at every product).
     """
     for i, cls in enumerate(p1):
         probe[cls] = i
@@ -100,11 +99,10 @@ def _next_level(
     probe: np.ndarray,
 ) -> Dict[Tuple[int, ...], Partition]:
     """
-    Livello i+1 del lattice: unione di due non-chiavi del livello i che
-    differiscono per l'ultimo attributo (prefisso comune, nessun attributo
-    ripetuto). Il candidato e' ammesso solo se tutti i suoi sottoinsiemi di
-    taglia i sono non-chiavi: cosi' nessun sovrainsieme di una chiave viene
-    generato.
+    Level i+1 of the lattice: union of two non-keys of level i that differ
+    in the last attribute (common prefix, no repeated attribute). The
+    candidate is admitted only if all its subsets of size i are non-keys:
+    this way no superset of a key is generated.
     """
     ordered = sorted(non_keys)
     nxt: Dict[Tuple[int, ...], Partition] = {}
@@ -113,7 +111,7 @@ def _next_level(
         for b in range(a + 1, len(ordered)):
             x2 = ordered[b]
             if x1[:-1] != x2[:-1]:
-                break                       # ordinati: il prefisso non torna piu'
+                break                       # sorted: the prefix never comes back
             cand = x1 + (x2[-1],)
             if all(cand[:j] + cand[j + 1:] in non_keys for j in range(len(cand) - 2)):
                 nxt[cand] = product(non_keys[x1], non_keys[x2], probe)
@@ -125,9 +123,9 @@ def find_minimal_keys(
     on_level: Optional[Callable[[], None]] = None,
 ) -> List[FrozenSet[str]]:
     """
-    Trova tutte le chiavi minimali (insiemi di colonne 'var.prop') del pattern.
-    `on_level` e' invocata a ogni livello del lattice (campionamento memoria).
-    Ritorna una lista deterministica di frozenset, ordinata per taglia.
+    Finds all minimal keys (sets of 'var.prop' columns) of the pattern.
+    `on_level` is invoked at every level of the lattice (memory sampling).
+    Returns a deterministic list of frozensets, sorted by size.
     """
     n_rows = len(df)
     if n_rows == 0:
@@ -140,7 +138,7 @@ def find_minimal_keys(
     probe = np.full(n_rows, -1, dtype=np.int32)
     keys: List[FrozenSet[str]] = []
 
-    # livello 1: attributi singoli
+    # level 1: single attributes
     non_keys: Dict[Tuple[int, ...], Partition] = {}
     for i, c in enumerate(cols):
         part = single_partition(df[c])
@@ -151,7 +149,7 @@ def find_minimal_keys(
     if on_level:
         on_level()
 
-    # livelli successivi
+    # subsequent levels
     while non_keys:
         level = _next_level(non_keys, probe)
         non_keys = {}
@@ -167,7 +165,7 @@ def find_minimal_keys(
 
 
 if __name__ == "__main__":
-    # Test rapido su una relazione sintetica.
+    # Quick test on a synthetic relation.
     data = pd.DataFrame(
         {
             "n.id":    [1, 2, 3, 4],

@@ -1,21 +1,21 @@
 """
 ged_adapter.py
 ==============
-Orchestrazione della baseline GED (DisGEDs adattato) per la scoperta di PG-Keys
-su uno scope dato.
+Orchestration of the GED baseline (adapted DisGEDs) for PG-Key discovery
+on a given scope.
 
 Pipeline:
-  1. parse dello scope                       (parser.parse_scope, baseline GFD)
-  2. sotto-pattern come HyUCC/HPIValid: nodi singoli, archi singoli e cammini
-     contigui nodo-nodo (subpattern_enum.enumerate_subpatterns + archi)
-  3. per ogni sotto-pattern:
-       a. match come DataFrame da Neo4j     (neo4j_connector, baseline GFD)
-       b. chiavi minimali interne           (ged_baseline.find_minimal_keys)
-       c. se nodo singolo senza chiavi interne: chiavi esterne con la stessa
-          strategia di HyUCC/HPIValid (vicini, coverage, one-to-one)
-       d. misura di tempo e memoria (RSS in MB, come HyUCC/HPIValid)
-  4. output testuale nel formato della baseline GFD:
-       FOR <pattern> IDENTIFIER <attributi>
+  1. parse the scope                         (parser.parse_scope, GFD baseline)
+  2. sub-patterns as in HyUCC/HPIValid: single nodes, single edges and
+     contiguous node-node paths (subpattern_enum.enumerate_subpatterns + edges)
+  3. for each sub-pattern:
+       a. matches as a DataFrame from Neo4j  (neo4j_connector, GFD baseline)
+       b. internal minimal keys              (ged_baseline.find_minimal_keys)
+       c. if single node without internal keys: external keys with the same
+          strategy as HyUCC/HPIValid (neighbors, coverage, one-to-one)
+       d. time and memory measurement (RSS in MB, as in HyUCC/HPIValid)
+  4. text output in the GFD baseline format:
+       FOR <pattern> IDENTIFIER <attributes>
 """
 
 import os
@@ -27,8 +27,8 @@ from typing import FrozenSet, List, Optional, Tuple
 import pandas as pd
 import psutil
 
-# le dipendenze (parser, enumerazione, connettore) sono quelle della baseline GFD,
-# riusate per import senza modificarle; append cosi' i moduli locali restano prioritari
+# the dependencies (parser, enumeration, connector) are those of the GFD baseline,
+# reused via import without modifying them; append so that local modules keep priority
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "gfd_adapted_baseline")))
 from parser import parse_scope, Relationship                      # noqa: E402
 from subpattern_enum import enumerate_subpatterns, SubPattern     # noqa: E402
@@ -60,12 +60,12 @@ def _rss_mb() -> float:
 
 
 def _format_key(key: FrozenSet[str]) -> str:
-    """Rende un IDENTIFIER come lista ordinata di attributi 'var.prop'."""
+    """Renders an IDENTIFIER as a sorted list of 'var.prop' attributes."""
     return ", ".join(sorted(key))
 
 
 # ----------------------------------------------------------------------------
-# Sotto-pattern
+# Sub-patterns
 # ----------------------------------------------------------------------------
 
 def _edge_display(rel: Relationship) -> str:
@@ -79,9 +79,9 @@ def _flatten(records, columns: List[str]) -> pd.DataFrame:
 def match_edge(connector: Neo4jConnector, rel: Relationship, filters=None
                ) -> Tuple[pd.DataFrame, int]:
     """
-    Match di un arco singolo: una riga per relazione, colonne 'var.prop'.
-    Gli archi non direzionati sono restituiti da Cypher in entrambi gli
-    orientamenti: si tiene un solo orientamento con id(s) <= id(t).
+    Match of a single edge: one row per relationship, columns 'var.prop'.
+    Undirected edges are returned by Cypher in both orientations: only one
+    orientation is kept, with id(s) <= id(t).
     """
     props = connector.rel_properties(rel.rel_type)
     if rel.direction == "right":
@@ -109,7 +109,7 @@ def match_edge(connector: Neo4jConnector, rel: Relationship, filters=None
 
 
 # ----------------------------------------------------------------------------
-# Chiavi esterne (stessa strategia di hyucc_baseline.py / hpivalid_baseline.py)
+# External keys (same strategy as hyucc_baseline.py / hpivalid_baseline.py)
 # ----------------------------------------------------------------------------
 
 def find_neighbors(session, target_label: str) -> List[Tuple[str, str]]:
@@ -156,7 +156,7 @@ def check_one_to_one(session, target_label: str, neighbor_label: str, rel_type: 
 
 def discover_external_keys(connector: Neo4jConnector, target_label: str,
                            on_level=None) -> List[ExternalKey]:
-    """target_label e' la stringa Cypher delle label, es. ':Application:Process'."""
+    """target_label is the Cypher label string, e.g. ':Application:Process'."""
     found: List[ExternalKey] = []
     with connector._driver.session() as session:
         for neighbor_label, rel_type in find_neighbors(session, target_label):
@@ -175,7 +175,7 @@ def discover_external_keys(connector: Neo4jConnector, target_label: str,
 
 
 # ----------------------------------------------------------------------------
-# Scoperta
+# Discovery
 # ----------------------------------------------------------------------------
 
 def run_discovery(
@@ -185,19 +185,19 @@ def run_discovery(
     filters_str: str = "",
 ) -> List[SubPatternResult]:
     """
-    Esegue la scoperta su tutti i sotto-pattern dello scope e ritorna i risultati.
-    `filters_str`: filtri Cypher (anche aggregati con PER), come in PG-KEYMAKER;
-    a ogni sotto-pattern si applicano solo quelli i cui alias compaiono in esso.
+    Runs the discovery on all sub-patterns of the scope and returns the results.
+    `filters_str`: Cypher filters (also aggregates with PER), as in PG-KEYMAKER;
+    only the filters whose aliases appear in a sub-pattern are applied to it.
     """
     scope = parse_scope(scope_str)
     paths: List[SubPattern] = enumerate_subpatterns(scope)
     nodes = [sp for sp in paths if sp.size() == 1]
     longer = [sp for sp in paths if sp.size() > 1]
     if filters_str:
-        qf.dbg(f"filtri: {filters_str}")
+        qf.dbg(f"filters: {filters_str}")
     filters = qf.parse_filters(filters_str, scope_str)
 
-    # stesso ordine di baseline_subpatterns: nodi, archi, cammini
+    # same order as baseline_subpatterns: nodes, edges, paths
     work: List[Tuple[str, object, List[str]]] = (
         [(sp.display(), sp, sp.variables()) for sp in nodes]
         + [(_edge_display(r), r, [r.var]) for r in scope.relationships]
@@ -215,7 +215,7 @@ def run_discovery(
     for pattern_str, item, variables in work:
         sp_filters = qf.applicable_filters(filters, variables)
         if filters:
-            print(f"sotto-pattern {pattern_str}{qf.filters_label(sp_filters)}")
+            print(f"sub-pattern {pattern_str}{qf.filters_label(sp_filters)}")
 
         peak = _rss_mb()
         t0 = time.perf_counter()
@@ -232,7 +232,7 @@ def run_discovery(
             res.status = "no_matches"
         else:
             res.keys = find_minimal_keys(df, sample)
-            # chiavi esterne: solo nodo singolo senza chiavi interne (come HyUCC)
+            # external keys: only single node without internal keys (as in HyUCC)
             if not res.keys and isinstance(item, SubPattern) and item.size() == 1 \
                     and df.shape[0] >= 2 and df.shape[1] >= 2:
                 res.external_keys = discover_external_keys(
@@ -250,7 +250,7 @@ def run_discovery(
 
 
 def render_report(results: List[SubPatternResult]) -> str:
-    """Costruisce il report testuale completo (anche per salvataggio su file)."""
+    """Builds the complete text report (also for saving to a file)."""
     lines: List[str] = []
     total_keys = 0
     total_time = 0.0
@@ -268,10 +268,10 @@ def render_report(results: List[SubPatternResult]) -> str:
         lines.append("")
         lines.append(f"FOR {res.pattern}")
         mem = f", peak {res.peak_mb:.1f} MB" if res.peak_mb is not None else ""
-        lines.append(f"  match: {res.n_matches} | tempo: {res.elapsed_s*1000:.2f} ms{mem}")
+        lines.append(f"  match: {res.n_matches} | time: {res.elapsed_s*1000:.2f} ms{mem}")
 
         if res.status == "no_matches":
-            lines.append("  [skip] nessun match per questo sotto-pattern")
+            lines.append("  [skip] no match for this sub-pattern")
             continue
         if res.status == "no_key":
             lines.append("  no key found")
@@ -288,12 +288,12 @@ def render_report(results: List[SubPatternResult]) -> str:
 
     lines.append("")
     lines.append("-" * 72)
-    lines.append(f"Totale PG-Keys trovate : {total_keys}")
-    lines.append(f"Sotto-pattern esaminati: {len(results)}")
-    lines.append(f"tempo d'esecuzione totale:: {total_time:.2f}s")
+    lines.append(f"Total PG-Keys found    : {total_keys}")
+    lines.append(f"Sub-patterns examined  : {len(results)}")
+    lines.append(f"total execution time: {total_time:.2f}s")
 
     if max_peak > 0:
-        lines.append(f"memoria massima totale: {max_peak:.2f} MB")
+        lines.append(f"max total memory: {max_peak:.2f} MB")
     lines.append("-" * 72)
 
     return "\n".join(lines)

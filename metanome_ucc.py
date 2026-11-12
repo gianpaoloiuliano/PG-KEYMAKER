@@ -8,10 +8,10 @@ import subprocess
 PROJECT_DIR = "/mnt/c/Users/gianp/Desktop/HPIvalid/release"
 CSV_DIR = "/mnt/c/Users/gianp/Desktop/Codes/PG-KEYMAKER_v2/temp_csvs"
 
-# Forza Python a usare UTF-8 per stdin/stdout/stderr
+# Force Python to use UTF-8 for stdin/stdout/stderr
 os.environ["PYTHONIOENCODING"] = "utf-8"
 
-# Se vuoi anche cambiare la code page della console corrente:
+# If you also want to change the code page of the current console:
 if sys.platform.startswith("win"):
     os.system("chcp 65001 > nul")
 #download_jar(verbose=True)

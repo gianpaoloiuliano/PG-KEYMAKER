@@ -1,23 +1,23 @@
 """
 subpattern_enum.py
 ==================
-Enumerazione dei sotto-pattern contigui di uno scope (analogo del vertical
-spawning dell'algoritmo GFD e del Sub-Patterns Tree di PG-Keymaker).
+Enumeration of the contiguous sub-patterns of a scope (analogous to the vertical
+spawning of the GFD algorithm and to the Sub-Patterns Tree of PG-Keymaker).
 
-Per uno scope con n nodi su un path lineare:
+For a scope with n nodes on a linear path:
     n0 -[e0]- n1 -[e1]- n2 ... -[e_{n-2}]- n_{n-1}
 
-un sotto-pattern contiguo e' individuato da una coppia (i, j) con
-0 <= i <= j <= n-1, e comprende:
-    - i nodi  nodes[i .. j]
-    - gli edge edges[i .. j-1] (quelli interni all'intervallo)
+a contiguous sub-pattern is identified by a pair (i, j) with
+0 <= i <= j <= n-1, and comprises:
+    - the nodes  nodes[i .. j]
+    - the edges  edges[i .. j-1] (those internal to the interval)
 
-Esempio, scope  A-[r]-B-[e]-C  (3 nodi):
+Example, scope  A-[r]-B-[e]-C  (3 nodes):
     (0,0)=A   (1,1)=B   (2,2)=C
     (0,1)=A-[r]-B        (1,2)=B-[e]-C
     (0,2)=A-[r]-B-[e]-C
 
-cioe' 6 sotto-pattern, esattamente come richiesto.
+i.e. 6 sub-patterns, exactly as required.
 """
 
 from dataclasses import dataclass
@@ -28,16 +28,16 @@ from parser import Node, Relationship, Scope
 
 @dataclass
 class SubPattern:
-    """Un sotto-percorso contiguo dello scope."""
+    """A contiguous sub-path of the scope."""
     nodes: List[Node]
     relationships: List[Relationship]
 
     def variables(self) -> List[str]:
-        """Tutte le variabili (nodi + relazioni) del sotto-pattern, in ordine."""
+        """All variables (nodes + relationships) of the sub-pattern, in order."""
         return [n.var for n in self.nodes] + [r.var for r in self.relationships]
 
     def display(self) -> str:
-        """Ricostruisce la rappresentazione Cypher-like del sotto-pattern."""
+        """Rebuilds the Cypher-like representation of the sub-pattern."""
         n0 = self.nodes[0]
         parts = [f"({n0.var}{n0.cypher_label_str()})"]
         for idx, rel in enumerate(self.relationships):
@@ -52,25 +52,25 @@ class SubPattern:
         return "".join(parts)
 
     def size(self) -> int:
-        """Numero di nodi del sotto-pattern."""
+        """Number of nodes of the sub-pattern."""
         return len(self.nodes)
 
 
 def enumerate_subpatterns(scope: Scope) -> List[SubPattern]:
     """
-    Genera tutti i sotto-pattern contigui dello scope, ordinati per dimensione
-    crescente (numero di nodi) e, a parita', per posizione di partenza.
+    Generates all contiguous sub-patterns of the scope, sorted by increasing
+    size (number of nodes) and, for equal size, by starting position.
     """
     nodes = scope.nodes
     rels = scope.relationships
     n = len(nodes)
 
     subs: List[SubPattern] = []
-    for length in range(1, n + 1):              # numero di nodi del sotto-pattern
-        for i in range(0, n - length + 1):      # indice di partenza
-            j = i + length - 1                  # indice di fine (incluso)
+    for length in range(1, n + 1):              # number of nodes of the sub-pattern
+        for i in range(0, n - length + 1):      # starting index
+            j = i + length - 1                  # ending index (inclusive)
             sub_nodes = nodes[i:j + 1]
-            sub_rels = rels[i:j]                # edge interni all'intervallo
+            sub_rels = rels[i:j]                # edges internal to the interval
             subs.append(SubPattern(nodes=sub_nodes, relationships=sub_rels))
     return subs
 
@@ -80,4 +80,4 @@ if __name__ == "__main__":
 
     sc = parse_scope("(a:Application:Process)-[r:ROUTES]-(i:Interface)-[e:EXPOSES]-(p:Port)")
     for sp in enumerate_subpatterns(sc):
-        print(f"[{sp.size()} nodi] {sp.display()}  vars={sp.variables()}")
+        print(f"[{sp.size()} nodes] {sp.display()}  vars={sp.variables()}")
