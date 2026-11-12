@@ -1,0 +1,43 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (cl:Client)
+  match: 2433 | tempo: 2433.72 ms, peak 660.4 KiB
+  IDENTIFIER cl.id
+
+FOR (ct:CashOut:Transaction)
+  match: 76023 | tempo: 14974.37 ms, peak 31895.7 KiB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (m:Merchant)
+  match: 347 | tempo: 134.06 ms, peak 6915.1 KiB
+  IDENTIFIER m.id
+
+FOR (cl:Client)-[pf:PERFORMED]->(ct:CashOut:Transaction)
+  match: 76023 | tempo: 19891.19 ms, peak 44049.2 KiB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (ct:CashOut:Transaction)-[to:TO]->(m:Merchant)
+  match: 76023 | tempo: 20243.31 ms, peak 59584.8 KiB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (cl:Client)-[pf:PERFORMED]->(ct:CashOut:Transaction)-[to:TO]->(m:Merchant)
+  match: 76023 | tempo: 31476.24 ms, peak 76724.9 KiB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 14
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 89.15s
+memoria massima totale: 76724.9 KiB
+------------------------------------------------------------------------

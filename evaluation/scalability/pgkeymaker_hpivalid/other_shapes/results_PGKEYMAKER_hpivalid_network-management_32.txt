@@ -1,0 +1,23 @@
+pattern;keys found
+
+(r:Rack)-[h:HOLDS]->(ma:Machine)-[ru:RUNS]->(sp:Service:Process)-[li:LISTENS]->(po:Port);[['sp.startTime', 'po.port']]
+(r:Rack)-[h:HOLDS]->(ma:Machine);[['ma.name']]
+(r:Rack);[['r.rack', 'r.zone'], ['r.name']]
+[h:HOLDS];[]
+(ma:Machine);[['ma.name']]
+(r:Rack)-[h:HOLDS]->(ma:Machine)-[ru:RUNS]->(sp:Service:Process);[['sp.name', 'sp.startTime'], ['sp.startTime', 'sp.pid']]
+(ma:Machine)-[ru:RUNS]->(sp:Service:Process);[['sp.name', 'sp.startTime'], ['sp.startTime', 'sp.pid']]
+[ru:RUNS];[]
+(sp:Service:Process);[['sp.name', 'sp.startTime'], ['sp.startTime', 'sp.pid']]
+(ma:Machine)-[ru:RUNS]->(sp:Service:Process)-[li:LISTENS]->(po:Port);[['sp.startTime', 'po.port']]
+(sp:Service:Process)-[li:LISTENS]->(po:Port);[['sp.startTime', 'po.port']]
+[li:LISTENS];[]
+(po:Port);[]
+
+execution time for tree and leaves: 5.87 s
+execution time for external keys: 3.99 s
+execution time for case 1: 0.00 s
+execution time for case 2: 3.53 s
+execution time for case 3: 0.14 s
+total execution time: 13.53 s
+Max memory used: 237.91 MB

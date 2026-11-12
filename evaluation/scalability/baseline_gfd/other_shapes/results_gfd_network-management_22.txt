@@ -1,0 +1,65 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (r:Rack)
+  match: 40 | tempo: 2089.45 ms, peak 74.5 KiB
+  IDENTIFIER r.name
+  IDENTIFIER r.rack, r.zone
+
+FOR (ma:Machine)
+  match: 8000 | tempo: 632.45 ms, peak 1636.2 KiB
+  IDENTIFIER ma.name
+
+FOR (sp:Service:Process)
+  match: 14430 | tempo: 1399.29 ms, peak 4529.3 KiB
+  IDENTIFIER sp.pid, sp.startTime
+  IDENTIFIER sp.name, sp.startTime
+
+FOR (po:Port)
+  match: 37238 | tempo: 2467.33 ms, peak 7312.1 KiB
+  no key found
+
+FOR (r:Rack)-[h:HOLDS]->(ma:Machine)
+  match: 8000 | tempo: 722.97 ms, peak 2849.7 KiB
+  IDENTIFIER ma.name
+
+FOR (ma:Machine)-[ru:RUNS]->(sp:Service:Process)
+  match: 14430 | tempo: 1629.42 ms, peak 6093.6 KiB
+  IDENTIFIER ma.name, sp.startTime
+  IDENTIFIER sp.pid, sp.startTime
+  IDENTIFIER ma.name, sp.pid
+  IDENTIFIER sp.name, sp.startTime
+  IDENTIFIER ma.name, sp.name
+
+FOR (sp:Service:Process)-[li:LISTENS]->(po:Port)
+  match: 26006 | tempo: 2249.33 ms, peak 10481.2 KiB
+  IDENTIFIER po.port, sp.startTime
+
+FOR (r:Rack)-[h:HOLDS]->(ma:Machine)-[ru:RUNS]->(sp:Service:Process)
+  match: 14430 | tempo: 1817.82 ms, peak 10104.8 KiB
+  IDENTIFIER r.name, sp.startTime
+  IDENTIFIER sp.name, sp.startTime
+  IDENTIFIER r.zone, sp.startTime
+  IDENTIFIER ma.name, sp.name
+  IDENTIFIER ma.name, sp.startTime
+  IDENTIFIER sp.pid, sp.startTime
+  IDENTIFIER ma.name, sp.pid
+
+FOR (ma:Machine)-[ru:RUNS]->(sp:Service:Process)-[li:LISTENS]->(po:Port)
+  match: 26006 | tempo: 2826.72 ms, peak 14033.5 KiB
+  IDENTIFIER po.port, sp.startTime
+  IDENTIFIER ma.name, po.port
+
+FOR (r:Rack)-[h:HOLDS]->(ma:Machine)-[ru:RUNS]->(sp:Service:Process)-[li:LISTENS]->(po:Port)
+  match: 26006 | tempo: 3344.35 ms, peak 19996.4 KiB
+  IDENTIFIER po.port, sp.startTime
+  IDENTIFIER ma.name, po.port
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 23
+Sotto-pattern esaminati: 10
+tempo d'esecuzione totale:: 19.18s
+memoria massima totale: 19996.4 KiB
+------------------------------------------------------------------------

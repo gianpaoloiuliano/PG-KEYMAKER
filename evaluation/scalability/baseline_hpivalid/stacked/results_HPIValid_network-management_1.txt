@@ -1,0 +1,7 @@
+
+### PATTERN (m:Machine)-[r:ROUTES]-(i:Interface)-[e:EXPOSES]-(p:Port)
+
+tempo d'esecuzione totale: 54.872 s
+internal keys discovery time: 33.474 s
+external keys discovery time: 0.000 s
+memoria massima totale: 194.05 MB

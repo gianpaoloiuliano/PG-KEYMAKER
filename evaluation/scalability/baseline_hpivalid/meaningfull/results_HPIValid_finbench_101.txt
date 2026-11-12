@@ -1,0 +1,8 @@
+
+### PATTERN (src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account)
+### FILTERS datetime('2021-01-01T00:00:00Z') < edge1.createTime < datetime('2022-01-01T00:00:00Z') AND datetime('2021-01-01T00:00:00Z') < edge2.createTime < datetime('2022-01-01T00:00:00Z') AND edge1.amount > 50 AND edge2.amount > 100
+
+tempo d'esecuzione totale: 27.627 s
+internal keys discovery time: 27.626 s
+external keys discovery time: 0.000 s
+memoria massima totale: 237.09 MB

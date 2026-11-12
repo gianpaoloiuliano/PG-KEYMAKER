@@ -1,0 +1,12 @@
+
+### PATTERN (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process)
+(ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process) - INTERNAL_KEYS [['m.name', 'se.startTime'], ['se.startTime', 'se.pid'], ['ra.name', 'se.startTime'], ['se.name', 'se.startTime'], ['ra.zone', 'se.startTime'], ['m.name', 'se.pid'], ['m.name', 'se.name']]
+(ra:Rack) - INTERNAL_KEYS [['ra.name'], ['ra.rack', 'ra.zone']]
+(ra:Rack)-[h:HOLDS]-(m:Machine) - INTERNAL_KEYS [['m.name']]
+(m:Machine)-[r:RUNS]-(se:Service:Process) - INTERNAL_KEYS [['m.name', 'se.startTime'], ['se.startTime', 'se.pid'], ['se.name', 'se.startTime'], ['m.name', 'se.pid'], ['m.name', 'se.name']]
+(se:Service:Process) - INTERNAL_KEYS [['se.startTime', 'se.pid'], ['se.name', 'se.startTime']]
+
+tempo d'esecuzione totale: 8.757 s
+internal keys discovery time: 5.693 s
+external keys discovery time: 0.000 s
+memoria massima totale: 211.16 MB

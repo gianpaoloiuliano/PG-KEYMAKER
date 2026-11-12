@@ -1,0 +1,7 @@
+
+### PATTERN (ct:CashIn:Transaction)-[n:NEXT]->(ct:CashIn:Transaction)-[to:TO]->(m:Merchant)
+
+tempo d'esecuzione totale: 68.615 s
+internal keys discovery time: 68.615 s
+external keys discovery time: 0.000 s
+memoria massima totale: 571.68 MB

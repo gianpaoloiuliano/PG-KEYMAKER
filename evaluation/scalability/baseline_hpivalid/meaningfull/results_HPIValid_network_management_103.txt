@@ -1,0 +1,8 @@
+
+### PATTERN (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process)
+### FILTERS ra.zone = 1 AND count(se) > 1 PER m
+
+tempo d'esecuzione totale: 5.905 s
+internal keys discovery time: 2.862 s
+external keys discovery time: 0.000 s
+memoria massima totale: 193.09 MB

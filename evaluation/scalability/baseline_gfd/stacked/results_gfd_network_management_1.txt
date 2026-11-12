@@ -1,0 +1,37 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (m:Machine)
+  match: 8000 | tempo: 2613.08 ms, peak 1736.7 KiB
+  IDENTIFIER m.name
+
+FOR (i:Interface)
+  match: 8045 | tempo: 511.48 ms, peak 2228.8 KiB
+  IDENTIFIER i.ip
+
+FOR (p:Port)
+  match: 37238 | tempo: 2302.06 ms, peak 6980.0 KiB
+  no key found
+
+FOR (m:Machine)-[r:ROUTES]-(i:Interface)
+  match: 8000 | tempo: 634.89 ms, peak 2538.5 KiB
+  IDENTIFIER m.name
+  IDENTIFIER i.ip
+
+FOR (i:Interface)-[e:EXPOSES]-(p:Port)
+  match: 37238 | tempo: 2780.15 ms, peak 9883.7 KiB
+  IDENTIFIER i.ip, p.port
+
+FOR (m:Machine)-[r:ROUTES]-(i:Interface)-[e:EXPOSES]-(p:Port)
+  match: 37238 | tempo: 3233.70 ms, peak 13743.1 KiB
+  IDENTIFIER i.ip, p.port
+  IDENTIFIER m.name, p.port
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 7
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 12.08s
+memoria massima totale: 13743.1 KiB
+------------------------------------------------------------------------

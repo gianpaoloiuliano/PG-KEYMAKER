@@ -1,0 +1,44 @@
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (m:Machine)
+  match: 8000 | tempo: 2794.45 ms, peak 140.7 MB
+  IDENTIFIER m.name
+
+FOR (i:Interface)
+  match: 8045 | tempo: 353.32 ms, peak 141.4 MB
+  IDENTIFIER i.ip
+
+FOR (p:Port)
+  match: 37238 | tempo: 920.91 ms, peak 143.1 MB
+  no key found
+
+FOR [r:ROUTES]
+  match: 8085 | tempo: 387.40 ms, peak 143.1 MB
+  no key found
+
+FOR [e:EXPOSES]
+  match: 37238 | tempo: 195.19 ms, peak 143.1 MB
+  no key found
+
+FOR (m:Machine)-[r:ROUTES]-(i:Interface)
+  match: 8000 | tempo: 353.95 ms, peak 143.1 MB
+  IDENTIFIER i.ip
+  IDENTIFIER m.name
+
+FOR (i:Interface)-[e:EXPOSES]-(p:Port)
+  match: 37238 | tempo: 876.40 ms, peak 149.0 MB
+  IDENTIFIER i.ip, p.port
+
+FOR (m:Machine)-[r:ROUTES]-(i:Interface)-[e:EXPOSES]-(p:Port)
+  match: 37238 | tempo: 1116.81 ms, peak 154.4 MB
+  IDENTIFIER i.ip, p.port
+  IDENTIFIER m.name, p.port
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 7
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 7.00s
+memoria massima totale: 154.43 MB
+------------------------------------------------------------------------

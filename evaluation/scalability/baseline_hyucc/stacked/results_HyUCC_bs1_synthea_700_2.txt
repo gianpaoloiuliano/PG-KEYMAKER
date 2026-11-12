@@ -1,0 +1,10 @@
+
+### PATTERN (en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure)
+(pro:Procedure) - INTERNAL_KEYS [['pro.code'], ['pro.description']]
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure) - INTERNAL_KEYS [['en1.date', 'en1.code', 'pro.code', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'pro.description', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'en2.id', 'pro.code'], ['en1.date', 'en1.code', 'en2.id', 'pro.description'], ['en1.date', 'en1.code', 'en2.end', 'pro.code'], ['en1.date', 'en1.code', 'en2.end', 'pro.description']]
+(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure) - INTERNAL_KEYS [['pro.code', 'en2.id'], ['pro.description', 'en2.id'], ['pro.code', 'en2.end'], ['pro.description', 'en2.end']]
+
+tempo d'esecuzione totale: 827.593 s
+internal keys discovery time: 227.213 s
+external keys discovery time: 582.637 s
+memoria massima totale: 1175.05 MB

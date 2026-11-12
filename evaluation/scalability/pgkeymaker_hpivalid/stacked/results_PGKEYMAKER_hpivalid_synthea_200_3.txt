@@ -1,0 +1,18 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]-(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['en.date', 'en.claimCost', 'en.coveredAmount', 'pro.code'], ['en.coveredAmount', 'en.end', 'pro.code'], ['en.id', 'pro.code'], ['en.date', 'en.claimCost', 'en.coveredAmount', 'pro.description'], ['en.coveredAmount', 'en.end', 'pro.description'], ['en.id', 'pro.description']]
+(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['en.date', 'en.claimCost', 'en.coveredAmount', 'pro.code'], ['en.coveredAmount', 'en.end', 'pro.code'], ['en.id', 'pro.code'], ['en.date', 'en.claimCost', 'en.coveredAmount', 'pro.description'], ['en.coveredAmount', 'en.end', 'pro.description'], ['en.id', 'pro.description']]
+(en:Encounter);[['en.date', 'en.baseCost', 'en.code', 'en.id'], ['en.date', 'en.code', 'en.claimCost', 'en.id'], ['en.date', 'en.code', 'en.description', 'en.id'], ['en.date', 'en.code', 'en.coveredAmount', 'en.id'], ['en.date', 'en.code', 'en.end', 'en.id'], ['en.date', 'en.code', 'en.id', 'en.class'], ['en.date', 'en.code', 'en.id', 'en.isEnd']]
+[hasp:HAS_PROCEDURE];[]
+(pro:Procedure);[['pro.code'], ['pro.description']]
+(p:Patient)-[has:HAS_ENCOUNTER]-(en:Encounter);[['en.date', 'en.baseCost', 'en.code', 'en.id'], ['en.date', 'en.code', 'en.claimCost', 'en.id'], ['en.date', 'en.code', 'en.description', 'en.id'], ['en.date', 'en.code', 'en.coveredAmount', 'en.id'], ['en.date', 'en.code', 'en.end', 'en.id'], ['en.date', 'en.code', 'en.id', 'en.class'], ['en.date', 'en.code', 'en.id', 'en.isEnd']]
+(p:Patient);[['p.firstName', 'p.lastName'], ['p.firstName', 'p.marital', 'p.city'], ['p.firstName', 'p.city', 'p.deathDate'], ['p.lastName', 'p.marital', 'p.city'], ['p.lastName', 'p.city', 'p.deathDate'], ['p.id'], ['p.firstName', 'p.marital', 'p.birthDate'], ['p.lastName', 'p.birthDate'], ['p.deathDate', 'p.birthDate'], ['p.SSN']]
+[has:HAS_ENCOUNTER];[]
+
+execution time for tree and leaves: 12.17 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 20.73 s
+execution time for case 3: 2.91 s
+total execution time: 35.85 s
+Max memory used: 555.79 MB

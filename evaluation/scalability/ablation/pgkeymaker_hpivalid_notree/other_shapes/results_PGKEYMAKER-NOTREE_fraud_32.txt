@@ -1,0 +1,23 @@
+pattern;keys found
+
+(tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction)-[to2:TO]->(m:Merchant);[['tt.globalStep', 'ct.globalStep'], ['tt.amount', 'ct.globalStep'], ['tt.id', 'ct.globalStep'], ['tt.globalStep', 'ct.amount'], ['tt.amount', 'ct.amount'], ['tt.id', 'ct.amount'], ['tt.globalStep', 'ct.id'], ['tt.amount', 'ct.id'], ['tt.id', 'ct.id']]
+(tt:Transfer:Transaction)-[to:TO]->(cl:Client);[['tt.globalStep'], ['tt.amount', 'tt.step'], ['tt.amount', 'tt.ts'], ['tt.id']]
+(tt:Transfer:Transaction);[['tt.globalStep'], ['tt.amount', 'tt.step'], ['tt.amount', 'tt.ts'], ['tt.id']]
+[to:TO];[]
+(cl:Client);[['cl.id']]
+(tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction);[['tt.globalStep', 'ct.globalStep'], ['tt.amount', 'ct.globalStep'], ['tt.id', 'ct.globalStep'], ['tt.globalStep', 'ct.amount'], ['tt.amount', 'ct.amount'], ['tt.id', 'ct.amount'], ['tt.globalStep', 'ct.id'], ['tt.amount', 'ct.id'], ['tt.id', 'ct.id']]
+(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction);[['ct.globalStep'], ['ct.amount'], ['ct.id']]
+[pf:PERFORMED];[]
+(ct:CashIn:Transaction);[['ct.globalStep'], ['ct.amount'], ['ct.id']]
+(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction)-[to2:TO]->(m:Merchant);[['ct.globalStep'], ['ct.amount'], ['ct.id']]
+(ct:CashIn:Transaction)-[to2:TO]->(m:Merchant);[['ct.globalStep'], ['ct.amount'], ['ct.id']]
+[to2:TO];[]
+(m:Merchant);[['m.id']]
+
+execution time for tree and leaves: 68.41 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 262.43 s
+execution time for case 3: 15.52 s
+total execution time: 346.51 s
+Max memory used: 2482.23 MB

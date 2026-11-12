@@ -1,0 +1,36 @@
+pattern;keys found
+
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Service:Process)-[rel4:INSTANCE]->(n5:Software:Service)-[rel5:VERSION]->(n6:Version);[['n4.startTime', 'n6.name']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack);[['n2.name'], ['n2.rack', 'n2.zone']]
+(n1:DataCenter);[['n1.name'], ['n1.location']]
+[rel1:CONTAINS];[]
+(n2:Rack);[['n2.name'], ['n2.rack', 'n2.zone']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine);[['n3.name']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine);[['n3.name']]
+[rel2:HOLDS];[]
+(n3:Machine);[['n3.name']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Service:Process);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Service:Process);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n3:Machine)-[rel3:RUNS]->(n4:Service:Process);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+[rel3:RUNS];[]
+(n4:Service:Process);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Service:Process)-[rel4:INSTANCE]->(n5:Software:Service);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Service:Process)-[rel4:INSTANCE]->(n5:Software:Service);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n3:Machine)-[rel3:RUNS]->(n4:Service:Process)-[rel4:INSTANCE]->(n5:Software:Service);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n4:Service:Process)-[rel4:INSTANCE]->(n5:Software:Service);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+[rel4:INSTANCE];[]
+(n5:Software:Service);[['n5.versions'], ['n5.name'], ['n5.ports']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Service:Process)-[rel4:INSTANCE]->(n5:Software:Service)-[rel5:VERSION]->(n6:Version);[['n4.startTime', 'n6.name']]
+(n3:Machine)-[rel3:RUNS]->(n4:Service:Process)-[rel4:INSTANCE]->(n5:Software:Service)-[rel5:VERSION]->(n6:Version);[['n4.startTime', 'n6.name']]
+(n4:Service:Process)-[rel4:INSTANCE]->(n5:Software:Service)-[rel5:VERSION]->(n6:Version);[['n4.startTime', 'n6.name']]
+(n5:Software:Service)-[rel5:VERSION]->(n6:Version);[['n5.versions', 'n6.name'], ['n5.name', 'n6.name'], ['n6.name', 'n5.ports'], ['n6.name', 'n5.dependencies']]
+[rel5:VERSION];[]
+(n6:Version);[]
+
+execution time for tree and leaves: 5.79 s
+execution time for external keys: 2.55 s
+execution time for case 1: 0.00 s
+execution time for case 2: 3.10 s
+execution time for case 3: 0.74 s
+total execution time: 12.19 s
+Max memory used: 242.89 MB

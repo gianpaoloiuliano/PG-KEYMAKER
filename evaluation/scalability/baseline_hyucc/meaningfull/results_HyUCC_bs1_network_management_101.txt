@@ -1,0 +1,13 @@
+
+### PATTERN (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(a:Application:Process)
+### FILTERS a.name = 'crm' AND count(m) > 40 PER ra
+(ra:Rack) - INTERNAL_KEYS [['ra.name'], ['ra.rack', 'ra.zone']]
+(a:Application:Process) - INTERNAL_KEYS [['a.startTime']]
+(ra:Rack)-[h:HOLDS]-(m:Machine) - INTERNAL_KEYS [['m.name']]
+(ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(a:Application:Process) - INTERNAL_KEYS [['m.name'], ['a.startTime']]
+(m:Machine)-[r:RUNS]-(a:Application:Process) - INTERNAL_KEYS [['a.startTime'], ['m.name']]
+
+tempo d'esecuzione totale: 7.190 s
+internal keys discovery time: 4.286 s
+external keys discovery time: 0.000 s
+memoria massima totale: 224.66 MB

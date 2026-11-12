@@ -1,0 +1,29 @@
+pattern;keys found
+
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port);[['n4.ip', 'n5.port']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack);[['n2.rack', 'n2.zone'], ['n2.name']]
+(n1:DataCenter);[['n1.name'], ['n1.location']]
+[rel1:CONTAINS];[]
+(n2:Rack);[['n2.rack', 'n2.zone'], ['n2.name']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine);[['n3.name']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine);[['n3.name']]
+[rel2:HOLDS];[]
+(n3:Machine);[['n3.name']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface);[['n3.name'], ['n4.ip']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface);[['n3.name'], ['n4.ip']]
+(n3:Machine)-[rel3:ROUTES]->(n4:Interface);[['n3.name'], ['n4.ip']]
+[rel3:ROUTES];[]
+(n4:Interface);[['n4.ip']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port);[['n4.ip', 'n5.port']]
+(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port);[['n4.ip', 'n5.port']]
+(n4:Interface)-[rel4:EXPOSES]->(n5:Port);[['n4.ip', 'n5.port']]
+[rel4:EXPOSES];[]
+(n5:Port);[]
+
+execution time for tree and leaves: 9.12 s
+execution time for external keys: 4.59 s
+execution time for case 1: 0.00 s
+execution time for case 2: 6.18 s
+execution time for case 3: 0.13 s
+total execution time: 20.01 s
+Max memory used: 171.91 MB

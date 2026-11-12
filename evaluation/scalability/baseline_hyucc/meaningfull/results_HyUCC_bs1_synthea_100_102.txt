@@ -1,0 +1,14 @@
+
+### PATTERN (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug)
+### FILTERS count(DISTINCT dr) >= 6 PER p
+(p:Patient) - INTERNAL_KEYS [['p.id'], ['p.SSN'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.city'], ['p.firstName', 'p.marital'], ['p.firstName', 'p.race'], ['p.lastName', 'p.birthDate'], ['p.lastName', 'p.city'], ['p.lastName', 'p.marital', 'p.ethnicity', 'p.deathDate'], ['p.lastName', 'p.marital', 'p.gender', 'p.ethnicity'], ['p.deathDate', 'p.birthDate'], ['p.marital', 'p.race', 'p.city', 'p.deathDate'], ['p.marital', 'p.ethnicity', 'p.city', 'p.deathDate']]
+(en:Encounter) - INTERNAL_KEYS [['en.date', 'en.code', 'en.id']]
+(dr:Drug) - INTERNAL_KEYS [['dr.code'], ['dr.description']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter) - INTERNAL_KEYS [['en.date', 'en.code', 'en.id']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug) - INTERNAL_KEYS [['en.date', 'en.end', 'en.id', 'dr.code'], ['en.date', 'en.end', 'en.id', 'dr.description'], ['en.date', 'en.coveredAmount', 'en.id', 'dr.code'], ['en.date', 'en.coveredAmount', 'en.id', 'dr.description'], ['en.date', 'en.claimCost', 'en.id', 'dr.code'], ['en.date', 'en.claimCost', 'en.id', 'dr.description'], ['en.date', 'en.code', 'en.id', 'dr.code'], ['en.date', 'en.code', 'en.id', 'dr.description'], ['en.date', 'en.description', 'en.id', 'dr.code'], ['en.date', 'en.id', 'en.class', 'dr.code'], ['en.date', 'en.baseCost', 'en.id', 'dr.code'], ['en.date', 'en.id', 'en.isEnd', 'dr.code'], ['en.date', 'en.description', 'en.id', 'dr.description'], ['en.date', 'en.id', 'en.class', 'dr.description'], ['en.date', 'en.baseCost', 'en.id', 'dr.description'], ['en.date', 'en.id', 'en.isEnd', 'dr.description']]
+(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug) - INTERNAL_KEYS [['dr.code', 'en.date', 'en.end', 'en.id'], ['dr.description', 'en.date', 'en.end', 'en.id'], ['dr.code', 'en.date', 'en.coveredAmount', 'en.id'], ['dr.description', 'en.date', 'en.coveredAmount', 'en.id'], ['dr.code', 'en.date', 'en.claimCost', 'en.id'], ['dr.description', 'en.date', 'en.claimCost', 'en.id'], ['dr.code', 'en.date', 'en.code', 'en.id'], ['dr.description', 'en.date', 'en.code', 'en.id'], ['dr.code', 'en.date', 'en.description', 'en.id'], ['dr.code', 'en.class', 'en.date', 'en.id'], ['dr.code', 'en.date', 'en.baseCost', 'en.id'], ['dr.code', 'en.isEnd', 'en.date', 'en.id'], ['dr.description', 'en.date', 'en.description', 'en.id'], ['dr.description', 'en.class', 'en.date', 'en.id'], ['dr.description', 'en.date', 'en.baseCost', 'en.id'], ['dr.description', 'en.isEnd', 'en.date', 'en.id']]
+
+tempo d'esecuzione totale: 17.796 s
+internal keys discovery time: 15.133 s
+external keys discovery time: 0.000 s
+memoria massima totale: 266.60 MB

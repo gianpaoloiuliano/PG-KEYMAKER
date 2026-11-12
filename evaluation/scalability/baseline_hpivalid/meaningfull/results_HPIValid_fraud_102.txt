@@ -1,0 +1,8 @@
+
+### PATTERN (c1:Client)-[perf:PERFORMED]->(tx:Transfer)-[to:TO]->(c2:Client)
+### FILTERS tx.amount >= 300000 AND count(DISTINCT tx) > 3 PER c1
+
+tempo d'esecuzione totale: 53.047 s
+internal keys discovery time: 53.047 s
+external keys discovery time: 0.000 s
+memoria massima totale: 553.59 MB

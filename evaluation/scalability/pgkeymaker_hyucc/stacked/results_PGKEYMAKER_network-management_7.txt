@@ -1,0 +1,18 @@
+pattern;keys found
+
+(m:Machine)-[r:RUNS]-(a:Application:Process)-[l:LISTENS]-(p:Port);[['a.startTime', 'p.port']]
+(a:Application:Process)-[l:LISTENS]-(p:Port);[['a.startTime', 'p.port']]
+(a:Application:Process);[['a.startTime']]
+[l:LISTENS];[]
+(p:Port);[]
+(m:Machine)-[r:RUNS]-(a:Application:Process);[['m.name'], ['a.startTime']]
+(m:Machine);[['m.name']]
+[r:RUNS];[]
+
+execution time for tree and leaves: 5.38 s
+execution time for external keys: 2.28 s
+execution time for case 1: 0.00 s
+execution time for case 2: 1.07 s
+execution time for case 3: 0.41 s
+total execution time: 9.13 s
+Max memory used: 222.73 MB

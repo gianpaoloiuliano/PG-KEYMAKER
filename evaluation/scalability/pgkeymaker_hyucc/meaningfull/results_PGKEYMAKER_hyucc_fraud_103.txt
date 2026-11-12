@@ -1,0 +1,30 @@
+filters: t1.step <= t2.step AND count(DISTINCT mule) > 1 PER victim
+pattern;keys found
+
+(victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant);[['t1.globalStep', 't2.globalStep'], ['t1.amount', 't2.globalStep'], ['t1.id', 't2.globalStep'], ['t1.globalStep', 't2.amount'], ['t1.amount', 't2.amount'], ['t1.id', 't2.amount'], ['t1.globalStep', 't2.id'], ['t1.amount', 't2.id'], ['t2.id', 't1.id']]
+(victim:Client)-[perf1:PERFORMED]->(t1:Transfer);[['t1.globalStep'], ['t1.id'], ['t1.amount', 't1.step'], ['t1.amount', 't1.ts']]
+(victim:Client);[['victim.id']]
+[perf1:PERFORMED];[]
+(t1:Transfer);[['t1.globalStep'], ['t1.id'], ['t1.amount', 't1.step'], ['t1.amount', 't1.ts']]
+(victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client);[['t1.globalStep'], ['t1.id'], ['t1.amount', 't1.step'], ['t1.amount', 't1.ts']]
+(t1:Transfer)-[to1:TO]->(mule:Client);[['t1.globalStep'], ['t1.id'], ['t1.amount', 't1.step'], ['t1.amount', 't1.ts']]
+[to1:TO];[]
+(mule:Client);[['mule.id']]
+(victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut);[['t1.globalStep', 't2.globalStep'], ['t1.amount', 't2.globalStep'], ['t1.id', 't2.globalStep'], ['t1.globalStep', 't2.amount'], ['t1.amount', 't2.amount'], ['t1.id', 't2.amount'], ['t1.globalStep', 't2.id'], ['t1.amount', 't2.id'], ['t2.id', 't1.id']]
+(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut);[['t1.globalStep', 't2.globalStep'], ['t1.amount', 't2.globalStep'], ['t1.id', 't2.globalStep'], ['t1.globalStep', 't2.amount'], ['t1.amount', 't2.amount'], ['t1.id', 't2.amount'], ['t1.globalStep', 't2.id'], ['t1.amount', 't2.id'], ['t2.id', 't1.id']]
+(mule:Client)-[perf2:PERFORMED]->(t2:CashOut);[['t2.globalStep'], ['t2.amount'], ['t2.id']]
+[perf2:PERFORMED];[]
+(t2:CashOut);[['t2.globalStep'], ['t2.amount'], ['t2.id']]
+(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant);[['t1.globalStep', 't2.globalStep'], ['t1.amount', 't2.globalStep'], ['t1.id', 't2.globalStep'], ['t1.globalStep', 't2.amount'], ['t1.amount', 't2.amount'], ['t1.id', 't2.amount'], ['t1.globalStep', 't2.id'], ['t1.amount', 't2.id'], ['t2.id', 't1.id']]
+(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant);[['t2.globalStep'], ['t2.amount'], ['t2.id']]
+(t2:CashOut)-[to2:TO]->(m:Merchant);[['t2.globalStep'], ['t2.amount'], ['t2.id']]
+[to2:TO];[]
+(m:Merchant);[['m.id']]
+
+execution time for tree and leaves: 30.08 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 73.46 s
+execution time for case 3: 3.44 s
+total execution time: 107.02 s
+Max memory used: 539.95 MB

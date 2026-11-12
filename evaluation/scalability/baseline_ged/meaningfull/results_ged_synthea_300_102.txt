@@ -1,0 +1,53 @@
+filters: count(DISTINCT dr) >= 6 PER p
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (p:Patient)
+  match: 179 | tempo: 2167.81 ms, peak 190.0 MB
+  IDENTIFIER p.SSN
+  IDENTIFIER p.birthDate, p.deathDate
+  IDENTIFIER p.birthDate, p.firstName
+  IDENTIFIER p.birthDate, p.lastName
+  IDENTIFIER p.city, p.firstName
+  IDENTIFIER p.city, p.lastName
+  IDENTIFIER p.firstName, p.lastName
+  IDENTIFIER p.firstName, p.marital
+  IDENTIFIER p.ethnicity, p.gender, p.lastName, p.marital
+
+FOR (en:Encounter)
+  match: 51108 | tempo: 6083.21 ms, peak 206.2 MB
+  IDENTIFIER en.code, en.date, en.id, en.isEnd
+
+FOR (dr:Drug)
+  match: 198 | tempo: 164.99 ms, peak 198.9 MB
+  IDENTIFIER dr.code
+
+FOR [has:HAS_ENCOUNTER]
+  match: 51108 | tempo: 165.29 ms, peak 194.4 MB
+  no key found
+
+FOR [hd:HAS_DRUG]
+  match: 37450 | tempo: 167.84 ms, peak 194.4 MB
+  no key found
+
+FOR (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)
+  match: 42539 | tempo: 1398727.99 ms, peak 3928.6 MB
+  IDENTIFIER en.code, en.date, en.id, en.isEnd
+
+FOR (en:Encounter)-[hd:HAS_DRUG]->(dr:Drug)
+  match: 37450 | tempo: 14948.31 ms, peak 2074.2 MB
+  IDENTIFIER dr.code, en.date, en.id, en.isEnd
+  IDENTIFIER dr.description, en.date, en.id, en.isEnd
+
+FOR (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug)
+  match: 34881 | tempo: 6001555.93 ms, peak 11087.3 MB
+  IDENTIFIER dr.code, en.date, en.id, en.isEnd
+  IDENTIFIER dr.description, en.date, en.id, en.isEnd
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 16
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 7423.98s
+memoria massima totale: 11087.35 MB
+------------------------------------------------------------------------

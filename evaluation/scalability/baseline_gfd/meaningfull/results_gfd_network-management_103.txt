@@ -1,0 +1,42 @@
+filters: ra.zone = 1 AND count(se) > 1 PER m
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (ra:Rack)
+  match: 10 | tempo: 2147.62 ms, peak 64.7 KiB
+  IDENTIFIER ra.name
+  IDENTIFIER ra.rack
+
+FOR (m:Machine)
+  match: 4796 | tempo: 401.70 ms, peak 996.6 KiB
+  IDENTIFIER m.name
+
+FOR (se:Service:Process)
+  match: 14430 | tempo: 974.44 ms, peak 4325.6 KiB
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)
+  match: 1190 | tempo: 273.63 ms, peak 1340.2 KiB
+  IDENTIFIER m.name
+
+FOR (m:Machine)-[r:RUNS]-(se:Service:Process)
+  match: 11226 | tempo: 1014.78 ms, peak 4028.8 KiB
+  IDENTIFIER se.startTime
+  IDENTIFIER m.name, se.name
+  IDENTIFIER m.name, se.pid
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process)
+  match: 2788 | tempo: 464.94 ms, peak 3029.9 KiB
+  IDENTIFIER se.startTime
+  IDENTIFIER m.name, se.name
+  IDENTIFIER m.name, se.pid
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 12
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 5.28s
+memoria massima totale: 4325.6 KiB
+------------------------------------------------------------------------

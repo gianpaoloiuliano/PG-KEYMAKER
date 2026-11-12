@@ -1,0 +1,13 @@
+
+### PATTERN (tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(co:CashOut:Transaction)
+(tt:Transfer:Transaction) - INTERNAL_KEYS [['tt.globalStep'], ['tt.id'], ['tt.amount', 'tt.step'], ['tt.amount', 'tt.ts']]
+(cl:Client) - INTERNAL_KEYS [['cl.id']]
+(co:CashOut:Transaction) - INTERNAL_KEYS [['co.globalStep'], ['co.amount'], ['co.id']]
+(tt:Transfer:Transaction)-[to:TO]->(cl:Client) - INTERNAL_KEYS [['tt.globalStep'], ['tt.id'], ['tt.amount', 'tt.step'], ['tt.amount', 'tt.ts']]
+(tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(co:CashOut:Transaction) - INTERNAL_KEYS [['co.globalStep', 'tt.globalStep'], ['co.globalStep', 'tt.amount'], ['tt.id', 'co.globalStep'], ['co.amount', 'tt.globalStep'], ['co.amount', 'tt.amount'], ['tt.id', 'co.amount'], ['co.id', 'tt.globalStep'], ['co.id', 'tt.amount'], ['tt.id', 'co.id']]
+(cl:Client)-[pf:PERFORMED]->(co:CashOut:Transaction) - INTERNAL_KEYS [['co.globalStep'], ['co.amount'], ['co.id']]
+
+tempo d'esecuzione totale: 147.140 s
+internal keys discovery time: 147.140 s
+external keys discovery time: 0.000 s
+memoria massima totale: 1452.70 MB

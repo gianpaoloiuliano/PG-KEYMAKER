@@ -1,0 +1,18 @@
+pattern;keys found
+
+(se:Service:Process)-[i:INSTANCE]-(ss:Software:Service)-[v:VERSION]-(ver:Version);[['se.startTime', 'ver.name']]
+(se:Service:Process)-[i:INSTANCE]-(ss:Software:Service);[['se.name', 'se.startTime'], ['se.startTime', 'se.pid']]
+(se:Service:Process);[['se.name', 'se.startTime'], ['se.startTime', 'se.pid']]
+[i:INSTANCE];[]
+(ss:Software:Service);[['ss.versions'], ['ss.name'], ['ss.ports']]
+(ss:Software:Service)-[v:VERSION]-(ver:Version);[['ss.versions', 'ver.name'], ['ss.name', 'ver.name'], ['ver.name', 'ss.ports'], ['ver.name', 'ss.dependencies']]
+[v:VERSION];[]
+(ver:Version);[]
+
+execution time for tree and leaves: 2.22 s
+execution time for external keys: 2.50 s
+execution time for case 1: 0.00 s
+execution time for case 2: 2.44 s
+execution time for case 3: 0.21 s
+total execution time: 7.37 s
+Max memory used: 232.00 MB

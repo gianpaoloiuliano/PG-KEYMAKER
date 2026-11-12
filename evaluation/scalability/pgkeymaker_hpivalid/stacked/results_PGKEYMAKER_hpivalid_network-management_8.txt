@@ -1,0 +1,18 @@
+pattern;keys found
+
+(m:Machine)-[r:RUNS]-(o:OS:Process)-[i:INSTANCE]-(ver:Version);[['m.name'], ['o.startTime']]
+(m:Machine)-[r:RUNS]-(o:OS:Process);[['m.name'], ['o.startTime']]
+(m:Machine);[['m.name']]
+[r:RUNS];[]
+(o:OS:Process);[['o.startTime']]
+(o:OS:Process)-[i:INSTANCE]-(ver:Version);[['o.startTime']]
+[i:INSTANCE];[]
+(ver:Version);[]
+
+execution time for tree and leaves: 3.13 s
+execution time for external keys: 2.32 s
+execution time for case 1: 0.00 s
+execution time for case 2: 0.39 s
+execution time for case 3: 0.00 s
+total execution time: 5.84 s
+Max memory used: 225.40 MB

@@ -1,0 +1,14 @@
+
+### PATTERN (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hc:HAS_CONDITION]->(c:Condition)
+### FILTERS count(DISTINCT c) >= 19 PER p
+(p:Patient) - INTERNAL_KEYS [['p.id'], ['p.SSN'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.city'], ['p.firstName', 'p.race'], ['p.lastName', 'p.birthDate'], ['p.lastName', 'p.city'], ['p.deathDate', 'p.birthDate'], ['p.marital', 'p.gender', 'p.race', 'p.city', 'p.deathDate'], ['p.marital', 'p.gender', 'p.ethnicity', 'p.city', 'p.deathDate']]
+(en:Encounter) - INTERNAL_KEYS [['en.date', 'en.code', 'en.id']]
+(c:Condition) - INTERNAL_KEYS [['c.code'], ['c.description']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter) - INTERNAL_KEYS [['en.date', 'en.code', 'en.id']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hc:HAS_CONDITION]->(c:Condition) - INTERNAL_KEYS [['en.date', 'en.id', 'c.code'], ['en.date', 'en.id', 'c.description'], ['en.date', 'c.code', 'p.id'], ['p.SSN', 'en.date', 'c.code'], ['p.firstName', 'en.date', 'c.code'], ['p.lastName', 'en.date', 'c.code'], ['en.date', 'c.code', 'p.deathDate', 'p.birthDate'], ['en.date', 'c.code', 'p.city', 'p.deathDate'], ['en.date', 'c.description', 'p.id'], ['p.SSN', 'en.date', 'c.description'], ['p.firstName', 'en.date', 'c.description'], ['p.lastName', 'en.date', 'c.description'], ['en.date', 'c.description', 'p.deathDate', 'p.birthDate'], ['en.date', 'c.description', 'p.city', 'p.deathDate'], ['en.end', 'en.id', 'c.code'], ['en.end', 'en.id', 'c.description'], ['en.coveredAmount', 'en.id', 'c.code'], ['en.coveredAmount', 'en.id', 'c.description'], ['en.claimCost', 'en.id', 'c.code'], ['en.claimCost', 'en.id', 'c.description'], ['en.description', 'en.id', 'c.code'], ['en.id', 'en.class', 'c.code'], ['en.baseCost', 'en.id', 'c.code'], ['en.id', 'en.isEnd', 'c.code'], ['en.description', 'en.id', 'c.description'], ['en.id', 'en.class', 'c.description'], ['en.baseCost', 'en.id', 'c.description'], ['en.id', 'en.isEnd', 'c.description']]
+(en:Encounter)-[hc:HAS_CONDITION]->(c:Condition) - INTERNAL_KEYS [['c.code', 'en.id', 'en.date'], ['en.id', 'c.description', 'en.date'], ['c.code', 'en.id', 'en.end'], ['en.id', 'c.description', 'en.end'], ['c.code', 'en.id', 'en.coveredAmount'], ['en.id', 'c.description', 'en.coveredAmount'], ['c.code', 'en.id', 'en.claimCost'], ['en.id', 'c.description', 'en.claimCost'], ['c.code', 'en.id', 'en.description'], ['c.code', 'en.id', 'en.class'], ['c.code', 'en.id', 'en.baseCost'], ['c.code', 'en.id', 'en.isEnd'], ['en.id', 'c.description', 'en.description'], ['en.id', 'en.class', 'c.description'], ['en.id', 'c.description', 'en.baseCost'], ['en.id', 'en.isEnd', 'c.description']]
+
+tempo d'esecuzione totale: 15.065 s
+internal keys discovery time: 13.181 s
+external keys discovery time: 0.000 s
+memoria massima totale: 262.54 MB

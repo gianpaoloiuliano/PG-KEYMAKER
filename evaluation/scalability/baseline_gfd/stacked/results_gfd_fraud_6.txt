@@ -1,0 +1,51 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (ct:CashIn:Transaction)
+  match: 149037 | tempo: 28616.14 ms, peak 61440.3 KiB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (ct2:CashIn:Transaction)
+  match: 149037 | tempo: 25297.08 ms, peak 74632.3 KiB
+  IDENTIFIER ct2.amount
+  IDENTIFIER ct2.globalStep
+  IDENTIFIER ct2.id
+
+FOR (m:Merchant)
+  match: 347 | tempo: 334.36 ms, peak 13472.7 KiB
+  IDENTIFIER m.id
+
+FOR (ct:CashIn:Transaction)-[n:NEXT]->(ct2:CashIn:Transaction)
+  match: 87715 | tempo: 25555.99 ms, peak 68178.7 KiB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+  IDENTIFIER ct2.amount
+  IDENTIFIER ct2.globalStep
+  IDENTIFIER ct2.id
+
+FOR (ct2:CashIn:Transaction)-[to:TO]->(m:Merchant)
+  match: 149037 | tempo: 35204.54 ms, peak 100099.6 KiB
+  IDENTIFIER ct2.amount
+  IDENTIFIER ct2.globalStep
+  IDENTIFIER ct2.id
+
+FOR (ct:CashIn:Transaction)-[n:NEXT]->(ct2:CashIn:Transaction)-[to:TO]->(m:Merchant)
+  match: 87715 | tempo: 34991.62 ms, peak 111572.6 KiB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+  IDENTIFIER ct2.amount
+  IDENTIFIER ct2.globalStep
+  IDENTIFIER ct2.id
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 22
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 150.00s
+memoria massima totale: 111572.6 KiB
+------------------------------------------------------------------------

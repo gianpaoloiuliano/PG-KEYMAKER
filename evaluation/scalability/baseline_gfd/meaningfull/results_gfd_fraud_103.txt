@@ -1,0 +1,156 @@
+filters: t1.step <= t2.step AND count(DISTINCT mule) > 1 PER victim
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (victim:Client)
+  match: 1656 | tempo: 3537.42 ms, peak 580.1 KiB
+  IDENTIFIER victim.id
+
+FOR (t1:Transfer)
+  match: 19460 | tempo: 1992.43 ms, peak 8494.2 KiB
+  IDENTIFIER t1.globalStep
+  IDENTIFIER t1.id
+  IDENTIFIER t1.amount, t1.ts
+  IDENTIFIER t1.amount, t1.step
+
+FOR (mule:Client)
+  match: 2433 | tempo: 292.62 ms, peak 2552.7 KiB
+  IDENTIFIER mule.id
+
+FOR (t2:CashOut)
+  match: 76023 | tempo: 6593.25 ms, peak 32023.4 KiB
+  IDENTIFIER t2.amount
+  IDENTIFIER t2.globalStep
+  IDENTIFIER t2.id
+
+FOR (m:Merchant)
+  match: 347 | tempo: 157.29 ms, peak 7040.6 KiB
+  IDENTIFIER m.id
+
+FOR (victim:Client)-[perf1:PERFORMED]->(t1:Transfer)
+  match: 18936 | tempo: 2430.34 ms, peak 11172.6 KiB
+  IDENTIFIER t1.globalStep
+  IDENTIFIER t1.id
+  IDENTIFIER t1.amount, t1.ts
+  IDENTIFIER t1.amount, t1.step
+
+FOR (t1:Transfer)-[to1:TO]->(mule:Client)
+  match: 19460 | tempo: 2543.99 ms, peak 15529.9 KiB
+  IDENTIFIER t1.globalStep
+  IDENTIFIER t1.id
+  IDENTIFIER t1.amount, t1.ts
+  IDENTIFIER t1.amount, t1.step
+
+FOR (mule:Client)-[perf2:PERFORMED]->(t2:CashOut)
+  match: 76023 | tempo: 10760.56 ms, peak 48287.9 KiB
+  IDENTIFIER t2.amount
+  IDENTIFIER t2.globalStep
+  IDENTIFIER t2.id
+
+FOR (t2:CashOut)-[to2:TO]->(m:Merchant)
+  match: 76023 | tempo: 9197.76 ms, peak 59736.7 KiB
+  IDENTIFIER t2.amount
+  IDENTIFIER t2.globalStep
+  IDENTIFIER t2.id
+
+FOR (victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)
+  match: 18936 | tempo: 3257.49 ms, peak 31148.9 KiB
+  IDENTIFIER t1.globalStep
+  IDENTIFIER t1.id
+  IDENTIFIER t1.amount, t1.step
+  IDENTIFIER t1.amount, t1.ts
+  IDENTIFIER mule.name, t1.ts, victim.name
+  IDENTIFIER mule.id, t1.step, victim.name
+  IDENTIFIER mule.name, t1.step, victim.id
+  IDENTIFIER mule.name, t1.step, victim.name
+  IDENTIFIER mule.name, t1.ts, victim.id
+  IDENTIFIER mule.id, t1.step, victim.id
+  IDENTIFIER mule.id, t1.ts, victim.name
+  IDENTIFIER mule.id, t1.ts, victim.id
+
+FOR (t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)
+  match: 337626 | tempo: 397583.69 ms, peak 324216.5 KiB
+  IDENTIFIER t1.amount, t2.globalStep
+  IDENTIFIER t1.id, t2.amount
+  IDENTIFIER t1.globalStep, t2.amount
+  IDENTIFIER t1.globalStep, t2.globalStep
+  IDENTIFIER t1.id, t2.id
+  IDENTIFIER t1.id, t2.globalStep
+  IDENTIFIER t1.amount, t2.amount
+  IDENTIFIER t1.globalStep, t2.id
+  IDENTIFIER t1.amount, t2.id
+
+FOR (mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant)
+  match: 76023 | tempo: 12973.22 ms, peak 163119.4 KiB
+  IDENTIFIER t2.amount
+  IDENTIFIER t2.globalStep
+  IDENTIFIER t2.id
+
+FOR (victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)
+  match: 334450 | tempo: 1617907.33 ms, peak 397034.7 KiB
+  IDENTIFIER t1.amount, t2.globalStep
+  IDENTIFIER t1.id, t2.amount
+  IDENTIFIER t1.globalStep, t2.amount
+  IDENTIFIER t1.globalStep, t2.globalStep
+  IDENTIFIER t1.id, t2.id
+  IDENTIFIER t1.id, t2.globalStep
+  IDENTIFIER t1.amount, t2.amount
+  IDENTIFIER t1.globalStep, t2.id
+  IDENTIFIER t1.amount, t2.id
+  IDENTIFIER t1.ts, t2.amount, victim.name
+  IDENTIFIER t1.ts, t2.amount, victim.id
+  IDENTIFIER t1.step, t2.amount, victim.id
+  IDENTIFIER t1.step, t2.globalStep, victim.name
+  IDENTIFIER t1.ts, t2.id, victim.id
+  IDENTIFIER t1.ts, t2.id, victim.name
+  IDENTIFIER t1.ts, t2.globalStep, victim.id
+  IDENTIFIER t1.ts, t2.globalStep, victim.name
+  IDENTIFIER t1.step, t2.amount, victim.name
+  IDENTIFIER t1.step, t2.id, victim.id
+  IDENTIFIER t1.step, t2.id, victim.name
+  IDENTIFIER t1.step, t2.globalStep, victim.id
+
+FOR (t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant)
+  match: 337626 | tempo: 2439165.94 ms, peak 515231.0 KiB
+  IDENTIFIER t1.amount, t2.globalStep
+  IDENTIFIER t1.id, t2.amount
+  IDENTIFIER t1.globalStep, t2.amount
+  IDENTIFIER t1.globalStep, t2.globalStep
+  IDENTIFIER t1.id, t2.id
+  IDENTIFIER t1.id, t2.globalStep
+  IDENTIFIER t1.amount, t2.amount
+  IDENTIFIER t1.globalStep, t2.id
+  IDENTIFIER t1.amount, t2.id
+
+FOR (victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant)
+  match: 334450 | tempo: 9651537.94 ms, peak 588429.7 KiB
+  IDENTIFIER t1.amount, t2.globalStep
+  IDENTIFIER t1.id, t2.amount
+  IDENTIFIER t1.globalStep, t2.amount
+  IDENTIFIER t1.globalStep, t2.globalStep
+  IDENTIFIER t1.id, t2.id
+  IDENTIFIER t1.id, t2.globalStep
+  IDENTIFIER t1.amount, t2.amount
+  IDENTIFIER t1.globalStep, t2.id
+  IDENTIFIER t1.amount, t2.id
+  IDENTIFIER t1.ts, t2.amount, victim.name
+  IDENTIFIER t1.ts, t2.amount, victim.id
+  IDENTIFIER t1.step, t2.amount, victim.id
+  IDENTIFIER t1.step, t2.globalStep, victim.name
+  IDENTIFIER t1.ts, t2.id, victim.id
+  IDENTIFIER t1.ts, t2.id, victim.name
+  IDENTIFIER t1.ts, t2.globalStep, victim.id
+  IDENTIFIER t1.ts, t2.globalStep, victim.name
+  IDENTIFIER t1.step, t2.amount, victim.name
+  IDENTIFIER t1.step, t2.id, victim.id
+  IDENTIFIER t1.step, t2.id, victim.name
+  IDENTIFIER t1.step, t2.globalStep, victim.id
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 99
+Sotto-pattern esaminati: 15
+tempo d'esecuzione totale:: 14159.93s
+memoria massima totale: 588429.7 KiB
+------------------------------------------------------------------------

@@ -1,0 +1,65 @@
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (tt:Transfer:Transaction)
+  match: 19460 | tempo: 2666.64 ms, peak 1936.1 MB
+  IDENTIFIER tt.globalStep
+  IDENTIFIER tt.id
+  IDENTIFIER tt.amount, tt.step
+  IDENTIFIER tt.amount, tt.ts
+
+FOR (cl:Client)
+  match: 2433 | tempo: 64.06 ms, peak 1936.2 MB
+  IDENTIFIER cl.id
+
+FOR (tt2:Transfer:Transaction)
+  match: 19460 | tempo: 654.04 ms, peak 1936.2 MB
+  IDENTIFIER tt2.globalStep
+  IDENTIFIER tt2.id
+  IDENTIFIER tt2.amount, tt2.step
+  IDENTIFIER tt2.amount, tt2.ts
+
+FOR [to:TO]
+  match: 323489 | tempo: 18.82 ms, peak 1936.2 MB
+  no key found
+
+FOR [pf:PERFORMED]
+  match: 323489 | tempo: 9.63 ms, peak 1936.2 MB
+  no key found
+
+FOR (tt:Transfer:Transaction)-[to:TO]->(cl:Client)
+  match: 19460 | tempo: 1263.60 ms, peak 1936.2 MB
+  IDENTIFIER tt.globalStep
+  IDENTIFIER tt.id
+  IDENTIFIER tt.amount, tt.step
+  IDENTIFIER tt.amount, tt.ts
+
+FOR (cl:Client)-[pf:PERFORMED]->(tt2:Transfer:Transaction)
+  match: 19460 | tempo: 1181.08 ms, peak 1927.5 MB
+  IDENTIFIER tt2.globalStep
+  IDENTIFIER tt2.id
+  IDENTIFIER tt2.amount, tt2.step
+  IDENTIFIER tt2.amount, tt2.ts
+
+FOR (tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(tt2:Transfer:Transaction)
+  match: 170166 | tempo: 601424.32 ms, peak 3827.1 MB
+  IDENTIFIER tt.amount, tt2.globalStep
+  IDENTIFIER tt.amount, tt2.id
+  IDENTIFIER tt.globalStep, tt2.globalStep
+  IDENTIFIER tt.globalStep, tt2.id
+  IDENTIFIER tt.id, tt2.globalStep
+  IDENTIFIER tt.id, tt2.id
+  IDENTIFIER tt.amount, tt2.amount, tt2.step
+  IDENTIFIER tt.amount, tt2.amount, tt2.ts
+  IDENTIFIER tt.globalStep, tt2.amount, tt2.step
+  IDENTIFIER tt.globalStep, tt2.amount, tt2.ts
+  IDENTIFIER tt.id, tt2.amount, tt2.step
+  IDENTIFIER tt.id, tt2.amount, tt2.ts
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 29
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 607.28s
+memoria massima totale: 3827.10 MB
+------------------------------------------------------------------------

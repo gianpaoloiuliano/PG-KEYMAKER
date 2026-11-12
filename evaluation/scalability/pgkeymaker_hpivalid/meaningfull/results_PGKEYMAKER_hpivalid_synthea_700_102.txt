@@ -1,0 +1,19 @@
+filters: count(DISTINCT dr) >= 6 PER p
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug);[]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter);[]
+(p:Patient);[['p.firstName', 'p.city'], ['p.firstName', 'p.lastName'], ['p.lastName', 'p.marital', 'p.city'], ['p.lastName', 'p.race', 'p.city', 'p.deathDate'], ['p.id'], ['p.firstName', 'p.birthDate'], ['p.lastName', 'p.birthDate'], ['p.marital', 'p.deathDate', 'p.birthDate'], ['p.city', 'p.deathDate', 'p.birthDate'], ['p.SSN']]
+[has:HAS_ENCOUNTER];[]
+(en:Encounter);[]
+(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug);[]
+[hd:HAS_DRUG];[]
+(dr:Drug);[['dr.code']]
+
+execution time for tree and leaves: 21.16 s
+execution time for external keys: 78.53 s
+execution time for case 1: 0.00 s
+execution time for case 2: 93.54 s
+execution time for case 3: 10.99 s
+total execution time: 204.42 s
+Max memory used: 284.13 MB

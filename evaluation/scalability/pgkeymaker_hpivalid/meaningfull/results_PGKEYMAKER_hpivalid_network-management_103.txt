@@ -1,0 +1,19 @@
+filters: ra.zone = 1 AND count(se) > 1 PER m
+pattern;keys found
+
+(ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process);[['se.name', 'se.startTime'], ['se.startTime', 'se.pid']]
+(ra:Rack)-[h:HOLDS]-(m:Machine);[['m.name']]
+(ra:Rack);[['ra.rack'], ['ra.name']]
+[h:HOLDS];[]
+(m:Machine);[['m.name']]
+(m:Machine)-[r:RUNS]-(se:Service:Process);[['se.name', 'se.startTime'], ['se.startTime', 'se.pid']]
+[r:RUNS];[]
+(se:Service:Process);[['se.name', 'se.startTime'], ['se.startTime', 'se.pid']]
+
+execution time for tree and leaves: 2.76 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 1.16 s
+execution time for case 3: 0.00 s
+total execution time: 3.92 s
+Max memory used: 225.35 MB

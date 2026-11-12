@@ -1,0 +1,7 @@
+
+### PATTERN (se:Service:Process)-[i:INSTANCE]-(ss:Software:Service)-[v:VERSION]-(ver:Version)
+
+tempo d'esecuzione totale: 18.153 s
+internal keys discovery time: 9.616 s
+external keys discovery time: 0.000 s
+memoria massima totale: 153.79 MB

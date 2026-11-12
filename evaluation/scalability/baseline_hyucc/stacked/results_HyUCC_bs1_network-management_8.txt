@@ -1,0 +1,11 @@
+
+### PATTERN (m:Machine)-[r:RUNS]-(o:OS:Process)-[i:INSTANCE]-(ver:Version)
+(m:Machine)-[r:RUNS]-(o:OS:Process)-[i:INSTANCE]-(ver:Version) - INTERNAL_KEYS [['m.name'], ['o.startTime']]
+(o:OS:Process) - INTERNAL_KEYS [['o.startTime']]
+(m:Machine)-[r:RUNS]-(o:OS:Process) - INTERNAL_KEYS [['m.name'], ['o.startTime']]
+(o:OS:Process)-[i:INSTANCE]-(ver:Version) - INTERNAL_KEYS [['o.startTime']]
+
+tempo d'esecuzione totale: 8.178 s
+internal keys discovery time: 3.698 s
+external keys discovery time: 0.000 s
+memoria massima totale: 198.36 MB

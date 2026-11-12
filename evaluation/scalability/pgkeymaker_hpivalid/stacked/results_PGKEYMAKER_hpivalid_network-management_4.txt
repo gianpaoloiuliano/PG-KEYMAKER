@@ -1,0 +1,18 @@
+pattern;keys found
+
+(m:Machine)-[r:RUNS]-(a:Application:Process)-[dep:DEPENDS_ON]-(se:Service:Process);[['se.name', 'se.startTime'], ['se.startTime', 'se.pid']]
+(a:Application:Process)-[dep:DEPENDS_ON]-(se:Service:Process);[['se.name', 'se.startTime'], ['se.startTime', 'se.pid']]
+(a:Application:Process);[['a.startTime']]
+[dep:DEPENDS_ON];[]
+(se:Service:Process);[['se.name', 'se.startTime'], ['se.startTime', 'se.pid']]
+(m:Machine)-[r:RUNS]-(a:Application:Process);[['m.name'], ['a.startTime']]
+(m:Machine);[['m.name']]
+[r:RUNS];[]
+
+execution time for tree and leaves: 3.72 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 1.25 s
+execution time for case 3: 0.00 s
+total execution time: 3.98 s
+Max memory used: 228.50 MB

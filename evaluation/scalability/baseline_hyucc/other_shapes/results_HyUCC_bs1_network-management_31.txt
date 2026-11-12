@@ -1,0 +1,18 @@
+
+### PATTERN (n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port)
+(n2:Rack) - INTERNAL_KEYS [['n2.name'], ['n2.rack', 'n2.zone']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack) - INTERNAL_KEYS [['n2.name'], ['n2.rack', 'n2.zone']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine) - INTERNAL_KEYS [['n3.name']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface) - INTERNAL_KEYS [['n3.name'], ['n4.ip']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port) - INTERNAL_KEYS [['n3.name', 'n5.port'], ['n4.ip', 'n5.port']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine) - INTERNAL_KEYS [['n3.name']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface) - INTERNAL_KEYS [['n3.name'], ['n4.ip']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port) - INTERNAL_KEYS [['n3.name', 'n5.port'], ['n4.ip', 'n5.port']]
+(n3:Machine)-[rel3:ROUTES]->(n4:Interface) - INTERNAL_KEYS [['n3.name'], ['n4.ip']]
+(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port) - INTERNAL_KEYS [['n3.name', 'n5.port'], ['n4.ip', 'n5.port']]
+(n4:Interface)-[rel4:EXPOSES]->(n5:Port) - INTERNAL_KEYS [['n4.ip', 'n5.port']]
+
+tempo d'esecuzione totale: 34.501 s
+internal keys discovery time: 27.168 s
+external keys discovery time: 0.000 s
+memoria massima totale: 288.19 MB

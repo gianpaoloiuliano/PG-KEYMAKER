@@ -1,0 +1,10 @@
+
+### PATTERN (m:Machine)-[r:ROUTES]-(i:Interface)-[e:EXPOSES]-(p:Port)
+(m:Machine)-[r:ROUTES]-(i:Interface) - INTERNAL_KEYS [['i.ip'], ['m.name']]
+(i:Interface)-[e:EXPOSES]-(p:Port) - INTERNAL_KEYS [['i.ip', 'p.port']]
+(m:Machine)-[r:ROUTES]-(i:Interface)-[e:EXPOSES]-(p:Port) - INTERNAL_KEYS [['i.ip', 'p.port'], ['m.name', 'p.port']]
+
+tempo d'esecuzione totale: 14.907 s
+internal keys discovery time: 7.982 s
+external keys discovery time: 0.000 s
+memoria massima totale: 222.08 MB

@@ -1,0 +1,18 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]-(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['en.coveredAmount', 'en.end', 'pro.code'], ['en.id', 'pro.code'], ['en.coveredAmount', 'en.end', 'pro.description'], ['en.id', 'pro.description']]
+(en:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['en.coveredAmount', 'en.end', 'pro.code'], ['en.id', 'pro.code'], ['en.coveredAmount', 'en.end', 'pro.description'], ['en.id', 'pro.description']]
+(en:Encounter);[]
+[hasp:HAS_PROCEDURE];[]
+(pro:Procedure);[['pro.code'], ['pro.description']]
+(p:Patient)-[has:HAS_ENCOUNTER]-(en:Encounter);[]
+(p:Patient);[['p.firstName', 'p.lastName'], ['p.lastName', 'p.marital', 'p.city'], ['p.lastName', 'p.gender', 'p.race', 'p.city'], ['p.lastName', 'p.race', 'p.city', 'p.deathDate'], ['p.id'], ['p.firstName', 'p.birthDate'], ['p.lastName', 'p.birthDate'], ['p.city', 'p.deathDate', 'p.birthDate'], ['p.SSN']]
+[has:HAS_ENCOUNTER];[]
+
+execution time for tree and leaves: 23.20 s
+execution time for external keys: 48.12 s
+execution time for case 1: 0.00 s
+execution time for case 2: 38.87 s
+execution time for case 3: 7.16 s
+total execution time: 117.42 s
+Max memory used: 171.44 MB

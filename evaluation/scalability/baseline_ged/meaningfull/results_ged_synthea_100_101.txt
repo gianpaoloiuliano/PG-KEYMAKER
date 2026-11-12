@@ -1,0 +1,65 @@
+filters: c1 <> c2 AND count(DISTINCT c1) >= 30 PER c2
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (c1:Condition)
+  match: 185 | tempo: 2652.37 ms, peak 137.5 MB
+  IDENTIFIER c1.code
+  IDENTIFIER c1.description
+
+FOR (en:Encounter)
+  match: 18276 | tempo: 2684.44 ms, peak 158.2 MB
+  IDENTIFIER en.code, en.date, en.id
+
+FOR (c2:Condition)
+  match: 4 | tempo: 693.56 ms, peak 158.2 MB
+  IDENTIFIER c2.code
+  IDENTIFIER c2.description
+  IDENTIFIER c2.num
+
+FOR [hc1:HAS_CONDITION]
+  match: 8558 | tempo: 206.52 ms, peak 154.8 MB
+  no key found
+
+FOR [hc2:HAS_CONDITION]
+  match: 8558 | tempo: 70.74 ms, peak 154.8 MB
+  no key found
+
+FOR (c1:Condition)<-[hc1:HAS_CONDITION]-(en:Encounter)
+  match: 8558 | tempo: 2556.91 ms, peak 159.9 MB
+  IDENTIFIER c1.code, en.date, en.id
+  IDENTIFIER c1.code, en.id, en.isEnd
+  IDENTIFIER c1.description, en.date, en.id
+  IDENTIFIER c1.description, en.id, en.isEnd
+
+FOR (en:Encounter)-[hc2:HAS_CONDITION]->(c2:Condition)
+  match: 4269 | tempo: 1234.42 ms, peak 156.1 MB
+  IDENTIFIER c2.code, en.date, en.id
+  IDENTIFIER c2.code, en.id, en.isEnd
+  IDENTIFIER c2.description, en.date, en.id
+  IDENTIFIER c2.description, en.id, en.isEnd
+  IDENTIFIER c2.num, en.date, en.id
+  IDENTIFIER c2.num, en.id, en.isEnd
+
+FOR (c1:Condition)<-[hc1:HAS_CONDITION]-(en:Encounter)-[hc2:HAS_CONDITION]->(c2:Condition)
+  match: 2885 | tempo: 3384.71 ms, peak 171.4 MB
+  IDENTIFIER c1.code, c2.code, en.date, en.id
+  IDENTIFIER c1.code, c2.code, en.id, en.isEnd
+  IDENTIFIER c1.code, c2.description, en.date, en.id
+  IDENTIFIER c1.code, c2.description, en.id, en.isEnd
+  IDENTIFIER c1.code, c2.num, en.date, en.id
+  IDENTIFIER c1.code, c2.num, en.id, en.isEnd
+  IDENTIFIER c1.description, c2.code, en.date, en.id
+  IDENTIFIER c1.description, c2.code, en.id, en.isEnd
+  IDENTIFIER c1.description, c2.description, en.date, en.id
+  IDENTIFIER c1.description, c2.description, en.id, en.isEnd
+  IDENTIFIER c1.description, c2.num, en.date, en.id
+  IDENTIFIER c1.description, c2.num, en.id, en.isEnd
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 28
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 13.48s
+memoria massima totale: 171.36 MB
+------------------------------------------------------------------------

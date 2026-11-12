@@ -1,0 +1,10 @@
+
+### PATTERN (ct:CashIn:Transaction)-[n:NEXT]->(ct:CashIn:Transaction)-[to:TO]->(m:Merchant)
+(ct:CashIn:Transaction) - INTERNAL_KEYS [['ct.globalStep'], ['ct.amount'], ['ct.id']]
+(m:Merchant) - INTERNAL_KEYS [['m.id']]
+(ct:CashIn:Transaction)-[to:TO]->(m:Merchant) - INTERNAL_KEYS [['ct.globalStep'], ['ct.amount'], ['ct.id']]
+
+tempo d'esecuzione totale: 71.448 s
+internal keys discovery time: 71.448 s
+external keys discovery time: 0.000 s
+memoria massima totale: 625.20 MB

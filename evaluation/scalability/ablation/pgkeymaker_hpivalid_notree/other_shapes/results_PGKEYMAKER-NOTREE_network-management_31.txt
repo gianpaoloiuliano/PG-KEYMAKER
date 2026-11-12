@@ -1,0 +1,23 @@
+pattern;keys found
+
+(r:Rack)-[h:HOLDS]->(ma:Machine)-[ro:ROUTES]->(in:Interface)-[exp:EXPOSES]->(po:Port);[['in.ip', 'po.port']]
+(r:Rack)-[h:HOLDS]->(ma:Machine);[['ma.name']]
+(r:Rack);[['r.rack', 'r.zone'], ['r.name']]
+[h:HOLDS];[]
+(ma:Machine);[['ma.name']]
+(r:Rack)-[h:HOLDS]->(ma:Machine)-[ro:ROUTES]->(in:Interface);[['ma.name'], ['in.ip']]
+(ma:Machine)-[ro:ROUTES]->(in:Interface);[['ma.name'], ['in.ip']]
+[ro:ROUTES];[]
+(in:Interface);[['in.ip']]
+(ma:Machine)-[ro:ROUTES]->(in:Interface)-[exp:EXPOSES]->(po:Port);[['in.ip', 'po.port']]
+(in:Interface)-[exp:EXPOSES]->(po:Port);[['in.ip', 'po.port']]
+[exp:EXPOSES];[]
+(po:Port);[]
+
+execution time for tree and leaves: 11.30 s
+execution time for external keys: 4.98 s
+execution time for case 1: 0.00 s
+execution time for case 2: 5.23 s
+execution time for case 3: 0.11 s
+total execution time: 21.62 s
+Max memory used: 172.53 MB

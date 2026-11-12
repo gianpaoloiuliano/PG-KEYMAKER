@@ -1,0 +1,103 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (cl:Client)
+  match: 2433 | tempo: 3022.80 ms, peak 781.5 KiB
+  IDENTIFIER cl.id
+
+FOR (tt2:Transfer:Transaction)
+  match: 19460 | tempo: 2277.89 ms, peak 8590.7 KiB
+  IDENTIFIER tt2.globalStep
+  IDENTIFIER tt2.id
+  IDENTIFIER tt2.amount, tt2.ts
+  IDENTIFIER tt2.amount, tt2.step
+
+FOR (cl2:Client)
+  match: 2433 | tempo: 241.62 ms, peak 2529.0 KiB
+  IDENTIFIER cl2.id
+
+FOR (ct:CashIn:Transaction)
+  match: 149037 | tempo: 12152.58 ms, peak 61757.6 KiB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (cl:Client)-[pf:PERFORMED]->(tt2:Transfer:Transaction)
+  match: 19460 | tempo: 2295.49 ms, peak 24668.3 KiB
+  IDENTIFIER tt2.globalStep
+  IDENTIFIER tt2.id
+  IDENTIFIER tt2.amount, tt2.ts
+  IDENTIFIER tt2.amount, tt2.step
+
+FOR (tt2:Transfer:Transaction)-[to:TO]->(cl2:Client)
+  match: 19460 | tempo: 2192.09 ms, peak 15618.9 KiB
+  IDENTIFIER tt2.globalStep
+  IDENTIFIER tt2.id
+  IDENTIFIER tt2.amount, tt2.ts
+  IDENTIFIER tt2.amount, tt2.step
+
+FOR (cl2:Client)-[pf2:PERFORMED]->(ct:CashIn:Transaction)
+  match: 149037 | tempo: 15490.86 ms, peak 89942.8 KiB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (cl:Client)-[pf:PERFORMED]->(tt2:Transfer:Transaction)-[to:TO]->(cl2:Client)
+  match: 19460 | tempo: 3584.62 ms, peak 47728.3 KiB
+  IDENTIFIER tt2.globalStep
+  IDENTIFIER tt2.id
+  IDENTIFIER tt2.amount, tt2.ts
+  IDENTIFIER tt2.amount, tt2.step
+  IDENTIFIER cl.name, cl2.id, tt2.ts
+  IDENTIFIER cl.id, cl2.name, tt2.ts
+  IDENTIFIER cl.id, cl2.name, tt2.step
+  IDENTIFIER cl.name, cl2.id, tt2.step
+  IDENTIFIER cl.id, cl2.id, tt2.step
+  IDENTIFIER cl.name, cl2.name, tt2.step
+  IDENTIFIER cl.name, cl2.name, tt2.ts
+  IDENTIFIER cl.id, cl2.id, tt2.ts
+
+FOR (tt2:Transfer:Transaction)-[to:TO]->(cl2:Client)-[pf2:PERFORMED]->(ct:CashIn:Transaction)
+  match: 1267493 | tempo: 1970108.92 ms, peak 1193870.3 KiB
+  IDENTIFIER ct.amount, tt2.globalStep
+  IDENTIFIER ct.id, tt2.globalStep
+  IDENTIFIER ct.globalStep, tt2.amount
+  IDENTIFIER ct.globalStep, tt2.id
+  IDENTIFIER ct.id, tt2.amount
+  IDENTIFIER ct.amount, tt2.id
+  IDENTIFIER ct.amount, tt2.amount
+  IDENTIFIER ct.id, tt2.id
+  IDENTIFIER ct.globalStep, tt2.globalStep
+
+FOR (cl:Client)-[pf:PERFORMED]->(tt2:Transfer:Transaction)-[to:TO]->(cl2:Client)-[pf2:PERFORMED]->(ct:CashIn:Transaction)
+  match: 1267493 | tempo: 8730983.45 ms, peak 1785795.4 KiB
+  IDENTIFIER ct.amount, tt2.globalStep
+  IDENTIFIER ct.id, tt2.globalStep
+  IDENTIFIER ct.globalStep, tt2.amount
+  IDENTIFIER ct.globalStep, tt2.id
+  IDENTIFIER ct.id, tt2.amount
+  IDENTIFIER ct.amount, tt2.id
+  IDENTIFIER ct.amount, tt2.amount
+  IDENTIFIER ct.id, tt2.id
+  IDENTIFIER ct.globalStep, tt2.globalStep
+  IDENTIFIER cl.id, ct.amount, tt2.ts
+  IDENTIFIER cl.id, ct.id, tt2.step
+  IDENTIFIER cl.name, ct.id, tt2.step
+  IDENTIFIER cl.name, ct.globalStep, tt2.step
+  IDENTIFIER cl.id, ct.globalStep, tt2.ts
+  IDENTIFIER cl.id, ct.globalStep, tt2.step
+  IDENTIFIER cl.name, ct.amount, tt2.step
+  IDENTIFIER cl.name, ct.globalStep, tt2.ts
+  IDENTIFIER cl.id, ct.id, tt2.ts
+  IDENTIFIER cl.id, ct.amount, tt2.step
+  IDENTIFIER cl.name, ct.amount, tt2.ts
+  IDENTIFIER cl.name, ct.id, tt2.ts
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 62
+Sotto-pattern esaminati: 10
+tempo d'esecuzione totale:: 10742.35s
+memoria massima totale: 1785795.4 KiB
+------------------------------------------------------------------------

@@ -1,0 +1,8 @@
+
+### PATTERN (account:Account)-[edge1:Transfer]->(other:Account)<-[edge2:SignIn]-(medium:Medium {isBlocked: true})
+### FILTERS datetime('2021-01-01T00:00:00Z') < edge1.createTime < datetime('2022-01-01T00:00:00Z') AND datetime('2021-01-01T00:00:00Z') < edge2.createTime < datetime('2022-01-01T00:00:00Z')
+
+tempo d'esecuzione totale: 11.477 s
+internal keys discovery time: 11.477 s
+external keys discovery time: 0.000 s
+memoria massima totale: 232.32 MB

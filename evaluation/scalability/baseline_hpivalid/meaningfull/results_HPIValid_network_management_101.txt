@@ -1,0 +1,8 @@
+
+### PATTERN (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(a:Application:Process)
+### FILTERS a.name = 'crm' AND count(m) > 40 PER ra
+
+tempo d'esecuzione totale: 13.609 s
+internal keys discovery time: 9.953 s
+external keys discovery time: 0.000 s
+memoria massima totale: 178.81 MB

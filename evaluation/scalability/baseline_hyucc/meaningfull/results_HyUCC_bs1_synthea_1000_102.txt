@@ -1,0 +1,10 @@
+
+### PATTERN (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug)
+### FILTERS count(DISTINCT dr) >= 6 PER p
+(p:Patient) - INTERNAL_KEYS [['p.id'], ['p.SSN'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.lastName', 'p.city'], ['p.firstName', 'p.lastName', 'p.deathDate'], ['p.firstName', 'p.lastName', 'p.marital'], ['p.firstName', 'p.marital', 'p.city'], ['p.lastName', 'p.city', 'p.birthDate'], ['p.lastName', 'p.marital', 'p.birthDate'], ['p.lastName', 'p.gender', 'p.birthDate'], ['p.city', 'p.deathDate', 'p.birthDate'], ['p.lastName', 'p.marital', 'p.race', 'p.city'], ['p.lastName', 'p.gender', 'p.race', 'p.city'], ['p.lastName', 'p.marital', 'p.ethnicity', 'p.city'], ['p.lastName', 'p.gender', 'p.ethnicity', 'p.city']]
+(dr:Drug) - INTERNAL_KEYS [['dr.code']]
+
+tempo d'esecuzione totale: 532.310 s
+internal keys discovery time: 92.389 s
+external keys discovery time: 423.450 s
+memoria massima totale: 857.82 MB

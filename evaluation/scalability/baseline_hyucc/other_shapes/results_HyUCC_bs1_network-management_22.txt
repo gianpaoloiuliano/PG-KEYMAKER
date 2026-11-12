@@ -1,0 +1,15 @@
+
+### PATTERN (r:Rack)-[h:HOLDS]->(ma:Machine)-[ru:RUNS]->(sp:Service:Process)-[li:LISTENS]->(po:Port)
+(r:Rack) - INTERNAL_KEYS [['r.name'], ['r.rack', 'r.zone']]
+(sp:Service:Process) - INTERNAL_KEYS [['sp.startTime', 'sp.pid'], ['sp.name', 'sp.startTime']]
+(r:Rack)-[h:HOLDS]->(ma:Machine) - INTERNAL_KEYS [['ma.name']]
+(r:Rack)-[h:HOLDS]->(ma:Machine)-[ru:RUNS]->(sp:Service:Process) - INTERNAL_KEYS [['ma.name', 'sp.startTime'], ['sp.startTime', 'sp.pid'], ['r.name', 'sp.startTime'], ['sp.name', 'sp.startTime'], ['r.zone', 'sp.startTime'], ['ma.name', 'sp.pid'], ['ma.name', 'sp.name']]
+(r:Rack)-[h:HOLDS]->(ma:Machine)-[ru:RUNS]->(sp:Service:Process)-[li:LISTENS]->(po:Port) - INTERNAL_KEYS [['po.port', 'sp.startTime'], ['ma.name', 'po.port']]
+(ma:Machine)-[ru:RUNS]->(sp:Service:Process) - INTERNAL_KEYS [['ma.name', 'sp.startTime'], ['sp.startTime', 'sp.pid'], ['sp.name', 'sp.startTime'], ['ma.name', 'sp.pid'], ['ma.name', 'sp.name']]
+(ma:Machine)-[ru:RUNS]->(sp:Service:Process)-[li:LISTENS]->(po:Port) - INTERNAL_KEYS [['po.port', 'sp.startTime'], ['ma.name', 'po.port']]
+(sp:Service:Process)-[li:LISTENS]->(po:Port) - INTERNAL_KEYS [['po.port', 'sp.startTime']]
+
+tempo d'esecuzione totale: 22.244 s
+internal keys discovery time: 14.991 s
+external keys discovery time: 0.000 s
+memoria massima totale: 256.61 MB

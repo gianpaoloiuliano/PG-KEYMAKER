@@ -1,0 +1,13 @@
+
+### PATTERN (ln:Loan)-[dep:Deposit]-(a:Account)-[wd:Withdraw]-(a2:Account)
+(a:Account)-[wd:Withdraw]-(a2:Account) - INTERNAL_KEYS [['a.accountId', 'wd.createTime'], ['a.lastLoginTime', 'wd.createTime'], ['wd.createTime', 'a.createTime'], ['wd.createTime', 'a2.accountId'], ['a2.lastLoginTime', 'wd.createTime'], ['a2.createTime', 'wd.createTime'], ['wd.createTime', 'a.phonenum'], ['a2.phonenum', 'wd.createTime'], ['wd.createTime', 'a.nickname', 'a.email'], ['a2.email', 'wd.createTime', 'a.nickname'], ['wd.createTime', 'a.freqLoginType', 'a.nickname'], ['a2.freqLoginType', 'wd.createTime', 'a.nickname'], ['wd.createTime', 'a.isBlocked', 'a.nickname'], ['a2.isBlocked', 'wd.createTime', 'a.nickname'], ['a2.nickname', 'wd.createTime', 'a.email'], ['a2.nickname', 'a2.email', 'wd.createTime'], ['a2.nickname', 'wd.createTime', 'a.freqLoginType'], ['a2.freqLoginType', 'a2.nickname', 'wd.createTime'], ['a2.nickname', 'wd.createTime', 'a.isBlocked'], ['a2.isBlocked', 'a2.nickname', 'wd.createTime'], ['a.accountId', 'wd.amount'], ['a.lastLoginTime', 'wd.amount'], ['wd.amount', 'a.createTime'], ['wd.amount', 'a2.accountId'], ['a2.lastLoginTime', 'wd.amount'], ['a2.createTime', 'wd.amount'], ['wd.amount', 'a.phonenum'], ['a2.phonenum', 'wd.amount'], ['wd.amount', 'a.nickname', 'a.email'], ['a2.email', 'wd.amount', 'a.nickname'], ['wd.amount', 'a.freqLoginType', 'a.nickname'], ['a2.freqLoginType', 'wd.amount', 'a.nickname'], ['wd.amount', 'a.isBlocked', 'a.nickname'], ['a2.isBlocked', 'wd.amount', 'a.nickname'], ['a2.nickname', 'wd.amount', 'a.email'], ['a2.nickname', 'a2.email', 'wd.amount'], ['a2.nickname', 'wd.amount', 'a.freqLoginType'], ['a2.freqLoginType', 'a2.nickname', 'wd.amount'], ['a2.nickname', 'wd.amount', 'a.isBlocked'], ['a2.isBlocked', 'a2.nickname', 'wd.amount']]
+(a2:Account) - INTERNAL_KEYS [['a2.accountId'], ['a2.lastLoginTime'], ['a2.createTime']]
+(ln:Loan)-[dep:Deposit]-(a:Account)-[wd:Withdraw]-(a2:Account) - INTERNAL_KEYS [['dep.amount', 'wd.createTime'], ['dep.createTime', 'wd.createTime'], ['dep.amount', 'wd.amount'], ['dep.createTime', 'wd.amount']]
+(ln:Loan) - INTERNAL_KEYS [['ln.createTime'], ['ln.loanId']]
+(a:Account) - INTERNAL_KEYS [['a.accountId'], ['a.lastLoginTime'], ['a.createTime']]
+(ln:Loan)-[dep:Deposit]-(a:Account) - INTERNAL_KEYS [['dep.amount'], ['dep.createTime']]
+
+tempo d'esecuzione totale: 276.423 s
+internal keys discovery time: 276.416 s
+external keys discovery time: 0.000 s
+memoria massima totale: 1491.38 MB

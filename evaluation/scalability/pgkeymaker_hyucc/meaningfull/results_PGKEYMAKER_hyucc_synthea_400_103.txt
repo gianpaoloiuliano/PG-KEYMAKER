@@ -1,0 +1,19 @@
+filters: count(DISTINCT c) >= 19 PER p
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hc:HAS_CONDITION]->(c:Condition);[['en.date', 'c.code', 'en.id'], ['en.date', 'c.description', 'en.id'], ['c.code', 'en.id', 'en.isEnd'], ['c.description', 'en.id', 'en.isEnd']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter);[]
+(p:Patient);[['p.id'], ['p.SSN'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.marital', 'p.city'], ['p.lastName', 'p.birthDate'], ['p.lastName', 'p.city', 'p.deathDate'], ['p.lastName', 'p.marital', 'p.city'], ['p.lastName', 'p.gender', 'p.city'], ['p.deathDate', 'p.birthDate']]
+[has:HAS_ENCOUNTER];[]
+(en:Encounter);[]
+(en:Encounter)-[hc:HAS_CONDITION]->(c:Condition);[['en.date', 'c.code', 'en.id'], ['en.date', 'c.description', 'en.id'], ['c.code', 'en.end', 'en.id'], ['c.description', 'en.end', 'en.id'], ['c.code', 'en.coveredAmount', 'en.id'], ['c.description', 'en.coveredAmount', 'en.id'], ['c.code', 'en.claimCost', 'en.id'], ['c.description', 'en.claimCost', 'en.id'], ['c.code', 'en.description', 'en.id'], ['c.code', 'en.id', 'en.class'], ['en.baseCost', 'c.code', 'en.id'], ['c.code', 'en.id', 'en.isEnd'], ['c.description', 'en.description', 'en.id'], ['c.description', 'en.id', 'en.class'], ['en.baseCost', 'c.description', 'en.id'], ['c.description', 'en.id', 'en.isEnd']]
+[hc:HAS_CONDITION];[]
+(c:Condition);[['c.code'], ['c.description']]
+
+execution time for tree and leaves: 11.85 s
+execution time for external keys: 117.16 s
+execution time for case 1: 0.00 s
+execution time for case 2: 22.30 s
+execution time for case 3: 2.16 s
+total execution time: 153.51 s
+Max memory used: 378.36 MB

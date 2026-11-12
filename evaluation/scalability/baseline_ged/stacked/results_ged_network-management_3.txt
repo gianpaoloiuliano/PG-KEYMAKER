@@ -1,0 +1,48 @@
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (m:Machine)
+  match: 8000 | tempo: 2199.27 ms, peak 151.4 MB
+  IDENTIFIER m.name
+
+FOR (se:Service:Process)
+  match: 14430 | tempo: 384.92 ms, peak 152.6 MB
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+FOR (p:Port)
+  match: 37238 | tempo: 688.04 ms, peak 154.3 MB
+  no key found
+
+FOR [r:RUNS]
+  match: 30430 | tempo: 174.56 ms, peak 154.3 MB
+  no key found
+
+FOR [l:LISTENS]
+  match: 37238 | tempo: 59.08 ms, peak 149.5 MB
+  no key found
+
+FOR (m:Machine)-[r:RUNS]-(se:Service:Process)
+  match: 14430 | tempo: 597.00 ms, peak 152.5 MB
+  IDENTIFIER m.name, se.name
+  IDENTIFIER m.name, se.pid
+  IDENTIFIER m.name, se.startTime
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+FOR (se:Service:Process)-[l:LISTENS]-(p:Port)
+  match: 26006 | tempo: 935.39 ms, peak 156.1 MB
+  IDENTIFIER p.port, se.startTime
+
+FOR (m:Machine)-[r:RUNS]-(se:Service:Process)-[l:LISTENS]-(p:Port)
+  match: 26006 | tempo: 1585.08 ms, peak 162.0 MB
+  IDENTIFIER m.name, p.port
+  IDENTIFIER p.port, se.startTime
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 11
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 6.62s
+memoria massima totale: 161.96 MB
+------------------------------------------------------------------------

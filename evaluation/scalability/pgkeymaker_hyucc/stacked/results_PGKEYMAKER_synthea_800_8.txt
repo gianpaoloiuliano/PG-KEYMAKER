@@ -1,0 +1,19 @@
+pattern;keys found
+
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[he:HAS_END]-(en3:Encounter);[]
+(en2:Encounter)-[he:HAS_END]-(en3:Encounter);[]
+(en2:Encounter);[]
+[he:HAS_END];[]
+(en3:Encounter);[]
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter);[]
+(en1:Encounter);[]
+[nx:NEXT];[]
+
+execution time for tree and leaves: 27.63 s
+execution time for external keys: 300.82 s
+execution time for case 1: 0.00 s
+execution time for case 2: 194.25 s
+execution time for case 3: 22.38 s
+total execution time: 545.93 s
+Memory: 1170.53 MB
+Max memory used: 774.32 MB

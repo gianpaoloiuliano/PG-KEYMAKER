@@ -1,0 +1,38 @@
+filters: ver.name IN ['14.04', '7.1', '6-Squeeze'] AND count(m) > 500 PER ver
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (m:Machine)
+  match: 8000 | tempo: 2529.02 ms, peak 1623.0 KiB
+  IDENTIFIER m.name
+
+FOR (o:OS:Process)
+  match: 8000 | tempo: 628.50 ms, peak 2443.0 KiB
+  IDENTIFIER o.startTime
+
+FOR (ver:Version)
+  match: 3 | tempo: 308.82 ms, peak 561.7 KiB
+  IDENTIFIER ver.name
+
+FOR (m:Machine)-[r:RUNS]-(o:OS:Process)
+  match: 8000 | tempo: 636.41 ms, peak 2457.1 KiB
+  IDENTIFIER m.name
+  IDENTIFIER o.startTime
+
+FOR (o:OS:Process)-[i:INSTANCE]-(ver:Version)
+  match: 2444 | tempo: 480.30 ms, peak 1819.5 KiB
+  IDENTIFIER o.startTime
+
+FOR (m:Machine)-[r:RUNS]-(o:OS:Process)-[i:INSTANCE]-(ver:Version)
+  match: 2444 | tempo: 406.27 ms, peak 1319.5 KiB
+  IDENTIFIER m.name
+  IDENTIFIER o.startTime
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 8
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 4.99s
+memoria massima totale: 2457.1 KiB
+------------------------------------------------------------------------

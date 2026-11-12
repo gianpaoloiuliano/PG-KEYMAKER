@@ -1,0 +1,7 @@
+
+### PATTERN (p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter)-[nx:NEXT]-(en2:Encounter)
+
+tempo d'esecuzione totale: 535.438 s
+internal keys discovery time: 289.624 s
+external keys discovery time: 223.095 s
+memoria massima totale: 1522.36 MB

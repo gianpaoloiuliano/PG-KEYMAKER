@@ -1,0 +1,19 @@
+filters: a.name = 'crm' AND count(m) > 40 PER ra
+pattern;keys found
+
+(ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(a:Application:Process);[['m.name'], ['a.startTime']]
+(ra:Rack)-[h:HOLDS]-(m:Machine);[['m.name']]
+(ra:Rack);[['ra.name'], ['ra.rack', 'ra.zone']]
+[h:HOLDS];[]
+(m:Machine);[['m.name']]
+(m:Machine)-[r:RUNS]-(a:Application:Process);[['m.name'], ['a.startTime']]
+[r:RUNS];[]
+(a:Application:Process);[['a.startTime']]
+
+execution time for tree and leaves: 3.30 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 1.82 s
+execution time for case 3: 0.00 s
+total execution time: 5.12 s
+Max memory used: 172.10 MB

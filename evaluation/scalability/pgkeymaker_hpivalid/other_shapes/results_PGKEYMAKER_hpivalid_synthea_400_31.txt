@@ -1,0 +1,23 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[nxt:NEXT]->(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure);[['en1.coveredAmount', 'en1.end', 'pro.code'], ['en1.id', 'pro.code'], ['en1.coveredAmount', 'en1.end', 'pro.description'], ['en1.id', 'pro.description']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter);[]
+(p:Patient);[['p.firstName', 'p.lastName'], ['p.lastName', 'p.gender', 'p.race', 'p.city'], ['p.lastName', 'p.race', 'p.city', 'p.deathDate'], ['p.lastName', 'p.marital', 'p.city'], ['p.id'], ['p.firstName', 'p.birthDate'], ['p.lastName', 'p.birthDate'], ['p.city', 'p.deathDate', 'p.birthDate'], ['p.SSN']]
+[has:HAS_ENCOUNTER];[]
+(en:Encounter);[]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[nxt:NEXT]->(en1:Encounter);[['en.date', 'en.code', 'en.id', 'en1.id'], ['en.date', 'en.code', 'en.id', 'en1.date'], ['en.date', 'en.code', 'en.isEnd', 'en1.date', 'en1.id'], ['en.date', 'en.code', 'en.id', 'en1.code'], ['en.date', 'en.code', 'en1.code', 'en1.id'], ['en.code', 'en.id', 'en1.date', 'en1.code'], ['en.date', 'en.id', 'en1.date', 'en1.code', 'en1.isEnd'], ['en.date', 'en1.date', 'en1.code', 'en1.id', 'en1.isEnd'], ['en.code', 'en1.date', 'en1.code', 'en1.id']]
+(en:Encounter)-[nxt:NEXT]->(en1:Encounter);[['en.date', 'en.code', 'en.id', 'en1.id'], ['en.date', 'en.code', 'en.id', 'en1.date'], ['en.date', 'en.baseCost', 'en.code', 'en1.date', 'en1.id'], ['en.date', 'en.code', 'en.claimCost', 'en1.date', 'en1.id'], ['en.date', 'en.code', 'en.description', 'en1.date', 'en1.id'], ['en.date', 'en.code', 'en.coveredAmount', 'en1.date', 'en1.id'], ['en.date', 'en.code', 'en.end', 'en1.date', 'en1.id'], ['en.date', 'en.code', 'en.isEnd', 'en1.date', 'en1.id'], ['en.date', 'en.code', 'en.class', 'en1.date', 'en1.id'], ['en.date', 'en.code', 'en.id', 'en1.code'], ['en.date', 'en.code', 'en1.code', 'en1.id'], ['en.code', 'en.id', 'en1.date', 'en1.code'], ['en.date', 'en.id', 'en1.date', 'en1.baseCost', 'en1.code'], ['en.date', 'en.id', 'en1.date', 'en1.code', 'en1.claimCost'], ['en.date', 'en.id', 'en1.date', 'en1.code', 'en1.description'], ['en.date', 'en.id', 'en1.date', 'en1.code', 'en1.coveredAmount'], ['en.date', 'en.id', 'en1.date', 'en1.code', 'en1.end'], ['en.date', 'en.id', 'en1.date', 'en1.code', 'en1.isEnd'], ['en.date', 'en.id', 'en1.date', 'en1.code', 'en1.class'], ['en.date', 'en1.date', 'en1.baseCost', 'en1.code', 'en1.id'], ['en.date', 'en1.date', 'en1.code', 'en1.claimCost', 'en1.id'], ['en.date', 'en1.date', 'en1.code', 'en1.description', 'en1.id'], ['en.date', 'en1.date', 'en1.code', 'en1.coveredAmount', 'en1.id'], ['en.date', 'en1.date', 'en1.code', 'en1.end', 'en1.id'], ['en.date', 'en1.date', 'en1.code', 'en1.id', 'en1.isEnd'], ['en.date', 'en1.date', 'en1.code', 'en1.id', 'en1.class'], ['en.code', 'en1.date', 'en1.code', 'en1.id']]
+[nxt:NEXT];[]
+(en1:Encounter);[]
+(en:Encounter)-[nxt:NEXT]->(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure);[['en1.coveredAmount', 'en1.end', 'pro.code'], ['en1.id', 'pro.code'], ['en1.coveredAmount', 'en1.end', 'pro.description'], ['en1.id', 'pro.description']]
+(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure);[['en1.coveredAmount', 'en1.end', 'pro.code'], ['en1.id', 'pro.code'], ['en1.coveredAmount', 'en1.end', 'pro.description'], ['en1.id', 'pro.description']]
+[hasp:HAS_PROCEDURE];[]
+(pro:Procedure);[['pro.code'], ['pro.description']]
+
+execution time for tree and leaves: 18.00 s
+execution time for external keys: 34.40 s
+execution time for case 1: 0.00 s
+execution time for case 2: 67.18 s
+execution time for case 3: 5.26 s
+total execution time: 124.95 s
+Max memory used: 173.05 MB

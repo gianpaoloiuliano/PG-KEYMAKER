@@ -1,0 +1,58 @@
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (cl:Client)
+  match: 2433 | tempo: 2103.78 ms, peak 220.7 MB
+  IDENTIFIER cl.id
+
+FOR (ct:CashIn:Transaction)
+  match: 149037 | tempo: 3939.30 ms, peak 220.7 MB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (ct2:CashIn:Transaction)
+  match: 149037 | tempo: 3926.12 ms, peak 223.3 MB
+  IDENTIFIER ct2.amount
+  IDENTIFIER ct2.globalStep
+  IDENTIFIER ct2.id
+
+FOR [pf:PERFORMED]
+  match: 323489 | tempo: 18.24 ms, peak 209.3 MB
+  no key found
+
+FOR [n:NEXT]
+  match: 321157 | tempo: 16.07 ms, peak 188.6 MB
+  no key found
+
+FOR (cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction)
+  match: 149037 | tempo: 11366.42 ms, peak 313.7 MB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (ct:CashIn:Transaction)-[n:NEXT]->(ct2:CashIn:Transaction)
+  match: 87715 | tempo: 4202.43 ms, peak 247.2 MB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+  IDENTIFIER ct2.amount
+  IDENTIFIER ct2.globalStep
+  IDENTIFIER ct2.id
+
+FOR (cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction)-[n:NEXT]->(ct2:CashIn:Transaction)
+  match: 87715 | tempo: 37698.26 ms, peak 457.3 MB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+  IDENTIFIER ct2.amount
+  IDENTIFIER ct2.globalStep
+  IDENTIFIER ct2.id
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 22
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 63.27s
+memoria massima totale: 457.28 MB
+------------------------------------------------------------------------

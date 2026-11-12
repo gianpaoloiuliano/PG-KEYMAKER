@@ -1,0 +1,115 @@
+{
+  "compare": {
+    "by_level": {
+      "intermediate": {
+        "kept": 0,
+        "lost": 27,
+        "new": 3
+      },
+      "leaf": {
+        "kept": 3,
+        "lost": 9,
+        "new": 0
+      },
+      "root": {
+        "kept": 0,
+        "lost": 54,
+        "new": 4
+      }
+    },
+    "clean_csv": "results_PGKEYMAKER_hyucc_finbench_101.txt",
+    "dirty_csv": "results_PGKEYMAKER_hyucc_finbench_10perc_99.txt",
+    "kept": 3,
+    "lost": 90,
+    "new": 7,
+    "warnings": []
+  },
+  "database": "finbench_10perc",
+  "validate": {
+    "by_level": {
+      "intermediate": {
+        "total": 27,
+        "violated": 27
+      },
+      "leaf": {
+        "total": 12,
+        "violated": 9
+      },
+      "root": {
+        "total": 54,
+        "violated": 54
+      }
+    },
+    "clean_csv": "results_PGKEYMAKER_hyucc_finbench_101.txt",
+    "filters": "datetime('2021-01-01T00:00:00Z') < edge1.createTime < datetime('2022-01-01T00:00:00Z') AND datetime('2021-01-01T00:00:00Z') < edge2.createTime < datetime('2022-01-01T00:00:00Z') AND edge1.amount > 50 AND edge2.amount > 100",
+    "pattern": "(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account)",
+    "total_keys": 93,
+    "violated_keys": 90,
+    "violation_examples": {
+      "intermediate": {
+        "key": [
+          "mid.accountId",
+          "dstCard.accountId",
+          "edge2.amount"
+        ],
+        "key_values": [
+          null,
+          95138542128207324,
+          2909827.04
+        ],
+        "matches": [
+          {
+            "dstCard": "4:133a40f7-05a8-4a21-a7d7-63f8da733f57:1274",
+            "edge2": "5:133a40f7-05a8-4a21-a7d7-63f8da733f57:1152924803141730304",
+            "mid": "4:133a40f7-05a8-4a21-a7d7-63f8da733f57:0"
+          }
+        ],
+        "subpattern": "(mid:Account)-[edge2:Withdraw]->(dstCard:Account)",
+        "type": "null_value"
+      },
+      "leaf": {
+        "key": [
+          "dstCard.accountId"
+        ],
+        "key_values": [
+          null
+        ],
+        "matches": [
+          {
+            "dstCard": "4:133a40f7-05a8-4a21-a7d7-63f8da733f57:0"
+          }
+        ],
+        "subpattern": "(dstCard:Account)",
+        "type": "null_value"
+      },
+      "root": {
+        "key": [
+          "mid.accountId",
+          "edge1.createTime",
+          "src1.accountId",
+          "dstCard.accountId",
+          "edge2.amount"
+        ],
+        "key_values": [
+          4631107791820425942,
+          "2021-10-21T06:51:26.738000000+00:00",
+          4851221223608170860,
+          null,
+          3412581.5
+        ],
+        "matches": [
+          {
+            "dstCard": "4:133a40f7-05a8-4a21-a7d7-63f8da733f57:1207",
+            "edge1": "5:133a40f7-05a8-4a21-a7d7-63f8da733f57:1152923703630103563",
+            "edge2": "5:133a40f7-05a8-4a21-a7d7-63f8da733f57:1152924803141730356",
+            "mid": "4:133a40f7-05a8-4a21-a7d7-63f8da733f57:52",
+            "src1": "4:133a40f7-05a8-4a21-a7d7-63f8da733f57:1035"
+          }
+        ],
+        "subpattern": "(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account)",
+        "type": "null_value"
+      }
+    },
+    "warnings": []
+  }
+}

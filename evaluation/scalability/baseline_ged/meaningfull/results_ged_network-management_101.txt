@@ -1,0 +1,46 @@
+filters: a.name = 'crm' AND count(m) > 40 PER ra
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (ra:Rack)
+  match: 40 | tempo: 7576.00 ms, peak 137.7 MB
+  IDENTIFIER ra.name
+  IDENTIFIER ra.rack, ra.zone
+
+FOR (m:Machine)
+  match: 8000 | tempo: 419.33 ms, peak 140.6 MB
+  IDENTIFIER m.name
+
+FOR (a:Application:Process)
+  match: 1574 | tempo: 403.08 ms, peak 140.6 MB
+  IDENTIFIER a.startTime
+
+FOR [h:HOLDS]
+  match: 8040 | tempo: 272.58 ms, peak 140.6 MB
+  no key found
+
+FOR [r:RUNS]
+  match: 30430 | tempo: 192.29 ms, peak 140.7 MB
+  no key found
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)
+  match: 8000 | tempo: 415.18 ms, peak 141.8 MB
+  IDENTIFIER m.name
+
+FOR (m:Machine)-[r:RUNS]-(a:Application:Process)
+  match: 1574 | tempo: 161.60 ms, peak 141.8 MB
+  IDENTIFIER a.startTime
+  IDENTIFIER m.name
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(a:Application:Process)
+  match: 1574 | tempo: 332.55 ms, peak 141.8 MB
+  IDENTIFIER a.startTime
+  IDENTIFIER m.name
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 9
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 9.77s
+memoria massima totale: 141.84 MB
+------------------------------------------------------------------------

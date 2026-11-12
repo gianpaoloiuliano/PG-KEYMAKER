@@ -1,0 +1,47 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (ra:Rack)
+  match: 40 | tempo: 2067.14 ms, peak 70.3 KiB
+  IDENTIFIER ra.name
+  IDENTIFIER ra.rack, ra.zone
+
+FOR (m:Machine)
+  match: 8000 | tempo: 506.37 ms, peak 1632.9 KiB
+  IDENTIFIER m.name
+
+FOR (se:Service:Process)
+  match: 14430 | tempo: 1245.66 ms, peak 4530.4 KiB
+  IDENTIFIER se.pid, se.startTime
+  IDENTIFIER se.name, se.startTime
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)
+  match: 8000 | tempo: 701.38 ms, peak 3461.2 KiB
+  IDENTIFIER m.name
+
+FOR (m:Machine)-[r:RUNS]-(se:Service:Process)
+  match: 14430 | tempo: 1345.98 ms, peak 6085.0 KiB
+  IDENTIFIER m.name, se.startTime
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER m.name, se.name
+  IDENTIFIER se.pid, se.startTime
+  IDENTIFIER m.name, se.pid
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process)
+  match: 14430 | tempo: 1743.42 ms, peak 9906.9 KiB
+  IDENTIFIER m.name, se.startTime
+  IDENTIFIER ra.name, se.startTime
+  IDENTIFIER m.name, se.pid
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER m.name, se.name
+  IDENTIFIER ra.zone, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 18
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 7.61s
+memoria massima totale: 9906.9 KiB
+------------------------------------------------------------------------

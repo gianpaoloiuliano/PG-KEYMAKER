@@ -1,0 +1,18 @@
+pattern;keys found
+
+(tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction);[['tt.globalStep', 'ct.globalStep'], ['tt.amount', 'ct.globalStep'], ['tt.id', 'ct.globalStep'], ['tt.globalStep', 'ct.amount'], ['tt.amount', 'ct.amount'], ['tt.id', 'ct.amount'], ['tt.globalStep', 'ct.id'], ['tt.amount', 'ct.id'], ['ct.id', 'tt.id']]
+(tt:Transfer:Transaction)-[to:TO]->(cl:Client);[['tt.globalStep'], ['tt.id'], ['tt.amount', 'tt.step'], ['tt.amount', 'tt.ts']]
+(tt:Transfer:Transaction);[['tt.globalStep'], ['tt.id'], ['tt.amount', 'tt.step'], ['tt.amount', 'tt.ts']]
+[to:TO];[]
+(cl:Client);[['cl.id']]
+(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction);[['ct.globalStep'], ['ct.amount'], ['ct.id']]
+[pf:PERFORMED];[]
+(ct:CashIn:Transaction);[['ct.globalStep'], ['ct.amount'], ['ct.id']]
+
+execution time for tree and leaves: 33.39 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 156.40 s
+execution time for case 3: 12.23 s
+total execution time: 202.15 s
+Max memory used: 172.28 MB

@@ -1,0 +1,8 @@
+
+### PATTERN (c1:Condition)<-[hc1:HAS_CONDITION]-(en:Encounter)-[hc2:HAS_CONDITION]->(c2:Condition)
+### FILTERS c1 <> c2 AND count(DISTINCT c1) >= 40 PER c2
+
+tempo d'esecuzione totale: 23.075 s
+internal keys discovery time: 20.517 s
+external keys discovery time: 0.000 s
+memoria massima totale: 246.55 MB

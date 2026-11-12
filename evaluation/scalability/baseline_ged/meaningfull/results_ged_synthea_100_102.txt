@@ -1,0 +1,63 @@
+filters: count(DISTINCT dr) >= 6 PER p
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (p:Patient)
+  match: 52 | tempo: 2472.80 ms, peak 153.9 MB
+  IDENTIFIER p.SSN
+  IDENTIFIER p.id
+  IDENTIFIER p.birthDate, p.deathDate
+  IDENTIFIER p.birthDate, p.firstName
+  IDENTIFIER p.birthDate, p.lastName
+  IDENTIFIER p.city, p.firstName
+  IDENTIFIER p.city, p.lastName
+  IDENTIFIER p.firstName, p.lastName
+  IDENTIFIER p.firstName, p.marital
+  IDENTIFIER p.firstName, p.race
+  IDENTIFIER p.city, p.deathDate, p.ethnicity, p.marital
+  IDENTIFIER p.city, p.deathDate, p.marital, p.race
+  IDENTIFIER p.deathDate, p.ethnicity, p.lastName, p.marital
+  IDENTIFIER p.ethnicity, p.gender, p.lastName, p.marital
+
+FOR (en:Encounter)
+  match: 18276 | tempo: 2149.02 ms, peak 161.2 MB
+  IDENTIFIER en.code, en.date, en.id
+
+FOR (dr:Drug)
+  match: 134 | tempo: 155.19 ms, peak 161.2 MB
+  IDENTIFIER dr.code
+  IDENTIFIER dr.description
+
+FOR [has:HAS_ENCOUNTER]
+  match: 18276 | tempo: 126.59 ms, peak 156.8 MB
+  no key found
+
+FOR [hd:HAS_DRUG]
+  match: 15467 | tempo: 102.51 ms, peak 156.8 MB
+  no key found
+
+FOR (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)
+  match: 15023 | tempo: 554126.96 ms, peak 2498.6 MB
+  IDENTIFIER en.code, en.date, en.id
+
+FOR (en:Encounter)-[hd:HAS_DRUG]->(dr:Drug)
+  match: 15467 | tempo: 3043.67 ms, peak 1034.3 MB
+  IDENTIFIER dr.code, en.code, en.date, en.id
+  IDENTIFIER dr.code, en.date, en.id, en.isEnd
+  IDENTIFIER dr.description, en.code, en.date, en.id
+  IDENTIFIER dr.description, en.date, en.id, en.isEnd
+
+FOR (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug)
+  match: 14408 | tempo: 2317137.73 ms, peak 8770.4 MB
+  IDENTIFIER dr.code, en.code, en.date, en.id
+  IDENTIFIER dr.code, en.date, en.id, en.isEnd
+  IDENTIFIER dr.description, en.code, en.date, en.id
+  IDENTIFIER dr.description, en.date, en.id, en.isEnd
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 26
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 2879.31s
+memoria massima totale: 8770.42 MB
+------------------------------------------------------------------------

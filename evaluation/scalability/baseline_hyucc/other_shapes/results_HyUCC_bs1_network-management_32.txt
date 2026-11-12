@@ -1,0 +1,20 @@
+
+### PATTERN (n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port)
+(n1:Rack) - INTERNAL_KEYS [['n1.name'], ['n1.rack', 'n1.zone']]
+(n3:Application:Process) - INTERNAL_KEYS [['n3.startTime']]
+(n4:Service:Process) - INTERNAL_KEYS [['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n1:Rack)-[rel1:HOLDS]->(n2:Machine) - INTERNAL_KEYS [['n2.name']]
+(n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process) - INTERNAL_KEYS [['n2.name'], ['n3.startTime']]
+(n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process) - INTERNAL_KEYS [['n2.name', 'n4.startTime'], ['n3.startTime', 'n4.startTime'], ['n4.startTime', 'n4.pid'], ['n3.pid', 'n4.startTime'], ['n1.name', 'n4.startTime'], ['n4.name', 'n4.startTime'], ['n3.name', 'n4.startTime'], ['n1.zone', 'n4.startTime'], ['n2.name', 'n4.pid'], ['n2.name', 'n4.name'], ['n3.startTime', 'n4.pid'], ['n3.startTime', 'n4.name'], ['n1.name', 'n3.pid', 'n4.pid'], ['n1.rack', 'n3.pid', 'n4.pid'], ['n3.pid', 'n4.name', 'n4.pid'], ['n3.name', 'n3.pid', 'n4.pid']]
+(n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port) - INTERNAL_KEYS [['n5.port', 'n4.startTime'], ['n5.port', 'n3.pid', 'n4.pid'], ['n5.port', 'n2.name'], ['n5.port', 'n3.startTime']]
+(n2:Machine)-[rel2:RUNS]->(n3:Application:Process) - INTERNAL_KEYS [['n2.name'], ['n3.startTime']]
+(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process) - INTERNAL_KEYS [['n2.name', 'n4.startTime'], ['n3.startTime', 'n4.startTime'], ['n4.startTime', 'n4.pid'], ['n3.pid', 'n4.startTime'], ['n4.name', 'n4.startTime'], ['n3.name', 'n4.startTime'], ['n2.name', 'n4.pid'], ['n2.name', 'n4.name'], ['n3.startTime', 'n4.pid'], ['n3.startTime', 'n4.name'], ['n3.pid', 'n4.name', 'n4.pid'], ['n3.name', 'n3.pid', 'n4.pid']]
+(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port) - INTERNAL_KEYS [['n4.startTime', 'n5.port'], ['n3.pid', 'n4.pid', 'n5.port'], ['n2.name', 'n5.port'], ['n3.startTime', 'n5.port']]
+(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process) - INTERNAL_KEYS [['n3.startTime', 'n4.startTime'], ['n4.startTime', 'n4.pid'], ['n3.pid', 'n4.startTime'], ['n4.name', 'n4.startTime'], ['n3.name', 'n4.startTime'], ['n3.startTime', 'n4.pid'], ['n3.startTime', 'n4.name'], ['n3.pid', 'n4.name', 'n4.pid'], ['n3.name', 'n3.pid', 'n4.pid']]
+(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port) - INTERNAL_KEYS [['n4.startTime', 'n5.port'], ['n3.pid', 'n4.pid', 'n5.port'], ['n3.startTime', 'n5.port']]
+(n4:Service:Process)-[rel4:LISTENS]->(n5:Port) - INTERNAL_KEYS [['n4.startTime', 'n5.port']]
+
+tempo d'esecuzione totale: 36.939 s
+internal keys discovery time: 27.832 s
+external keys discovery time: 0.000 s
+memoria massima totale: 273.32 MB

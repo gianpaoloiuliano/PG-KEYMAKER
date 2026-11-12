@@ -1,0 +1,12 @@
+
+### PATTERN (m:Machine)-[r:RUNS]-(a:Application:Process)-[dep:DEPENDS_ON]-(se:Service:Process)
+(m:Machine)-[r:RUNS]-(a:Application:Process)-[dep:DEPENDS_ON]-(se:Service:Process) - INTERNAL_KEYS [['a.startTime', 'se.startTime'], ['m.name', 'se.startTime'], ['se.startTime', 'se.pid'], ['a.pid', 'se.startTime'], ['se.name', 'se.startTime'], ['a.name', 'se.startTime'], ['a.startTime', 'se.pid'], ['a.startTime', 'se.name'], ['m.name', 'se.pid'], ['m.name', 'se.name'], ['a.pid', 'se.name', 'se.pid'], ['a.name', 'a.pid', 'se.pid']]
+(m:Machine)-[r:RUNS]-(a:Application:Process) - INTERNAL_KEYS [['a.startTime'], ['m.name']]
+(a:Application:Process) - INTERNAL_KEYS [['a.startTime']]
+(se:Service:Process) - INTERNAL_KEYS [['se.startTime', 'se.pid'], ['se.name', 'se.startTime']]
+(a:Application:Process)-[dep:DEPENDS_ON]-(se:Service:Process) - INTERNAL_KEYS [['a.startTime', 'se.startTime'], ['se.startTime', 'se.pid'], ['a.pid', 'se.startTime'], ['se.name', 'se.startTime'], ['a.name', 'se.startTime'], ['a.startTime', 'se.pid'], ['a.startTime', 'se.name'], ['a.pid', 'se.name', 'se.pid'], ['a.name', 'a.pid', 'se.pid']]
+
+tempo d'esecuzione totale: 9.904 s
+internal keys discovery time: 6.421 s
+external keys discovery time: 0.000 s
+memoria massima totale: 216.17 MB

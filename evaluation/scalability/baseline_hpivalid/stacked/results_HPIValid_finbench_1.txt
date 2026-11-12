@@ -1,0 +1,7 @@
+
+### PATTERN (a:Account)-[tran:Transfer]-(a2:Account)-[wd:Withdraw]-(a3:Account)
+
+tempo d'esecuzione totale: 1452.843 s
+internal keys discovery time: 1452.842 s
+external keys discovery time: 0.000 s
+memoria massima totale: 8967.68 MB

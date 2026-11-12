@@ -1,0 +1,54 @@
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (ra:Rack)
+  match: 40 | tempo: 2146.58 ms, peak 153.5 MB
+  IDENTIFIER ra.name
+  IDENTIFIER ra.rack, ra.zone
+
+FOR (m:Machine)
+  match: 8000 | tempo: 161.88 ms, peak 154.2 MB
+  IDENTIFIER m.name
+
+FOR (se:Service:Process)
+  match: 14430 | tempo: 450.48 ms, peak 155.5 MB
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+FOR [h:HOLDS]
+  match: 8040 | tempo: 135.02 ms, peak 155.5 MB
+  no key found
+
+FOR [r:RUNS]
+  match: 30430 | tempo: 48.88 ms, peak 155.5 MB
+  no key found
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)
+  match: 8000 | tempo: 246.67 ms, peak 155.7 MB
+  IDENTIFIER m.name
+
+FOR (m:Machine)-[r:RUNS]-(se:Service:Process)
+  match: 14430 | tempo: 526.78 ms, peak 155.9 MB
+  IDENTIFIER m.name, se.name
+  IDENTIFIER m.name, se.pid
+  IDENTIFIER m.name, se.startTime
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process)
+  match: 14430 | tempo: 1313.90 ms, peak 156.7 MB
+  IDENTIFIER m.name, se.name
+  IDENTIFIER m.name, se.pid
+  IDENTIFIER m.name, se.startTime
+  IDENTIFIER ra.name, se.startTime
+  IDENTIFIER ra.zone, se.startTime
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 18
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 5.03s
+memoria massima totale: 156.66 MB
+------------------------------------------------------------------------

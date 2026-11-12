@@ -1,0 +1,13 @@
+
+### PATTERN (tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(pt:Payment:Transaction)
+(tt:Transfer:Transaction) - INTERNAL_KEYS [['tt.globalStep'], ['tt.id'], ['tt.amount', 'tt.step'], ['tt.amount', 'tt.ts']]
+(cl:Client) - INTERNAL_KEYS [['cl.id']]
+(pt:Payment:Transaction) - INTERNAL_KEYS [['pt.globalStep'], ['pt.id'], ['pt.amount', 'pt.step'], ['pt.amount', 'pt.ts']]
+(tt:Transfer:Transaction)-[to:TO]->(cl:Client) - INTERNAL_KEYS [['tt.globalStep'], ['tt.id'], ['tt.amount', 'tt.step'], ['tt.amount', 'tt.ts']]
+(tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(pt:Payment:Transaction) - INTERNAL_KEYS [['pt.globalStep', 'tt.globalStep'], ['pt.globalStep', 'tt.amount'], ['tt.id', 'pt.globalStep'], ['pt.id', 'tt.globalStep'], ['pt.id', 'tt.amount'], ['tt.id', 'pt.id'], ['pt.amount', 'tt.globalStep'], ['pt.amount', 'tt.amount'], ['tt.id', 'pt.amount']]
+(cl:Client)-[pf:PERFORMED]->(pt:Payment:Transaction) - INTERNAL_KEYS [['pt.globalStep'], ['pt.id'], ['cl.id', 'pt.amount'], ['cl.name', 'pt.amount'], ['pt.amount', 'pt.step'], ['pt.amount', 'pt.ts']]
+
+tempo d'esecuzione totale: 140.032 s
+internal keys discovery time: 140.032 s
+external keys discovery time: 0.000 s
+memoria massima totale: 1433.96 MB

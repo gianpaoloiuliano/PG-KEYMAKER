@@ -1,0 +1,19 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter)-[he:HAS_END]-(en2:Encounter);[]
+(p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter);[]
+(p:Patient);[['p.id'], ['p.SSN'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.city'], ['p.lastName', 'p.birthDate'], ['p.city', 'p.deathDate', 'p.birthDate'], ['p.lastName', 'p.marital', 'p.gender', 'p.ethnicity', 'p.city', 'p.deathDate']]
+[has:HAS_ENCOUNTER];[]
+(en1:Encounter);[]
+(en1:Encounter)-[he:HAS_END]-(en2:Encounter);[]
+[he:HAS_END];[]
+(en2:Encounter);[]
+
+execution time for tree and leaves: 17.76 s
+execution time for external keys: 170.40 s
+execution time for case 1: 0.00 s
+execution time for case 2: 79.53 s
+execution time for case 3: 9.72 s
+total execution time: 277.79 s
+Memory: 591.66 MB
+Max memory used: 567.97 MB

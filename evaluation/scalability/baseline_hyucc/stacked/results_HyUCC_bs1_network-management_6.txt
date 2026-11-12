@@ -1,0 +1,12 @@
+
+### PATTERN (se:Service:Process)-[i:INSTANCE]-(ss:Software:Service)-[v:VERSION]-(ver:Version)
+(ss:Software:Service)-[v:VERSION]-(ver:Version) - INTERNAL_KEYS [['ss.versions', 'ver.name'], ['ss.name', 'ver.name'], ['ver.name', 'ss.ports'], ['ver.name', 'ss.dependencies']]
+(se:Service:Process)-[i:INSTANCE]-(ss:Software:Service)-[v:VERSION]-(ver:Version) - INTERNAL_KEYS [['se.startTime', 'ver.name']]
+(se:Service:Process)-[i:INSTANCE]-(ss:Software:Service) - INTERNAL_KEYS [['se.startTime']]
+(ss:Software:Service) - INTERNAL_KEYS [['ss.versions'], ['ss.name'], ['ss.ports']]
+(se:Service:Process) - INTERNAL_KEYS [['se.startTime', 'se.pid'], ['se.name', 'se.startTime']]
+
+tempo d'esecuzione totale: 6.231 s
+internal keys discovery time: 3.989 s
+external keys discovery time: 0.000 s
+memoria massima totale: 198.46 MB

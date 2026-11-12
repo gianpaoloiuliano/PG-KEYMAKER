@@ -1,0 +1,101 @@
+subpattern,level,key,status
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.amount', 'mid.accountId', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.amount', 'mid.accountId', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.amount', 'mid.accountId', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.amount', 'mid.createTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.amount', 'mid.createTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.amount', 'mid.createTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.amount', 'mid.lastLoginTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.amount', 'mid.lastLoginTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.amount', 'mid.lastLoginTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.createTime', 'mid.accountId', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.createTime', 'mid.accountId', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.createTime', 'mid.accountId', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.createTime', 'mid.createTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.createTime', 'mid.createTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.createTime', 'mid.createTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.createTime', 'mid.lastLoginTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.createTime', 'mid.lastLoginTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.accountId', 'edge1.createTime', 'edge2.createTime', 'mid.lastLoginTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.amount', 'mid.accountId', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.amount', 'mid.accountId', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.amount', 'mid.accountId', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.amount', 'mid.createTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.amount', 'mid.createTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.amount', 'mid.createTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.amount', 'mid.lastLoginTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.amount', 'mid.lastLoginTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.amount', 'mid.lastLoginTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.createTime', 'mid.accountId', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.createTime', 'mid.accountId', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.createTime', 'mid.accountId', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.createTime', 'mid.createTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.createTime', 'mid.createTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.createTime', 'mid.createTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.createTime', 'mid.lastLoginTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.createTime', 'mid.lastLoginTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.createTime', 'edge1.createTime', 'edge2.createTime', 'mid.lastLoginTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.amount', 'mid.accountId', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.amount', 'mid.accountId', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.amount', 'mid.accountId', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.amount', 'mid.createTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.amount', 'mid.createTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.amount', 'mid.createTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.amount', 'mid.lastLoginTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.amount', 'mid.lastLoginTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.amount', 'mid.lastLoginTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.createTime', 'mid.accountId', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.createTime', 'mid.accountId', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.createTime', 'mid.accountId', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.createTime', 'mid.createTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.createTime', 'mid.createTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.createTime', 'mid.createTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.createTime', 'mid.lastLoginTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.createTime', 'mid.lastLoginTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['dstCard.lastLoginTime', 'edge1.createTime', 'edge2.createTime', 'mid.lastLoginTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['edge1.amount', 'edge2.amount']",new
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['edge1.amount', 'edge2.createTime']",new
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['edge1.createTime', 'edge2.amount']",new
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account),root,"['edge1.createTime', 'edge2.createTime']",new
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.accountId', 'edge2.amount', 'mid.accountId']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.accountId', 'edge2.amount', 'mid.createTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.accountId', 'edge2.amount', 'mid.lastLoginTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.accountId', 'edge2.createTime', 'mid.accountId']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.accountId', 'edge2.createTime', 'mid.createTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.accountId', 'edge2.createTime', 'mid.lastLoginTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.createTime', 'edge2.amount', 'mid.accountId']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.createTime', 'edge2.amount', 'mid.createTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.createTime', 'edge2.amount', 'mid.lastLoginTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.createTime', 'edge2.createTime', 'mid.accountId']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.createTime', 'edge2.createTime', 'mid.createTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.createTime', 'edge2.createTime', 'mid.lastLoginTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.lastLoginTime', 'edge2.amount', 'mid.accountId']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.lastLoginTime', 'edge2.amount', 'mid.createTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.lastLoginTime', 'edge2.amount', 'mid.lastLoginTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.lastLoginTime', 'edge2.createTime', 'mid.accountId']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.lastLoginTime', 'edge2.createTime', 'mid.createTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,"['dstCard.lastLoginTime', 'edge2.createTime', 'mid.lastLoginTime']",lost
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,['edge2.amount'],new
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account),intermediate,['edge2.createTime'],new
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,"['edge1.createTime', 'mid.accountId', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,"['edge1.createTime', 'mid.accountId', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,"['edge1.createTime', 'mid.accountId', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,"['edge1.createTime', 'mid.createTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,"['edge1.createTime', 'mid.createTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,"['edge1.createTime', 'mid.createTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,"['edge1.createTime', 'mid.lastLoginTime', 'src1.accountId']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,"['edge1.createTime', 'mid.lastLoginTime', 'src1.createTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,"['edge1.createTime', 'mid.lastLoginTime', 'src1.lastLoginTime']",lost
+(src1:Account)-[edge1:Transfer]->(mid:Account),intermediate,['edge1.createTime'],new
+(dstCard:Account),leaf,['dstCard.accountId'],lost
+(dstCard:Account),leaf,['dstCard.createTime'],lost
+(dstCard:Account),leaf,['dstCard.lastLoginTime'],lost
+(mid:Account),leaf,['mid.accountId'],lost
+(mid:Account),leaf,['mid.createTime'],lost
+(mid:Account),leaf,['mid.lastLoginTime'],lost
+(src1:Account),leaf,['src1.accountId'],lost
+(src1:Account),leaf,['src1.createTime'],lost
+(src1:Account),leaf,['src1.lastLoginTime'],lost
+[edge1:Transfer],leaf,['edge1.createTime'],kept
+[edge2:Withdraw],leaf,['edge2.amount'],kept
+[edge2:Withdraw],leaf,['edge2.createTime'],kept

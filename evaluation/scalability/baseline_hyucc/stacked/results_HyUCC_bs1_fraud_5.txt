@@ -1,0 +1,13 @@
+
+### PATTERN (cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction)-[to:TO]->(m:Merchant)
+(cl:Client) - INTERNAL_KEYS [['cl.id']]
+(ct:CashIn:Transaction) - INTERNAL_KEYS [['ct.globalStep'], ['ct.amount'], ['ct.id']]
+(m:Merchant) - INTERNAL_KEYS [['m.id']]
+(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction) - INTERNAL_KEYS [['ct.globalStep'], ['ct.amount'], ['ct.id']]
+(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction)-[to:TO]->(m:Merchant) - INTERNAL_KEYS [['ct.globalStep'], ['ct.amount'], ['ct.id']]
+(ct:CashIn:Transaction)-[to:TO]->(m:Merchant) - INTERNAL_KEYS [['ct.globalStep'], ['ct.amount'], ['ct.id']]
+
+tempo d'esecuzione totale: 105.132 s
+internal keys discovery time: 105.132 s
+external keys discovery time: 0.000 s
+memoria massima totale: 670.15 MB

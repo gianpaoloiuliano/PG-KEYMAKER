@@ -1,0 +1,56 @@
+filters: count(DISTINCT dr) >= 6 PER p
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (p:Patient)
+  match: 139 | tempo: 2463.88 ms, peak 175.9 MB
+  IDENTIFIER p.SSN
+  IDENTIFIER p.id
+  IDENTIFIER p.birthDate, p.deathDate
+  IDENTIFIER p.birthDate, p.lastName
+  IDENTIFIER p.firstName, p.lastName
+  IDENTIFIER p.birthDate, p.firstName, p.marital
+  IDENTIFIER p.city, p.deathDate, p.firstName
+  IDENTIFIER p.city, p.deathDate, p.lastName
+  IDENTIFIER p.city, p.firstName, p.marital
+  IDENTIFIER p.city, p.lastName, p.marital
+  IDENTIFIER p.ethnicity, p.gender, p.lastName, p.marital
+  IDENTIFIER p.gender, p.lastName, p.marital, p.race
+
+FOR (en:Encounter)
+  match: 42030 | tempo: 12400.95 ms, peak 194.1 MB
+  IDENTIFIER en.code, en.date, en.id, en.isEnd
+
+FOR (dr:Drug)
+  match: 186 | tempo: 159.36 ms, peak 187.4 MB
+  IDENTIFIER dr.code
+
+FOR [has:HAS_ENCOUNTER]
+  match: 42030 | tempo: 104.24 ms, peak 184.5 MB
+  no key found
+
+FOR [hd:HAS_DRUG]
+  match: 32531 | tempo: 121.54 ms, peak 184.5 MB
+  no key found
+
+FOR (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)
+  match: 35420 | tempo: 2560014.04 ms, peak 5242.8 MB
+  IDENTIFIER en.code, en.date, en.id, en.isEnd
+
+FOR (en:Encounter)-[hd:HAS_DRUG]->(dr:Drug)
+  match: 32531 | tempo: 6123.34 ms, peak 1893.0 MB
+  IDENTIFIER dr.code, en.date, en.id, en.isEnd
+  IDENTIFIER dr.description, en.date, en.id, en.isEnd
+
+FOR (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug)
+  match: 30231 | tempo: 5118533.03 ms, peak 17195.4 MB
+  IDENTIFIER dr.code, en.date, en.id, en.isEnd
+  IDENTIFIER dr.description, en.date, en.id, en.isEnd
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 19
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 7699.92s
+memoria massima totale: 17195.35 MB
+------------------------------------------------------------------------

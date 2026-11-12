@@ -1,0 +1,46 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (a:Application:Process)
+  match: 8000 | tempo: 2721.20 ms, peak 2285.9 KiB
+  IDENTIFIER a.startTime
+
+FOR (se:Service:Process)
+  match: 14430 | tempo: 1138.73 ms, peak 4583.4 KiB
+  IDENTIFIER se.pid, se.startTime
+  IDENTIFIER se.name, se.startTime
+
+FOR (p:Port)
+  match: 37238 | tempo: 2224.79 ms, peak 7290.8 KiB
+  no key found
+
+FOR (a:Application:Process)-[d:DEPENDS_ON]-(se:Service:Process)
+  match: 14430 | tempo: 1644.07 ms, peak 7874.0 KiB
+  IDENTIFIER a.name, se.startTime
+  IDENTIFIER a.pid, se.startTime
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+  IDENTIFIER a.startTime, se.pid
+  IDENTIFIER a.startTime, se.name
+  IDENTIFIER a.startTime, se.startTime
+  IDENTIFIER a.name, a.pid, se.pid
+  IDENTIFIER a.pid, se.name, se.pid
+
+FOR (se:Service:Process)-[l:LISTENS]-(p:Port)
+  match: 26006 | tempo: 2357.96 ms, peak 10541.3 KiB
+  IDENTIFIER p.port, se.startTime
+
+FOR (a:Application:Process)-[d:DEPENDS_ON]-(se:Service:Process)-[l:LISTENS]-(p:Port)
+  match: 26006 | tempo: 3217.62 ms, peak 17668.1 KiB
+  IDENTIFIER a.startTime, p.port
+  IDENTIFIER p.port, se.startTime
+  IDENTIFIER a.pid, p.port, se.pid
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 16
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 13.30s
+memoria massima totale: 17668.1 KiB
+------------------------------------------------------------------------

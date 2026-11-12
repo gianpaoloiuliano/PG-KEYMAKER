@@ -1,0 +1,8 @@
+
+### PATTERN (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug)
+### FILTERS count(DISTINCT dr) >= 6 PER p
+
+tempo d'esecuzione totale: 42.394 s
+internal keys discovery time: 36.469 s
+external keys discovery time: 0.000 s
+memoria massima totale: 367.88 MB

@@ -1,0 +1,7 @@
+
+### PATTERN (en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hd:HAS_DRUG]-(dr:Drug)
+
+tempo d'esecuzione totale: 454.411 s
+internal keys discovery time: 214.016 s
+external keys discovery time: 223.384 s
+memoria massima totale: 1225.59 MB

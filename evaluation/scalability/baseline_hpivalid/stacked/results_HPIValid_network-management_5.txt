@@ -1,0 +1,7 @@
+
+### PATTERN (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process)
+
+tempo d'esecuzione totale: 26.171 s
+internal keys discovery time: 14.787 s
+external keys discovery time: 0.000 s
+memoria massima totale: 160.30 MB

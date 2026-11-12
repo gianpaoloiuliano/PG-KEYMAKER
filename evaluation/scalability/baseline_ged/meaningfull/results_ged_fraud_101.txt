@@ -1,0 +1,59 @@
+filters: tx.amount >= 300000
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (c1:Client)
+  match: 2433 | tempo: 2102.20 ms, peak 138.8 MB
+  IDENTIFIER c1.id
+
+FOR (tx:Transfer)
+  match: 14108 | tempo: 427.37 ms, peak 145.2 MB
+  IDENTIFIER tx.amount
+  IDENTIFIER tx.globalStep
+  IDENTIFIER tx.id
+
+FOR (c2:Client)
+  match: 2433 | tempo: 62.40 ms, peak 145.2 MB
+  IDENTIFIER c2.id
+
+FOR [perf:PERFORMED]
+  match: 323489 | tempo: 33.28 ms, peak 141.2 MB
+  no key found
+
+FOR [to:TO]
+  match: 323489 | tempo: 19.99 ms, peak 141.2 MB
+  no key found
+
+FOR (c1:Client)-[perf:PERFORMED]->(tx:Transfer)
+  match: 14108 | tempo: 824.05 ms, peak 148.1 MB
+  IDENTIFIER tx.amount
+  IDENTIFIER tx.globalStep
+  IDENTIFIER tx.id
+
+FOR (tx:Transfer)-[to:TO]->(c2:Client)
+  match: 14108 | tempo: 991.31 ms, peak 151.5 MB
+  IDENTIFIER tx.amount
+  IDENTIFIER tx.globalStep
+  IDENTIFIER tx.id
+
+FOR (c1:Client)-[perf:PERFORMED]->(tx:Transfer)-[to:TO]->(c2:Client)
+  match: 14108 | tempo: 1540.83 ms, peak 155.5 MB
+  IDENTIFIER tx.amount
+  IDENTIFIER tx.globalStep
+  IDENTIFIER tx.id
+  IDENTIFIER c1.id, c2.id, tx.step
+  IDENTIFIER c1.id, c2.id, tx.ts
+  IDENTIFIER c1.id, c2.name, tx.step
+  IDENTIFIER c1.id, c2.name, tx.ts
+  IDENTIFIER c1.name, c2.id, tx.step
+  IDENTIFIER c1.name, c2.id, tx.ts
+  IDENTIFIER c1.name, c2.name, tx.step
+  IDENTIFIER c1.name, c2.name, tx.ts
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 22
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 6.00s
+memoria massima totale: 155.45 MB
+------------------------------------------------------------------------

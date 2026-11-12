@@ -1,0 +1,8 @@
+
+### PATTERN (p:Patient)-[has:HAS_ENCOUNTER]-(en1:Encounter)-[he:HAS_END]-(en2:Encounter)
+(p:Patient) - INTERNAL_KEYS [['p.id'], ['p.SSN'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.city'], ['p.lastName', 'p.birthDate'], ['p.city', 'p.deathDate', 'p.birthDate'], ['p.lastName', 'p.marital', 'p.race', 'p.ethnicity', 'p.city', 'p.deathDate'], ['p.lastName', 'p.marital', 'p.gender', 'p.ethnicity', 'p.city']]
+
+tempo d'esecuzione totale: 710.031 s
+internal keys discovery time: 153.178 s
+external keys discovery time: 543.933 s
+memoria massima totale: 825.86 MB

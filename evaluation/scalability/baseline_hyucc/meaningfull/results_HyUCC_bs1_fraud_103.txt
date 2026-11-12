@@ -1,0 +1,23 @@
+
+### PATTERN (victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant)
+### FILTERS t1.step <= t2.step AND count(DISTINCT mule) > 1 PER victim
+(victim:Client) - INTERNAL_KEYS [['victim.id']]
+(t1:Transfer) - INTERNAL_KEYS [['t1.globalStep'], ['t1.id'], ['t1.amount', 't1.step'], ['t1.amount', 't1.ts']]
+(mule:Client) - INTERNAL_KEYS [['mule.id']]
+(t2:CashOut) - INTERNAL_KEYS [['t2.globalStep'], ['t2.amount'], ['t2.id']]
+(m:Merchant) - INTERNAL_KEYS [['m.id']]
+(victim:Client)-[perf1:PERFORMED]->(t1:Transfer) - INTERNAL_KEYS [['t1.globalStep'], ['t1.id'], ['t1.amount', 't1.step'], ['t1.amount', 't1.ts']]
+(victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client) - INTERNAL_KEYS [['t1.globalStep'], ['t1.id'], ['t1.amount', 't1.step'], ['t1.amount', 't1.ts'], ['victim.id', 't1.step', 'mule.id'], ['victim.id', 't1.ts', 'mule.id'], ['victim.name', 't1.step', 'mule.id'], ['victim.name', 't1.ts', 'mule.id'], ['victim.id', 't1.step', 'mule.name'], ['victim.id', 't1.ts', 'mule.name'], ['victim.name', 't1.step', 'mule.name'], ['victim.name', 't1.ts', 'mule.name']]
+(victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut) - INTERNAL_KEYS [['t2.globalStep', 't1.globalStep'], ['t2.globalStep', 't1.amount'], ['t2.globalStep', 't1.id'], ['victim.id', 't2.globalStep', 't1.step'], ['victim.id', 't2.globalStep', 't1.ts'], ['victim.name', 't2.globalStep', 't1.step'], ['victim.name', 't2.globalStep', 't1.ts'], ['t2.amount', 't1.globalStep'], ['t2.amount', 't1.amount'], ['t2.amount', 't1.id'], ['victim.id', 't2.amount', 't1.step'], ['victim.id', 't2.amount', 't1.ts'], ['victim.name', 't2.amount', 't1.step'], ['victim.name', 't2.amount', 't1.ts'], ['t2.id', 't1.globalStep'], ['t2.id', 't1.amount'], ['t2.id', 't1.id'], ['victim.id', 't2.id', 't1.step'], ['victim.id', 't2.id', 't1.ts'], ['victim.name', 't2.id', 't1.step'], ['victim.name', 't2.id', 't1.ts']]
+(victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant) - INTERNAL_KEYS [['t2.globalStep', 't1.globalStep'], ['t2.globalStep', 't1.amount'], ['t2.globalStep', 't1.id'], ['victim.id', 't2.globalStep', 't1.step'], ['victim.id', 't2.globalStep', 't1.ts'], ['victim.name', 't2.globalStep', 't1.step'], ['victim.name', 't2.globalStep', 't1.ts'], ['t2.amount', 't1.globalStep'], ['t2.amount', 't1.amount'], ['t2.amount', 't1.id'], ['victim.id', 't2.amount', 't1.step'], ['victim.id', 't2.amount', 't1.ts'], ['victim.name', 't2.amount', 't1.step'], ['victim.name', 't2.amount', 't1.ts'], ['t2.id', 't1.globalStep'], ['t2.id', 't1.amount'], ['t2.id', 't1.id'], ['victim.id', 't2.id', 't1.step'], ['victim.id', 't2.id', 't1.ts'], ['victim.name', 't2.id', 't1.step'], ['victim.name', 't2.id', 't1.ts']]
+(t1:Transfer)-[to1:TO]->(mule:Client) - INTERNAL_KEYS [['t1.globalStep'], ['t1.id'], ['t1.amount', 't1.step'], ['t1.amount', 't1.ts']]
+(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut) - INTERNAL_KEYS [['t1.globalStep', 't2.globalStep'], ['t1.amount', 't2.globalStep'], ['t1.id', 't2.globalStep'], ['t1.globalStep', 't2.amount'], ['t1.amount', 't2.amount'], ['t1.id', 't2.amount'], ['t2.id', 't1.globalStep'], ['t2.id', 't1.amount'], ['t2.id', 't1.id']]
+(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant) - INTERNAL_KEYS [['t2.globalStep', 't1.globalStep'], ['t2.globalStep', 't1.amount'], ['t2.globalStep', 't1.id'], ['t2.amount', 't1.globalStep'], ['t2.amount', 't1.amount'], ['t2.amount', 't1.id'], ['t2.id', 't1.globalStep'], ['t2.id', 't1.amount'], ['t2.id', 't1.id']]
+(mule:Client)-[perf2:PERFORMED]->(t2:CashOut) - INTERNAL_KEYS [['t2.globalStep'], ['t2.amount'], ['t2.id']]
+(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant) - INTERNAL_KEYS [['t2.globalStep'], ['t2.amount'], ['t2.id']]
+(t2:CashOut)-[to2:TO]->(m:Merchant) - INTERNAL_KEYS [['t2.globalStep'], ['t2.amount'], ['t2.id']]
+
+tempo d'esecuzione totale: 356.976 s
+internal keys discovery time: 356.976 s
+external keys discovery time: 0.000 s
+memoria massima totale: 1187.88 MB

@@ -1,0 +1,29 @@
+pattern;keys found
+
+(n1:Patient)-[rel1:HAS_ENCOUNTER]->(n2:Encounter)-[rel2:NEXT]->(n3:Encounter)-[rel3:NEXT]->(n4:Encounter)-[rel4:HAS_PROCEDURE]->(n5:Procedure);[['n5.code', 'n4.id'], ['n5.description', 'n4.id'], ['n5.code', 'n4.end'], ['n5.description', 'n4.end']]
+(n1:Patient)-[rel1:HAS_ENCOUNTER]->(n2:Encounter);[['n2.date', 'n2.code', 'n2.id', 'n2.isEnd']]
+(n1:Patient);[['n1.SSN'], ['n1.firstName', 'n1.birthDate'], ['n1.firstName', 'n1.lastName'], ['n1.firstName', 'n1.city'], ['n1.lastName', 'n1.birthDate'], ['n1.deathDate', 'n1.birthDate'], ['n1.lastName', 'n1.city']]
+[rel1:HAS_ENCOUNTER];[]
+(n2:Encounter);[['n2.date', 'n2.code', 'n2.end', 'n2.id'], ['n2.date', 'n2.code', 'n2.claimCost', 'n2.id'], ['n2.date', 'n2.code', 'n2.coveredAmount', 'n2.id'], ['n2.date', 'n2.code', 'n2.description', 'n2.id'], ['n2.date', 'n2.baseCost', 'n2.code', 'n2.id'], ['n2.date', 'n2.code', 'n2.id', 'n2.class'], ['n2.date', 'n2.code', 'n2.id', 'n2.isEnd']]
+(n1:Patient)-[rel1:HAS_ENCOUNTER]->(n2:Encounter)-[rel2:NEXT]->(n3:Encounter);[['n2.date', 'n2.code', 'n2.id', 'n2.isEnd'], ['n3.date', 'n3.code', 'n3.id', 'n3.isEnd']]
+(n2:Encounter)-[rel2:NEXT]->(n3:Encounter);[['n2.date', 'n2.code', 'n2.id', 'n2.isEnd'], ['n3.date', 'n3.code', 'n3.id', 'n3.isEnd']]
+[rel2:NEXT];[]
+(n3:Encounter);[['n3.date', 'n3.code', 'n3.end', 'n3.id'], ['n3.date', 'n3.code', 'n3.claimCost', 'n3.id'], ['n3.date', 'n3.code', 'n3.coveredAmount', 'n3.id'], ['n3.date', 'n3.code', 'n3.description', 'n3.id'], ['n3.date', 'n3.baseCost', 'n3.code', 'n3.id'], ['n3.date', 'n3.code', 'n3.id', 'n3.class'], ['n3.date', 'n3.code', 'n3.id', 'n3.isEnd']]
+(n1:Patient)-[rel1:HAS_ENCOUNTER]->(n2:Encounter)-[rel2:NEXT]->(n3:Encounter)-[rel3:NEXT]->(n4:Encounter);[['n2.date', 'n2.code', 'n2.id', 'n2.isEnd'], ['n3.date', 'n3.code', 'n3.id', 'n3.isEnd'], ['n4.date', 'n4.code', 'n4.id', 'n4.isEnd']]
+(n2:Encounter)-[rel2:NEXT]->(n3:Encounter)-[rel3:NEXT]->(n4:Encounter);[['n2.date', 'n2.code', 'n2.id', 'n2.isEnd'], ['n3.date', 'n3.code', 'n3.id', 'n3.isEnd'], ['n4.date', 'n4.code', 'n4.id', 'n4.isEnd']]
+(n3:Encounter)-[rel3:NEXT]->(n4:Encounter);[['n3.date', 'n3.code', 'n3.id', 'n3.isEnd'], ['n4.date', 'n4.code', 'n4.id', 'n4.isEnd']]
+[rel3:NEXT];[]
+(n4:Encounter);[['n4.date', 'n4.code', 'n4.end', 'n4.id'], ['n4.date', 'n4.code', 'n4.claimCost', 'n4.id'], ['n4.date', 'n4.code', 'n4.coveredAmount', 'n4.id'], ['n4.date', 'n4.code', 'n4.description', 'n4.id'], ['n4.date', 'n4.baseCost', 'n4.code', 'n4.id'], ['n4.date', 'n4.code', 'n4.id', 'n4.class'], ['n4.date', 'n4.code', 'n4.id', 'n4.isEnd']]
+(n2:Encounter)-[rel2:NEXT]->(n3:Encounter)-[rel3:NEXT]->(n4:Encounter)-[rel4:HAS_PROCEDURE]->(n5:Procedure);[['n5.code', 'n4.id'], ['n5.description', 'n4.id'], ['n5.code', 'n4.end'], ['n5.description', 'n4.end']]
+(n3:Encounter)-[rel3:NEXT]->(n4:Encounter)-[rel4:HAS_PROCEDURE]->(n5:Procedure);[['n5.code', 'n4.id'], ['n5.description', 'n4.id'], ['n5.code', 'n4.end'], ['n5.description', 'n4.end']]
+(n4:Encounter)-[rel4:HAS_PROCEDURE]->(n5:Procedure);[['n5.code', 'n4.id'], ['n5.description', 'n4.id'], ['n5.code', 'n4.end'], ['n5.description', 'n4.end']]
+[rel4:HAS_PROCEDURE];[]
+(n5:Procedure);[['n5.code'], ['n5.description']]
+
+execution time for tree and leaves: 13.43 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 21.42 s
+execution time for case 3: 1.39 s
+total execution time: 36.25 s
+Max memory used: 173.51 MB

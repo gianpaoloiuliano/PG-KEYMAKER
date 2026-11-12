@@ -1,0 +1,7 @@
+
+### PATTERN (n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port)
+
+tempo d'esecuzione totale: 35.545 s
+internal keys discovery time: 27.432 s
+external keys discovery time: 0.000 s
+memoria massima totale: 243.02 MB

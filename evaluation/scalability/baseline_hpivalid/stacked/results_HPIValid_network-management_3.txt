@@ -1,0 +1,7 @@
+
+### PATTERN (m:Machine)-[r:RUNS]-(se:Service:Process)-[l:LISTENS]-(p:Port)
+
+tempo d'esecuzione totale: 48.498 s
+internal keys discovery time: 25.837 s
+external keys discovery time: 0.000 s
+memoria massima totale: 170.09 MB

@@ -1,0 +1,49 @@
+filters: ra.zone = 1 AND count(se) > 1 PER m
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (ra:Rack)
+  match: 10 | tempo: 2128.44 ms, peak 137.4 MB
+  IDENTIFIER ra.name
+  IDENTIFIER ra.rack
+
+FOR (m:Machine)
+  match: 4796 | tempo: 251.84 ms, peak 138.9 MB
+  IDENTIFIER m.name
+
+FOR (se:Service:Process)
+  match: 14430 | tempo: 390.25 ms, peak 143.4 MB
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+FOR [h:HOLDS]
+  match: 8040 | tempo: 82.86 ms, peak 143.4 MB
+  no key found
+
+FOR [r:RUNS]
+  match: 30430 | tempo: 62.18 ms, peak 142.5 MB
+  no key found
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)
+  match: 1190 | tempo: 238.40 ms, peak 142.5 MB
+  IDENTIFIER m.name
+
+FOR (m:Machine)-[r:RUNS]-(se:Service:Process)
+  match: 11226 | tempo: 542.35 ms, peak 143.7 MB
+  IDENTIFIER se.startTime
+  IDENTIFIER m.name, se.name
+  IDENTIFIER m.name, se.pid
+
+FOR (ra:Rack)-[h:HOLDS]-(m:Machine)-[r:RUNS]-(se:Service:Process)
+  match: 2788 | tempo: 423.73 ms, peak 143.8 MB
+  IDENTIFIER se.startTime
+  IDENTIFIER m.name, se.name
+  IDENTIFIER m.name, se.pid
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 12
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 4.12s
+memoria massima totale: 143.79 MB
+------------------------------------------------------------------------

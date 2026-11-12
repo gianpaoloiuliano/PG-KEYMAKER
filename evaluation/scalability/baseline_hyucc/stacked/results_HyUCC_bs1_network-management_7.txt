@@ -1,0 +1,11 @@
+
+### PATTERN (m:Machine)-[r:RUNS]-(a:Application:Process)-[l:LISTENS]-(p:Port)
+(m:Machine)-[r:RUNS]-(a:Application:Process)-[l:LISTENS]-(p:Port) - INTERNAL_KEYS [['a.startTime', 'p.port'], ['m.name', 'p.port']]
+(a:Application:Process)-[l:LISTENS]-(p:Port) - INTERNAL_KEYS [['a.startTime', 'p.port']]
+(m:Machine)-[r:RUNS]-(a:Application:Process) - INTERNAL_KEYS [['a.startTime'], ['m.name']]
+(a:Application:Process) - INTERNAL_KEYS [['a.startTime']]
+
+tempo d'esecuzione totale: 10.776 s
+internal keys discovery time: 4.604 s
+external keys discovery time: 0.000 s
+memoria massima totale: 201.86 MB

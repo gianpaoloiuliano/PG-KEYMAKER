@@ -1,0 +1,8 @@
+
+### PATTERN (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hc:HAS_CONDITION]->(c:Condition)
+### FILTERS count(DISTINCT c) >= 19 PER p
+
+tempo d'esecuzione totale: 131.733 s
+internal keys discovery time: 54.541 s
+external keys discovery time: 67.442 s
+memoria massima totale: 691.85 MB

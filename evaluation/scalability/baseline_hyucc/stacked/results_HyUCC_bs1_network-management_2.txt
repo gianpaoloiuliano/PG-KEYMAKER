@@ -1,0 +1,12 @@
+
+### PATTERN (a:Application:Process)-[d:DEPENDS_ON]-(se:Service:Process)-[l:LISTENS]-(p:Port)
+(a:Application:Process)-[d:DEPENDS_ON]-(se:Service:Process)-[l:LISTENS]-(p:Port) - INTERNAL_KEYS [['p.port', 'se.startTime'], ['a.pid', 'p.port', 'se.pid'], ['a.startTime', 'p.port']]
+(a:Application:Process)-[d:DEPENDS_ON]-(se:Service:Process) - INTERNAL_KEYS [['a.startTime', 'se.startTime'], ['se.startTime', 'se.pid'], ['a.pid', 'se.startTime'], ['se.name', 'se.startTime'], ['a.name', 'se.startTime'], ['a.startTime', 'se.pid'], ['a.startTime', 'se.name'], ['a.pid', 'se.name', 'se.pid'], ['a.name', 'a.pid', 'se.pid']]
+(a:Application:Process) - INTERNAL_KEYS [['a.startTime']]
+(se:Service:Process)-[l:LISTENS]-(p:Port) - INTERNAL_KEYS [['p.port', 'se.startTime']]
+(se:Service:Process) - INTERNAL_KEYS [['se.startTime', 'se.pid'], ['se.name', 'se.startTime']]
+
+tempo d'esecuzione totale: 14.248 s
+internal keys discovery time: 9.312 s
+external keys discovery time: 0.000 s
+memoria massima totale: 204.36 MB

@@ -1,0 +1,29 @@
+pattern;keys found
+
+(n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port);[['n4.startTime', 'n5.port']]
+(n1:Rack)-[rel1:HOLDS]->(n2:Machine);[['n2.name']]
+(n1:Rack);[['n1.name'], ['n1.rack', 'n1.zone']]
+[rel1:HOLDS];[]
+(n2:Machine);[['n2.name']]
+(n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process);[['n2.name'], ['n3.startTime']]
+(n2:Machine)-[rel2:RUNS]->(n3:Application:Process);[['n2.name'], ['n3.startTime']]
+[rel2:RUNS];[]
+(n3:Application:Process);[['n3.startTime']]
+(n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+[rel3:DEPENDS_ON];[]
+(n4:Service:Process);[['n4.startTime', 'n4.pid'], ['n4.name', 'n4.startTime']]
+(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port);[['n4.startTime', 'n5.port']]
+(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port);[['n4.startTime', 'n5.port']]
+(n4:Service:Process)-[rel4:LISTENS]->(n5:Port);[['n4.startTime', 'n5.port']]
+[rel4:LISTENS];[]
+(n5:Port);[]
+
+execution time for tree and leaves: 6.79 s
+execution time for external keys: 4.06 s
+execution time for case 1: 0.00 s
+execution time for case 2: 3.09 s
+execution time for case 3: 0.45 s
+total execution time: 14.38 s
+Max memory used: 241.02 MB

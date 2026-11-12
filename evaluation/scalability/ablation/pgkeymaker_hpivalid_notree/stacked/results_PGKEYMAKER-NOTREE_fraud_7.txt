@@ -1,0 +1,18 @@
+pattern;keys found
+
+(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction)-[n:NEXT]->(ct2:CashIn:Transaction);[['ct.globalStep'], ['ct.amount'], ['ct.id'], ['ct2.globalStep'], ['ct2.amount'], ['ct2.id']]
+(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction);[['ct.globalStep'], ['ct.amount'], ['ct.id']]
+(cl:Client);[['cl.id']]
+[pf:PERFORMED];[]
+(ct:CashIn:Transaction);[['ct.globalStep'], ['ct.amount'], ['ct.id']]
+(ct:CashIn:Transaction)-[n:NEXT]->(ct2:CashIn:Transaction);[['ct.globalStep'], ['ct.amount'], ['ct.id'], ['ct2.globalStep'], ['ct2.amount'], ['ct2.id']]
+[n:NEXT];[]
+(ct2:CashIn:Transaction);[['ct2.globalStep'], ['ct2.amount'], ['ct2.id']]
+
+execution time for tree and leaves: 48.85 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 4.08 s
+execution time for case 3: 0.00 s
+total execution time: 52.92 s
+Max memory used: 172.73 MB

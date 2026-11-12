@@ -1,0 +1,45 @@
+filters: ver.name IN ['14.04', '7.1', '6-Squeeze'] AND count(m) > 500 PER ver
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (m:Machine)
+  match: 8000 | tempo: 2260.57 ms, peak 141.8 MB
+  IDENTIFIER m.name
+
+FOR (o:OS:Process)
+  match: 8000 | tempo: 310.03 ms, peak 141.8 MB
+  IDENTIFIER o.startTime
+
+FOR (ver:Version)
+  match: 3 | tempo: 298.12 ms, peak 141.8 MB
+  IDENTIFIER ver.name
+
+FOR [r:RUNS]
+  match: 30430 | tempo: 90.10 ms, peak 141.8 MB
+  no key found
+
+FOR [i:INSTANCE]
+  match: 30430 | tempo: 206.74 ms, peak 141.8 MB
+  no key found
+
+FOR (m:Machine)-[r:RUNS]-(o:OS:Process)
+  match: 8000 | tempo: 249.76 ms, peak 141.8 MB
+  IDENTIFIER m.name
+  IDENTIFIER o.startTime
+
+FOR (o:OS:Process)-[i:INSTANCE]-(ver:Version)
+  match: 2444 | tempo: 238.68 ms, peak 141.8 MB
+  IDENTIFIER o.startTime
+
+FOR (m:Machine)-[r:RUNS]-(o:OS:Process)-[i:INSTANCE]-(ver:Version)
+  match: 2444 | tempo: 258.73 ms, peak 141.8 MB
+  IDENTIFIER m.name
+  IDENTIFIER o.startTime
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 8
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 4.91s
+memoria massima totale: 141.84 MB
+------------------------------------------------------------------------

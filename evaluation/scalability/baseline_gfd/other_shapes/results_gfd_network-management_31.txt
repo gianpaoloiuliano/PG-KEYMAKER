@@ -1,0 +1,80 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (n1:DataCenter)
+  match: 1 | tempo: 2213.68 ms, peak 237.2 KiB
+  IDENTIFIER n1.location
+  IDENTIFIER n1.name
+
+FOR (n2:Rack)
+  match: 40 | tempo: 92.79 ms, peak 204.0 KiB
+  IDENTIFIER n2.name
+  IDENTIFIER n2.rack, n2.zone
+
+FOR (n3:Machine)
+  match: 8000 | tempo: 498.22 ms, peak 1766.1 KiB
+  IDENTIFIER n3.name
+
+FOR (n4:Interface)
+  match: 8045 | tempo: 508.38 ms, peak 2236.6 KiB
+  IDENTIFIER n4.ip
+
+FOR (n5:Port)
+  match: 37238 | tempo: 2003.33 ms, peak 6959.3 KiB
+  no key found
+
+FOR (n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)
+  match: 40 | tempo: 160.07 ms, peak 504.6 KiB
+  IDENTIFIER n2.name
+  IDENTIFIER n2.rack, n2.zone
+
+FOR (n2:Rack)-[rel2:HOLDS]->(n3:Machine)
+  match: 8000 | tempo: 671.17 ms, peak 2692.2 KiB
+  IDENTIFIER n3.name
+
+FOR (n3:Machine)-[rel3:ROUTES]->(n4:Interface)
+  match: 8000 | tempo: 607.07 ms, peak 3358.1 KiB
+  IDENTIFIER n3.name
+  IDENTIFIER n4.ip
+
+FOR (n4:Interface)-[rel4:EXPOSES]->(n5:Port)
+  match: 37238 | tempo: 2417.66 ms, peak 9928.2 KiB
+  IDENTIFIER n4.ip, n5.port
+
+FOR (n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)
+  match: 8000 | tempo: 885.83 ms, peak 6626.3 KiB
+  IDENTIFIER n3.name
+
+FOR (n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)
+  match: 8000 | tempo: 814.11 ms, peak 5609.5 KiB
+  IDENTIFIER n3.name
+  IDENTIFIER n4.ip
+
+FOR (n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port)
+  match: 37238 | tempo: 4362.98 ms, peak 12914.4 KiB
+  IDENTIFIER n4.ip, n5.port
+  IDENTIFIER n3.name, n5.port
+
+FOR (n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)
+  match: 8000 | tempo: 1242.28 ms, peak 9701.0 KiB
+  IDENTIFIER n3.name
+  IDENTIFIER n4.ip
+
+FOR (n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port)
+  match: 37238 | tempo: 4053.67 ms, peak 21215.1 KiB
+  IDENTIFIER n3.name, n5.port
+  IDENTIFIER n4.ip, n5.port
+
+FOR (n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:ROUTES]->(n4:Interface)-[rel4:EXPOSES]->(n5:Port)
+  match: 37238 | tempo: 5815.02 ms, peak 32301.5 KiB
+  IDENTIFIER n4.ip, n5.port
+  IDENTIFIER n3.name, n5.port
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 23
+Sotto-pattern esaminati: 15
+tempo d'esecuzione totale:: 26.35s
+memoria massima totale: 32301.5 KiB
+------------------------------------------------------------------------

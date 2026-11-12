@@ -1,0 +1,7 @@
+
+### PATTERN (m:Machine)-[r:RUNS]-(o:OS:Process)-[i:INSTANCE]-(ver:Version)
+
+tempo d'esecuzione totale: 27.531 s
+internal keys discovery time: 11.358 s
+external keys discovery time: 0.000 s
+memoria massima totale: 156.83 MB

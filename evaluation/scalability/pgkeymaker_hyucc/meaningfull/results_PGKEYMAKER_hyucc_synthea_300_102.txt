@@ -1,0 +1,19 @@
+filters: count(DISTINCT dr) >= 6 PER p
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug);[['en.date', 'dr.code', 'en.id', 'en.isEnd'], ['en.date', 'dr.description', 'en.id', 'en.isEnd']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter);[['en.date', 'en.code', 'en.id', 'en.isEnd']]
+(p:Patient);[['p.SSN'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.city'], ['p.firstName', 'p.marital'], ['p.lastName', 'p.birthDate'], ['p.lastName', 'p.city'], ['p.lastName', 'p.marital', 'p.gender', 'p.ethnicity'], ['p.deathDate', 'p.birthDate']]
+[has:HAS_ENCOUNTER];[]
+(en:Encounter);[['en.date', 'en.code', 'en.end', 'en.id'], ['en.date', 'en.code', 'en.claimCost', 'en.id'], ['en.date', 'en.code', 'en.coveredAmount', 'en.id'], ['en.date', 'en.code', 'en.description', 'en.id'], ['en.date', 'en.baseCost', 'en.code', 'en.id'], ['en.date', 'en.code', 'en.id', 'en.class'], ['en.date', 'en.code', 'en.id', 'en.isEnd']]
+(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug);[['en.date', 'dr.code', 'en.end', 'en.id'], ['en.date', 'dr.description', 'en.end', 'en.id'], ['en.date', 'dr.code', 'en.coveredAmount', 'en.id'], ['en.date', 'dr.description', 'en.coveredAmount', 'en.id'], ['en.date', 'dr.code', 'en.claimCost', 'en.id'], ['en.date', 'dr.description', 'en.claimCost', 'en.id'], ['en.date', 'dr.code', 'en.description', 'en.id'], ['en.date', 'en.baseCost', 'dr.code', 'en.id'], ['en.date', 'dr.code', 'en.id', 'en.class'], ['en.date', 'dr.code', 'en.id', 'en.isEnd'], ['en.date', 'dr.description', 'en.description', 'en.id'], ['en.date', 'en.baseCost', 'dr.description', 'en.id'], ['en.date', 'dr.description', 'en.id', 'en.class'], ['en.date', 'dr.description', 'en.id', 'en.isEnd']]
+[hd:HAS_DRUG];[]
+(dr:Drug);[['dr.code']]
+
+execution time for tree and leaves: 11.00 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 16.33 s
+execution time for case 3: 0.87 s
+total execution time: 28.20 s
+Max memory used: 260.50 MB

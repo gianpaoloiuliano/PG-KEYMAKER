@@ -1,0 +1,58 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (tt:Transfer:Transaction)
+  match: 19460 | tempo: 5229.31 ms, peak 8143.6 KiB
+  IDENTIFIER tt.globalStep
+  IDENTIFIER tt.id
+  IDENTIFIER tt.amount, tt.step
+  IDENTIFIER tt.amount, tt.ts
+
+FOR (cl:Client)
+  match: 2433 | tempo: 382.95 ms, peak 2414.7 KiB
+  IDENTIFIER cl.id
+
+FOR (tt2:Transfer:Transaction)
+  match: 19460 | tempo: 3995.74 ms, peak 8466.7 KiB
+  IDENTIFIER tt2.globalStep
+  IDENTIFIER tt2.id
+  IDENTIFIER tt2.amount, tt2.step
+  IDENTIFIER tt2.amount, tt2.ts
+
+FOR (tt:Transfer:Transaction)-[to:TO]->(cl:Client)
+  match: 19460 | tempo: 4918.84 ms, peak 13085.5 KiB
+  IDENTIFIER tt.globalStep
+  IDENTIFIER tt.id
+  IDENTIFIER tt.amount, tt.step
+  IDENTIFIER tt.amount, tt.ts
+
+FOR (cl:Client)-[pf:PERFORMED]->(tt2:Transfer:Transaction)
+  match: 19460 | tempo: 4772.51 ms, peak 15515.3 KiB
+  IDENTIFIER tt2.globalStep
+  IDENTIFIER tt2.id
+  IDENTIFIER tt2.amount, tt2.step
+  IDENTIFIER tt2.amount, tt2.ts
+
+FOR (tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(tt2:Transfer:Transaction)
+  match: 170166 | tempo: 461373.72 ms, peak 164442.9 KiB
+  IDENTIFIER tt.amount, tt2.id
+  IDENTIFIER tt.id, tt2.id
+  IDENTIFIER tt.globalStep, tt2.id
+  IDENTIFIER tt.globalStep, tt2.globalStep
+  IDENTIFIER tt.amount, tt2.globalStep
+  IDENTIFIER tt.id, tt2.globalStep
+  IDENTIFIER tt.globalStep, tt2.amount, tt2.step
+  IDENTIFIER tt.globalStep, tt2.amount, tt2.ts
+  IDENTIFIER tt.amount, tt2.amount, tt2.step
+  IDENTIFIER tt.id, tt2.amount, tt2.ts
+  IDENTIFIER tt.id, tt2.amount, tt2.step
+  IDENTIFIER tt.amount, tt2.amount, tt2.ts
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 29
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 480.67s
+memoria massima totale: 164442.9 KiB
+------------------------------------------------------------------------

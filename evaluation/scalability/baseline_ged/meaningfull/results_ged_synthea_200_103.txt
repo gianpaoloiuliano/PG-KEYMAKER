@@ -1,0 +1,80 @@
+filters: count(DISTINCT c) >= 19 PER p
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (p:Patient)
+  match: 140 | tempo: 2259.47 ms, peak 533.2 MB
+  IDENTIFIER p.SSN
+  IDENTIFIER p.id
+  IDENTIFIER p.birthDate, p.deathDate
+  IDENTIFIER p.birthDate, p.lastName
+  IDENTIFIER p.deathDate, p.firstName
+  IDENTIFIER p.firstName, p.lastName
+  IDENTIFIER p.firstName, p.marital
+  IDENTIFIER p.city, p.deathDate, p.lastName
+  IDENTIFIER p.city, p.lastName, p.marital
+
+FOR (en:Encounter)
+  match: 42030 | tempo: 5088.87 ms, peak 533.2 MB
+  IDENTIFIER en.code, en.date, en.id, en.isEnd
+
+FOR (c:Condition)
+  match: 224 | tempo: 53.99 ms, peak 470.9 MB
+  IDENTIFIER c.code
+  IDENTIFIER c.description
+
+FOR [has:HAS_ENCOUNTER]
+  match: 42030 | tempo: 13.20 ms, peak 462.0 MB
+  no key found
+
+FOR [hc:HAS_CONDITION]
+  match: 17708 | tempo: 28.65 ms, peak 462.0 MB
+  no key found
+
+FOR (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)
+  match: 36545 | tempo: 1335320.97 ms, peak 6684.7 MB
+  IDENTIFIER en.code, en.date, en.id, en.isEnd
+
+FOR (en:Encounter)-[hc:HAS_CONDITION]->(c:Condition)
+  match: 17708 | tempo: 4164.28 ms, peak 2052.3 MB
+  IDENTIFIER c.code, en.date, en.id
+  IDENTIFIER c.code, en.id, en.isEnd
+  IDENTIFIER c.description, en.date, en.id
+  IDENTIFIER c.description, en.id, en.isEnd
+
+FOR (p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hc:HAS_CONDITION]->(c:Condition)
+  match: 14283 | tempo: 4510615.80 ms, peak 18462.1 MB
+  IDENTIFIER c.code, en.date, en.id
+  IDENTIFIER c.code, en.date, p.SSN
+  IDENTIFIER c.code, en.date, p.id
+  IDENTIFIER c.code, en.id, en.isEnd
+  IDENTIFIER c.description, en.date, en.id
+  IDENTIFIER c.description, en.date, p.SSN
+  IDENTIFIER c.description, en.date, p.id
+  IDENTIFIER c.description, en.id, en.isEnd
+  IDENTIFIER c.code, en.code, en.date, p.lastName
+  IDENTIFIER c.code, en.date, p.birthDate, p.deathDate
+  IDENTIFIER c.code, en.date, p.birthDate, p.lastName
+  IDENTIFIER c.code, en.date, p.city, p.deathDate
+  IDENTIFIER c.code, en.date, p.city, p.lastName
+  IDENTIFIER c.code, en.date, p.deathDate, p.firstName
+  IDENTIFIER c.code, en.date, p.firstName, p.lastName
+  IDENTIFIER c.code, en.date, p.firstName, p.marital
+  IDENTIFIER c.code, en.date, p.lastName, p.marital
+  IDENTIFIER c.description, en.code, en.date, p.lastName
+  IDENTIFIER c.description, en.date, p.birthDate, p.deathDate
+  IDENTIFIER c.description, en.date, p.birthDate, p.lastName
+  IDENTIFIER c.description, en.date, p.city, p.deathDate
+  IDENTIFIER c.description, en.date, p.city, p.lastName
+  IDENTIFIER c.description, en.date, p.deathDate, p.firstName
+  IDENTIFIER c.description, en.date, p.firstName, p.lastName
+  IDENTIFIER c.description, en.date, p.firstName, p.marital
+  IDENTIFIER c.description, en.date, p.lastName, p.marital
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 43
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 5857.55s
+memoria massima totale: 18462.09 MB
+------------------------------------------------------------------------

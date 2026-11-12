@@ -1,0 +1,7 @@
+
+### PATTERN (tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(ct:CashIn:Transaction)
+
+tempo d'esecuzione totale: 218.246 s
+internal keys discovery time: 218.246 s
+external keys discovery time: 0.000 s
+memoria massima totale: 2531.18 MB

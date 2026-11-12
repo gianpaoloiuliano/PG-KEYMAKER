@@ -1,0 +1,53 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (tt:Transfer:Transaction)
+  match: 19460 | tempo: 5470.62 ms, peak 8143.9 KiB
+  IDENTIFIER tt.globalStep
+  IDENTIFIER tt.id
+  IDENTIFIER tt.amount, tt.step
+  IDENTIFIER tt.amount, tt.ts
+
+FOR (cl:Client)
+  match: 2433 | tempo: 433.38 ms, peak 2415.3 KiB
+  IDENTIFIER cl.id
+
+FOR (co:CashOut:Transaction)
+  match: 76023 | tempo: 15702.44 ms, peak 31902.1 KiB
+  IDENTIFIER co.amount
+  IDENTIFIER co.globalStep
+  IDENTIFIER co.id
+
+FOR (tt:Transfer:Transaction)-[to:TO]->(cl:Client)
+  match: 19460 | tempo: 5210.77 ms, peak 18099.0 KiB
+  IDENTIFIER tt.globalStep
+  IDENTIFIER tt.id
+  IDENTIFIER tt.amount, tt.step
+  IDENTIFIER tt.amount, tt.ts
+
+FOR (cl:Client)-[pf:PERFORMED]->(co:CashOut:Transaction)
+  match: 76023 | tempo: 18406.07 ms, peak 48181.2 KiB
+  IDENTIFIER co.amount
+  IDENTIFIER co.globalStep
+  IDENTIFIER co.id
+
+FOR (tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(co:CashOut:Transaction)
+  match: 666114 | tempo: 1450195.13 ms, peak 643071.1 KiB
+  IDENTIFIER co.globalStep, tt.globalStep
+  IDENTIFIER co.globalStep, tt.amount
+  IDENTIFIER co.id, tt.id
+  IDENTIFIER co.amount, tt.amount
+  IDENTIFIER co.globalStep, tt.id
+  IDENTIFIER co.amount, tt.globalStep
+  IDENTIFIER co.id, tt.amount
+  IDENTIFIER co.amount, tt.id
+  IDENTIFIER co.id, tt.globalStep
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 24
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 1495.42s
+memoria massima totale: 643071.1 KiB
+------------------------------------------------------------------------

@@ -1,0 +1,56 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (r:Rack)
+  match: 40 | tempo: 2596.04 ms, peak 236.6 KiB
+  IDENTIFIER r.name
+  IDENTIFIER r.rack, r.zone
+
+FOR (ma:Machine)
+  match: 8000 | tempo: 945.87 ms, peak 1764.1 KiB
+  IDENTIFIER ma.name
+
+FOR (in:Interface)
+  match: 8045 | tempo: 741.59 ms, peak 2234.7 KiB
+  IDENTIFIER in.ip
+
+FOR (po:Port)
+  match: 37238 | tempo: 3299.15 ms, peak 6959.1 KiB
+  no key found
+
+FOR (r:Rack)-[h:HOLDS]->(ma:Machine)
+  match: 8000 | tempo: 1201.87 ms, peak 2963.4 KiB
+  IDENTIFIER ma.name
+
+FOR (ma:Machine)-[ro:ROUTES]->(in:Interface)
+  match: 8000 | tempo: 957.98 ms, peak 3354.1 KiB
+  IDENTIFIER ma.name
+  IDENTIFIER in.ip
+
+FOR (in:Interface)-[exp:EXPOSES]->(po:Port)
+  match: 37238 | tempo: 2869.96 ms, peak 9924.2 KiB
+  IDENTIFIER in.ip, po.port
+
+FOR (r:Rack)-[h:HOLDS]->(ma:Machine)-[ro:ROUTES]->(in:Interface)
+  match: 8000 | tempo: 1101.90 ms, peak 5968.6 KiB
+  IDENTIFIER ma.name
+  IDENTIFIER in.ip
+
+FOR (ma:Machine)-[ro:ROUTES]->(in:Interface)-[exp:EXPOSES]->(po:Port)
+  match: 37238 | tempo: 3781.43 ms, peak 12897.6 KiB
+  IDENTIFIER in.ip, po.port
+  IDENTIFIER ma.name, po.port
+
+FOR (r:Rack)-[h:HOLDS]->(ma:Machine)-[ro:ROUTES]->(in:Interface)-[exp:EXPOSES]->(po:Port)
+  match: 37238 | tempo: 4463.03 ms, peak 23501.0 KiB
+  IDENTIFIER ma.name, po.port
+  IDENTIFIER in.ip, po.port
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 14
+Sotto-pattern esaminati: 10
+tempo d'esecuzione totale:: 21.96s
+memoria massima totale: 23501.0 KiB
+------------------------------------------------------------------------

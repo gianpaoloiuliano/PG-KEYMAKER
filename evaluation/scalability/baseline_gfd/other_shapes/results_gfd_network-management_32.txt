@@ -1,0 +1,117 @@
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (n1:Rack)
+  match: 40 | tempo: 2084.11 ms, peak 69.2 KiB
+  IDENTIFIER n1.name
+  IDENTIFIER n1.rack, n1.zone
+
+FOR (n2:Machine)
+  match: 8000 | tempo: 493.80 ms, peak 1635.7 KiB
+  IDENTIFIER n2.name
+
+FOR (n3:Application:Process)
+  match: 8000 | tempo: 636.23 ms, peak 2809.7 KiB
+  IDENTIFIER n3.startTime
+
+FOR (n4:Service:Process)
+  match: 14430 | tempo: 1167.87 ms, peak 4591.1 KiB
+  IDENTIFIER n4.pid, n4.startTime
+  IDENTIFIER n4.name, n4.startTime
+
+FOR (n5:Port)
+  match: 37238 | tempo: 1942.41 ms, peak 7293.2 KiB
+  no key found
+
+FOR (n1:Rack)-[rel1:HOLDS]->(n2:Machine)
+  match: 8000 | tempo: 616.80 ms, peak 2840.2 KiB
+  IDENTIFIER n2.name
+
+FOR (n2:Machine)-[rel2:RUNS]->(n3:Application:Process)
+  match: 8000 | tempo: 711.22 ms, peak 3946.4 KiB
+  IDENTIFIER n2.name
+  IDENTIFIER n3.startTime
+
+FOR (n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)
+  match: 14430 | tempo: 1386.14 ms, peak 8674.1 KiB
+  IDENTIFIER n3.startTime, n4.startTime
+  IDENTIFIER n3.name, n4.startTime
+  IDENTIFIER n4.pid, n4.startTime
+  IDENTIFIER n4.name, n4.startTime
+  IDENTIFIER n3.startTime, n4.name
+  IDENTIFIER n3.startTime, n4.pid
+  IDENTIFIER n3.pid, n4.startTime
+  IDENTIFIER n3.pid, n4.name, n4.pid
+  IDENTIFIER n3.name, n3.pid, n4.pid
+
+FOR (n4:Service:Process)-[rel4:LISTENS]->(n5:Port)
+  match: 26006 | tempo: 2134.62 ms, peak 10557.5 KiB
+  IDENTIFIER n4.startTime, n5.port
+
+FOR (n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)
+  match: 8000 | tempo: 884.14 ms, peak 6645.4 KiB
+  IDENTIFIER n2.name
+  IDENTIFIER n3.startTime
+
+FOR (n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)
+  match: 14430 | tempo: 1609.26 ms, peak 10511.5 KiB
+  IDENTIFIER n3.name, n4.startTime
+  IDENTIFIER n3.startTime, n4.name
+  IDENTIFIER n2.name, n4.startTime
+  IDENTIFIER n4.pid, n4.startTime
+  IDENTIFIER n4.name, n4.startTime
+  IDENTIFIER n2.name, n4.pid
+  IDENTIFIER n3.pid, n4.startTime
+  IDENTIFIER n2.name, n4.name
+  IDENTIFIER n3.startTime, n4.pid
+  IDENTIFIER n3.startTime, n4.startTime
+  IDENTIFIER n3.pid, n4.name, n4.pid
+  IDENTIFIER n3.name, n3.pid, n4.pid
+
+FOR (n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port)
+  match: 26006 | tempo: 3240.57 ms, peak 18437.6 KiB
+  IDENTIFIER n4.startTime, n5.port
+  IDENTIFIER n3.startTime, n5.port
+  IDENTIFIER n3.pid, n4.pid, n5.port
+
+FOR (n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)
+  match: 14430 | tempo: 2519.27 ms, peak 15702.7 KiB
+  IDENTIFIER n3.name, n4.startTime
+  IDENTIFIER n1.zone, n4.startTime
+  IDENTIFIER n3.startTime, n4.name
+  IDENTIFIER n2.name, n4.startTime
+  IDENTIFIER n4.pid, n4.startTime
+  IDENTIFIER n4.name, n4.startTime
+  IDENTIFIER n2.name, n4.pid
+  IDENTIFIER n3.pid, n4.startTime
+  IDENTIFIER n1.name, n4.startTime
+  IDENTIFIER n2.name, n4.name
+  IDENTIFIER n3.startTime, n4.pid
+  IDENTIFIER n3.startTime, n4.startTime
+  IDENTIFIER n3.pid, n4.name, n4.pid
+  IDENTIFIER n1.rack, n3.pid, n4.pid
+  IDENTIFIER n1.name, n3.pid, n4.pid
+  IDENTIFIER n3.name, n3.pid, n4.pid
+
+FOR (n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port)
+  match: 26006 | tempo: 3182.29 ms, peak 21653.1 KiB
+  IDENTIFIER n4.startTime, n5.port
+  IDENTIFIER n3.startTime, n5.port
+  IDENTIFIER n2.name, n5.port
+  IDENTIFIER n3.pid, n4.pid, n5.port
+
+FOR (n1:Rack)-[rel1:HOLDS]->(n2:Machine)-[rel2:RUNS]->(n3:Application:Process)-[rel3:DEPENDS_ON]->(n4:Service:Process)-[rel4:LISTENS]->(n5:Port)
+  match: 26006 | tempo: 8541.54 ms, peak 28539.4 KiB
+  IDENTIFIER n4.startTime, n5.port
+  IDENTIFIER n3.startTime, n5.port
+  IDENTIFIER n2.name, n5.port
+  IDENTIFIER n3.pid, n4.pid, n5.port
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 60
+Sotto-pattern esaminati: 15
+tempo d'esecuzione totale:: 31.15s
+memoria massima totale: 28539.4 KiB
+------------------------------------------------------------------------

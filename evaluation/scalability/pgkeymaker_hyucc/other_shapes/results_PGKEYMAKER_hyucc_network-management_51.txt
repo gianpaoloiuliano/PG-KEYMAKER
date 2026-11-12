@@ -1,0 +1,36 @@
+pattern;keys found
+
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Application:Process)-[rel4:DEPENDS_ON]->(n5:Service:Process)-[rel5:LISTENS]->(n6:Port);[['n5.startTime', 'n6.port']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack);[['n2.name'], ['n2.rack', 'n2.zone']]
+(n1:DataCenter);[['n1.name'], ['n1.location']]
+[rel1:CONTAINS];[]
+(n2:Rack);[['n2.name'], ['n2.rack', 'n2.zone']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine);[['n3.name']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine);[['n3.name']]
+[rel2:HOLDS];[]
+(n3:Machine);[['n3.name']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Application:Process);[['n3.name'], ['n4.startTime']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Application:Process);[['n3.name'], ['n4.startTime']]
+(n3:Machine)-[rel3:RUNS]->(n4:Application:Process);[['n3.name'], ['n4.startTime']]
+[rel3:RUNS];[]
+(n4:Application:Process);[['n4.startTime']]
+(n1:DataCenter)-[rel1:CONTAINS]->(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Application:Process)-[rel4:DEPENDS_ON]->(n5:Service:Process);[['n5.startTime', 'n5.pid'], ['n5.name', 'n5.startTime']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Application:Process)-[rel4:DEPENDS_ON]->(n5:Service:Process);[['n5.startTime', 'n5.pid'], ['n5.name', 'n5.startTime']]
+(n3:Machine)-[rel3:RUNS]->(n4:Application:Process)-[rel4:DEPENDS_ON]->(n5:Service:Process);[['n5.startTime', 'n5.pid'], ['n5.name', 'n5.startTime']]
+(n4:Application:Process)-[rel4:DEPENDS_ON]->(n5:Service:Process);[['n5.startTime', 'n5.pid'], ['n5.name', 'n5.startTime']]
+[rel4:DEPENDS_ON];[]
+(n5:Service:Process);[['n5.startTime', 'n5.pid'], ['n5.name', 'n5.startTime']]
+(n2:Rack)-[rel2:HOLDS]->(n3:Machine)-[rel3:RUNS]->(n4:Application:Process)-[rel4:DEPENDS_ON]->(n5:Service:Process)-[rel5:LISTENS]->(n6:Port);[['n5.startTime', 'n6.port']]
+(n3:Machine)-[rel3:RUNS]->(n4:Application:Process)-[rel4:DEPENDS_ON]->(n5:Service:Process)-[rel5:LISTENS]->(n6:Port);[['n5.startTime', 'n6.port']]
+(n4:Application:Process)-[rel4:DEPENDS_ON]->(n5:Service:Process)-[rel5:LISTENS]->(n6:Port);[['n5.startTime', 'n6.port']]
+(n5:Service:Process)-[rel5:LISTENS]->(n6:Port);[['n5.startTime', 'n6.port']]
+[rel5:LISTENS];[]
+(n6:Port);[]
+
+execution time for tree and leaves: 7.71 s
+execution time for external keys: 4.09 s
+execution time for case 1: 0.00 s
+execution time for case 2: 4.01 s
+execution time for case 3: 0.46 s
+total execution time: 16.29 s
+Max memory used: 172.36 MB

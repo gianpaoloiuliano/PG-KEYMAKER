@@ -1,0 +1,18 @@
+pattern;keys found
+
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hd:HAS_DRUG]-(dr:Drug);[]
+(en2:Encounter)-[hd:HAS_DRUG]-(dr:Drug);[]
+(en2:Encounter);[]
+[hd:HAS_DRUG];[]
+(dr:Drug);[['dr.code']]
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter);[]
+(en1:Encounter);[]
+[nx:NEXT];[]
+
+execution time for tree and leaves: 36.96 s
+execution time for external keys: 120.62 s
+execution time for case 1: 0.00 s
+execution time for case 2: 189.49 s
+execution time for case 3: 24.88 s
+total execution time: 372.53 s
+Max memory used: 619.86 MB

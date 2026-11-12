@@ -1,0 +1,8 @@
+
+### PATTERN (m:Machine)-[r:RUNS]-(o:OS:Process)-[i:INSTANCE]-(ver:Version)
+### FILTERS ver.name IN ['14.04', '7.1', '6-Squeeze'] AND count(m) > 500 PER ver
+
+tempo d'esecuzione totale: 7.447 s
+internal keys discovery time: 2.378 s
+external keys discovery time: 0.000 s
+memoria massima totale: 188.32 MB

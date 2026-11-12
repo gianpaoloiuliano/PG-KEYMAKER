@@ -1,0 +1,19 @@
+pattern;keys found
+
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['en1.date', 'en1.code', 'pro.code', 'en1.id', 'en1.end', 'en2.date'], ['en1.date', 'en1.code', 'pro.description', 'en1.id', 'en1.end', 'en2.date'], ['en1.date', 'en1.code', 'pro.code', 'en1.coveredAmount', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'pro.description', 'en1.coveredAmount', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'pro.code', 'en1.claimCost', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'pro.description', 'en1.claimCost', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'pro.code', 'en1.description', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'pro.code', 'en1.baseCost', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'pro.code', 'en1.id', 'en1.class', 'en2.date'], ['en1.date', 'en1.code', 'pro.code', 'en1.id', 'en1.isEnd', 'en2.date'], ['en1.date', 'en1.code', 'pro.description', 'en1.description', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'pro.description', 'en1.baseCost', 'en1.id', 'en2.date'], ['en1.date', 'en1.code', 'pro.description', 'en1.id', 'en1.class', 'en2.date'], ['en1.date', 'en1.code', 'pro.description', 'en1.id', 'en1.isEnd', 'en2.date'], ['en1.date', 'en1.code', 'en2.end', 'pro.code', 'en1.end'], ['en1.date', 'en1.code', 'en2.end', 'pro.description', 'en1.end'], ['en1.date', 'en1.code', 'en2.end', 'pro.code', 'en1.coveredAmount'], ['en1.date', 'en1.code', 'en2.end', 'pro.description', 'en1.coveredAmount'], ['en1.date', 'en1.code', 'en2.end', 'pro.code', 'en1.claimCost'], ['en1.date', 'en1.code', 'en2.end', 'pro.description', 'en1.claimCost'], ['en1.date', 'en1.code', 'en2.end', 'pro.code', 'en1.description'], ['en1.date', 'en1.code', 'en2.end', 'pro.code', 'en1.baseCost'], ['en1.date', 'en1.code', 'en2.end', 'pro.code', 'en1.class'], ['en1.date', 'en1.code', 'en2.end', 'pro.code', 'en1.isEnd'], ['en1.date', 'en1.code', 'en2.end', 'pro.description', 'en1.description'], ['en1.date', 'en1.code', 'en2.end', 'pro.description', 'en1.baseCost'], ['en1.date', 'en1.code', 'en2.end', 'pro.description', 'en1.class'], ['en1.date', 'en1.code', 'en2.end', 'pro.description', 'en1.isEnd'], ['en1.date', 'en1.code', 'en2.id', 'pro.code', 'en1.end'], ['en1.date', 'en1.code', 'en2.id', 'pro.description', 'en1.end'], ['en1.date', 'en1.code', 'en2.id', 'pro.code', 'en1.coveredAmount'], ['en1.date', 'en1.code', 'en2.id', 'pro.description', 'en1.coveredAmount'], ['en1.date', 'en1.code', 'en2.id', 'pro.code', 'en1.claimCost'], ['en1.date', 'en1.code', 'en2.id', 'pro.description', 'en1.claimCost'], ['en1.date', 'en1.code', 'en2.id', 'pro.code', 'en1.description'], ['en1.date', 'en1.code', 'en2.id', 'pro.code', 'en1.baseCost'], ['en1.date', 'en1.code', 'en2.id', 'pro.code', 'en1.class'], ['en1.date', 'en1.code', 'en2.id', 'pro.code', 'en1.isEnd'], ['en1.date', 'en1.code', 'en2.id', 'pro.description', 'en1.description'], ['en1.date', 'en1.code', 'en2.id', 'pro.description', 'en1.baseCost'], ['en1.date', 'en1.code', 'en2.id', 'pro.description', 'en1.class'], ['en1.date', 'en1.code', 'en2.id', 'pro.description', 'en1.isEnd']]
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter);[]
+(en1:Encounter);[]
+[nx:NEXT];[]
+(en2:Encounter);[]
+(en2:Encounter)-[hasp:HAS_PROCEDURE]-(pro:Procedure);[['pro.code', 'en2.end'], ['pro.description', 'en2.end'], ['pro.code', 'en2.id'], ['pro.description', 'en2.id']]
+[hasp:HAS_PROCEDURE];[]
+(pro:Procedure);[['pro.code'], ['pro.description']]
+
+execution time for tree and leaves: 28.76 s
+execution time for external keys: 324.39 s
+execution time for case 1: 0.00 s
+execution time for case 2: 112.49 s
+execution time for case 3: 13.26 s
+total execution time: 479.25 s
+Memory: 850.08 MB
+Max memory used: 502.21 MB

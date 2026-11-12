@@ -1,0 +1,23 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[nxt:NEXT]->(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure);[['pro.code', 'en1.id'], ['pro.description', 'en1.id'], ['pro.code', 'en1.coveredAmount', 'en1.end'], ['pro.description', 'en1.coveredAmount', 'en1.end'], ['en1.date', 'pro.code', 'en1.claimCost', 'en1.coveredAmount'], ['en1.date', 'pro.description', 'en1.claimCost', 'en1.coveredAmount']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter);[['en.date', 'en.code', 'en.id', 'en.isEnd']]
+(p:Patient);[['p.id'], ['p.SSN'], ['p.firstName', 'p.marital', 'p.birthDate'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.city', 'p.deathDate'], ['p.firstName', 'p.marital', 'p.city'], ['p.lastName', 'p.birthDate'], ['p.deathDate', 'p.birthDate'], ['p.lastName', 'p.city', 'p.deathDate'], ['p.lastName', 'p.marital', 'p.city']]
+[has:HAS_ENCOUNTER];[]
+(en:Encounter);[['en.date', 'en.code', 'en.end', 'en.id'], ['en.date', 'en.code', 'en.claimCost', 'en.id'], ['en.date', 'en.code', 'en.coveredAmount', 'en.id'], ['en.date', 'en.code', 'en.description', 'en.id'], ['en.date', 'en.baseCost', 'en.code', 'en.id'], ['en.date', 'en.code', 'en.id', 'en.class'], ['en.date', 'en.code', 'en.id', 'en.isEnd']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[nxt:NEXT]->(en1:Encounter);[['en.date', 'en.code', 'en.id', 'en.isEnd'], ['en1.date', 'en1.code', 'en1.id', 'en1.isEnd']]
+(en:Encounter)-[nxt:NEXT]->(en1:Encounter);[['en.date', 'en.code', 'en.id', 'en.isEnd'], ['en1.date', 'en1.code', 'en1.id', 'en1.isEnd']]
+[nxt:NEXT];[]
+(en1:Encounter);[['en1.date', 'en1.code', 'en1.end', 'en1.id'], ['en1.date', 'en1.code', 'en1.claimCost', 'en1.id'], ['en1.date', 'en1.code', 'en1.coveredAmount', 'en1.id'], ['en1.date', 'en1.code', 'en1.description', 'en1.id'], ['en1.date', 'en1.baseCost', 'en1.code', 'en1.id'], ['en1.date', 'en1.code', 'en1.id', 'en1.class'], ['en1.date', 'en1.code', 'en1.id', 'en1.isEnd']]
+(en:Encounter)-[nxt:NEXT]->(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure);[['pro.code', 'en1.id'], ['pro.description', 'en1.id'], ['pro.code', 'en1.coveredAmount', 'en1.end'], ['pro.description', 'en1.coveredAmount', 'en1.end'], ['en1.date', 'pro.code', 'en1.claimCost', 'en1.coveredAmount'], ['en1.date', 'pro.description', 'en1.claimCost', 'en1.coveredAmount']]
+(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure);[['pro.code', 'en1.id'], ['pro.description', 'en1.id'], ['pro.code', 'en1.coveredAmount', 'en1.end'], ['pro.description', 'en1.coveredAmount', 'en1.end'], ['en1.date', 'pro.code', 'en1.claimCost', 'en1.coveredAmount'], ['en1.date', 'pro.description', 'en1.claimCost', 'en1.coveredAmount']]
+[hasp:HAS_PROCEDURE];[]
+(pro:Procedure);[['pro.code'], ['pro.description']]
+
+execution time for tree and leaves: 17.33 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 21.04 s
+execution time for case 3: 1.08 s
+total execution time: 39.46 s
+Max memory used: 173.59 MB

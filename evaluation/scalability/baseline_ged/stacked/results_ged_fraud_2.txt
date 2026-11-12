@@ -1,0 +1,60 @@
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (tt:Transfer:Transaction)
+  match: 19460 | tempo: 2979.77 ms, peak 1835.1 MB
+  IDENTIFIER tt.globalStep
+  IDENTIFIER tt.id
+  IDENTIFIER tt.amount, tt.step
+  IDENTIFIER tt.amount, tt.ts
+
+FOR (cl:Client)
+  match: 2433 | tempo: 101.08 ms, peak 1835.3 MB
+  IDENTIFIER cl.id
+
+FOR (co:CashOut:Transaction)
+  match: 76023 | tempo: 2491.64 ms, peak 1846.8 MB
+  IDENTIFIER co.amount
+  IDENTIFIER co.globalStep
+  IDENTIFIER co.id
+
+FOR [to:TO]
+  match: 323489 | tempo: 87.03 ms, peak 1846.8 MB
+  no key found
+
+FOR [pf:PERFORMED]
+  match: 323489 | tempo: 19.47 ms, peak 1845.2 MB
+  no key found
+
+FOR (tt:Transfer:Transaction)-[to:TO]->(cl:Client)
+  match: 19460 | tempo: 1232.49 ms, peak 1845.2 MB
+  IDENTIFIER tt.globalStep
+  IDENTIFIER tt.id
+  IDENTIFIER tt.amount, tt.step
+  IDENTIFIER tt.amount, tt.ts
+
+FOR (cl:Client)-[pf:PERFORMED]->(co:CashOut:Transaction)
+  match: 76023 | tempo: 6803.18 ms, peak 1863.8 MB
+  IDENTIFIER co.amount
+  IDENTIFIER co.globalStep
+  IDENTIFIER co.id
+
+FOR (tt:Transfer:Transaction)-[to:TO]->(cl:Client)-[pf:PERFORMED]->(co:CashOut:Transaction)
+  match: 666114 | tempo: 4456758.66 ms, peak 20142.9 MB
+  IDENTIFIER co.amount, tt.amount
+  IDENTIFIER co.amount, tt.globalStep
+  IDENTIFIER co.amount, tt.id
+  IDENTIFIER co.globalStep, tt.amount
+  IDENTIFIER co.globalStep, tt.globalStep
+  IDENTIFIER co.globalStep, tt.id
+  IDENTIFIER co.id, tt.amount
+  IDENTIFIER co.id, tt.globalStep
+  IDENTIFIER co.id, tt.id
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 24
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 4470.47s
+memoria massima totale: 20142.87 MB
+------------------------------------------------------------------------

@@ -1,0 +1,13 @@
+
+### PATTERN (en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[he:HAS_END]-(en3:Encounter)
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter) - INTERNAL_KEYS [['en1.date', 'en2.date', 'en2.code', 'en2.id', 'en1.code', 'en1.id']]
+(en2:Encounter)-[he:HAS_END]-(en3:Encounter) - INTERNAL_KEYS [['en2.date', 'en2.code', 'en3.date', 'en3.code']]
+(en3:Encounter) - INTERNAL_KEYS [['en3.date', 'en3.code', 'en3.id']]
+(en2:Encounter) - INTERNAL_KEYS [['en2.date', 'en2.code', 'en2.id']]
+(en1:Encounter) - INTERNAL_KEYS [['en1.date', 'en1.code', 'en1.id']]
+(en1:Encounter)-[nx:NEXT]-(en2:Encounter)-[he:HAS_END]-(en3:Encounter) - INTERNAL_KEYS [['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.id'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.end'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.coveredAmount'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.claimCost'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.description'], ['en1.date', 'en1.baseCost', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.class'], ['en1.date', 'en2.date', 'en2.code', 'en3.date', 'en3.code', 'en1.code', 'en1.isEnd']]
+
+tempo d'esecuzione totale: 52.717 s
+internal keys discovery time: 50.595 s
+external keys discovery time: 0.000 s
+memoria massima totale: 359.59 MB

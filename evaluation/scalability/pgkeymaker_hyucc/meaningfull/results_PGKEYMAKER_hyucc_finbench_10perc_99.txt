@@ -1,0 +1,19 @@
+filters: datetime('2021-01-01T00:00:00Z') < edge1.createTime < datetime('2022-01-01T00:00:00Z') AND datetime('2021-01-01T00:00:00Z') < edge2.createTime < datetime('2022-01-01T00:00:00Z') AND edge1.amount > 50 AND edge2.amount > 100
+pattern;keys found
+
+(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account);[['edge2.amount', 'edge1.amount'], ['edge1.createTime', 'edge2.amount'], ['edge2.createTime', 'edge1.amount'], ['edge1.createTime', 'edge2.createTime']]
+(src1:Account)-[edge1:Transfer]->(mid:Account);[['edge1.createTime']]
+(src1:Account);[]
+[edge1:Transfer];[['edge1.createTime']]
+(mid:Account);[]
+(mid:Account)-[edge2:Withdraw]->(dstCard:Account);[['edge2.amount'], ['edge2.createTime']]
+[edge2:Withdraw];[['edge2.amount'], ['edge2.createTime']]
+(dstCard:Account);[]
+
+execution time for tree and leaves: 4.99 s
+execution time for external keys: 72.86 s
+execution time for case 1: 0.00 s
+execution time for case 2: 1.78 s
+execution time for case 3: 0.45 s
+total execution time: 80.08 s
+Max memory used: 172.26 MB

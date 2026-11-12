@@ -1,0 +1,23 @@
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[nxt:NEXT]->(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure);[['pro.code', 'en1.end'], ['pro.description', 'en1.end'], ['pro.code', 'en1.id'], ['pro.description', 'en1.id'], ['en1.date', 'pro.code', 'en1.code', 'en1.coveredAmount'], ['en1.date', 'pro.description', 'en1.code', 'en1.coveredAmount'], ['en1.date', 'pro.code', 'en1.claimCost'], ['en1.date', 'pro.description', 'en1.claimCost']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter);[['en.date', 'en.code', 'en.id']]
+(p:Patient);[['p.id'], ['p.SSN'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.lastName'], ['p.firstName', 'p.city'], ['p.firstName', 'p.marital', 'p.race'], ['p.lastName', 'p.birthDate'], ['p.deathDate', 'p.birthDate'], ['p.lastName', 'p.city']]
+[has:HAS_ENCOUNTER];[]
+(en:Encounter);[['en.date', 'en.code', 'en.id']]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[nxt:NEXT]->(en1:Encounter);[['en.date', 'en.code', 'en.id'], ['en1.date', 'en1.code', 'en1.id']]
+(en:Encounter)-[nxt:NEXT]->(en1:Encounter);[['en.date', 'en.code', 'en.id'], ['en1.date', 'en1.code', 'en1.id']]
+[nxt:NEXT];[]
+(en1:Encounter);[['en1.date', 'en1.code', 'en1.id']]
+(en:Encounter)-[nxt:NEXT]->(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure);[['pro.code', 'en1.end'], ['pro.description', 'en1.end'], ['pro.code', 'en1.id'], ['pro.description', 'en1.id'], ['en1.date', 'pro.code', 'en1.code', 'en1.coveredAmount'], ['en1.date', 'pro.description', 'en1.code', 'en1.coveredAmount'], ['en1.date', 'pro.code', 'en1.claimCost'], ['en1.date', 'pro.description', 'en1.claimCost']]
+(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure);[['pro.code', 'en1.end'], ['pro.description', 'en1.end'], ['pro.code', 'en1.id'], ['pro.description', 'en1.id'], ['en1.date', 'pro.code', 'en1.code', 'en1.coveredAmount'], ['en1.date', 'pro.description', 'en1.code', 'en1.coveredAmount'], ['en1.date', 'pro.code', 'en1.claimCost'], ['en1.date', 'pro.description', 'en1.claimCost']]
+[hasp:HAS_PROCEDURE];[]
+(pro:Procedure);[['pro.code'], ['pro.description']]
+
+execution time for tree and leaves: 8.22 s
+execution time for external keys: 0.00 s
+execution time for case 1: 0.00 s
+execution time for case 2: 10.76 s
+execution time for case 3: 0.69 s
+total execution time: 19.69 s
+Max memory used: 173.15 MB

@@ -1,0 +1,19 @@
+filters: count(DISTINCT dr) >= 6 PER p
+pattern;keys found
+
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug);[]
+(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter);[]
+(p:Patient);[['p.firstName', 'p.marital', 'p.city'], ['p.firstName', 'p.birthDate'], ['p.firstName', 'p.lastName', 'p.marital'], ['p.firstName', 'p.lastName', 'p.city'], ['p.lastName', 'p.marital', 'p.race', 'p.city'], ['p.lastName', 'p.marital', 'p.ethnicity', 'p.city'], ['p.lastName', 'p.gender', 'p.race', 'p.city'], ['p.lastName', 'p.gender', 'p.ethnicity', 'p.city'], ['p.lastName', 'p.marital', 'p.birthDate'], ['p.lastName', 'p.gender', 'p.birthDate'], ['p.lastName', 'p.city', 'p.birthDate'], ['p.firstName', 'p.lastName', 'p.deathDate'], ['p.city', 'p.deathDate', 'p.birthDate'], ['p.id'], ['p.SSN']]
+[has:HAS_ENCOUNTER];[]
+(en:Encounter);[]
+(en:Encounter)-[hd:HAS_DRUG]->(dr:Drug);[]
+[hd:HAS_DRUG];[]
+(dr:Drug);[['dr.code']]
+
+execution time for tree and leaves: 32.07 s
+execution time for external keys: 104.10 s
+execution time for case 1: 0.00 s
+execution time for case 2: 72.97 s
+execution time for case 3: 9.99 s
+total execution time: 219.32 s
+Max memory used: 382.40 MB

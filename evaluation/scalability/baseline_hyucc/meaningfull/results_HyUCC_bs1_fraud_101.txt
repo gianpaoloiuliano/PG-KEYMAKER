@@ -1,0 +1,14 @@
+
+### PATTERN (c1:Client)-[perf:PERFORMED]->(tx:Transfer)-[to:TO]->(c2:Client)
+### FILTERS tx.amount >= 300000
+(c1:Client) - INTERNAL_KEYS [['c1.id']]
+(tx:Transfer) - INTERNAL_KEYS [['tx.globalStep'], ['tx.amount'], ['tx.id']]
+(c2:Client) - INTERNAL_KEYS [['c2.id']]
+(c1:Client)-[perf:PERFORMED]->(tx:Transfer) - INTERNAL_KEYS [['tx.globalStep'], ['tx.amount'], ['tx.id']]
+(c1:Client)-[perf:PERFORMED]->(tx:Transfer)-[to:TO]->(c2:Client) - INTERNAL_KEYS [['tx.globalStep'], ['tx.amount'], ['tx.id'], ['c1.id', 'c2.id', 'tx.step'], ['c1.id', 'c2.id', 'tx.ts'], ['c1.name', 'c2.id', 'tx.step'], ['c1.name', 'c2.id', 'tx.ts'], ['c1.id', 'c2.name', 'tx.step'], ['c1.id', 'c2.name', 'tx.ts'], ['c1.name', 'c2.name', 'tx.step'], ['c1.name', 'c2.name', 'tx.ts']]
+(tx:Transfer)-[to:TO]->(c2:Client) - INTERNAL_KEYS [['tx.globalStep'], ['tx.amount'], ['tx.id']]
+
+tempo d'esecuzione totale: 55.100 s
+internal keys discovery time: 55.100 s
+external keys discovery time: 0.000 s
+memoria massima totale: 525.91 MB

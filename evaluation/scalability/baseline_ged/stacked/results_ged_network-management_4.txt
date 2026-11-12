@@ -1,0 +1,63 @@
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (m:Machine)
+  match: 8000 | tempo: 2231.82 ms, peak 152.6 MB
+  IDENTIFIER m.name
+
+FOR (a:Application:Process)
+  match: 8000 | tempo: 230.81 ms, peak 153.0 MB
+  IDENTIFIER a.startTime
+
+FOR (se:Service:Process)
+  match: 14430 | tempo: 422.45 ms, peak 154.3 MB
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+FOR [r:RUNS]
+  match: 30430 | tempo: 49.12 ms, peak 154.3 MB
+  no key found
+
+FOR [dep:DEPENDS_ON]
+  match: 14441 | tempo: 115.34 ms, peak 154.3 MB
+  no key found
+
+FOR (m:Machine)-[r:RUNS]-(a:Application:Process)
+  match: 8000 | tempo: 292.64 ms, peak 154.4 MB
+  IDENTIFIER a.startTime
+  IDENTIFIER m.name
+
+FOR (a:Application:Process)-[dep:DEPENDS_ON]-(se:Service:Process)
+  match: 14430 | tempo: 1263.29 ms, peak 156.3 MB
+  IDENTIFIER a.name, se.startTime
+  IDENTIFIER a.pid, se.startTime
+  IDENTIFIER a.startTime, se.name
+  IDENTIFIER a.startTime, se.pid
+  IDENTIFIER a.startTime, se.startTime
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+  IDENTIFIER a.name, a.pid, se.pid
+  IDENTIFIER a.pid, se.name, se.pid
+
+FOR (m:Machine)-[r:RUNS]-(a:Application:Process)-[dep:DEPENDS_ON]-(se:Service:Process)
+  match: 14430 | tempo: 1785.27 ms, peak 157.7 MB
+  IDENTIFIER a.name, se.startTime
+  IDENTIFIER a.pid, se.startTime
+  IDENTIFIER a.startTime, se.name
+  IDENTIFIER a.startTime, se.pid
+  IDENTIFIER a.startTime, se.startTime
+  IDENTIFIER m.name, se.name
+  IDENTIFIER m.name, se.pid
+  IDENTIFIER m.name, se.startTime
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+  IDENTIFIER a.name, a.pid, se.pid
+  IDENTIFIER a.pid, se.name, se.pid
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 27
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 6.39s
+memoria massima totale: 157.69 MB
+------------------------------------------------------------------------

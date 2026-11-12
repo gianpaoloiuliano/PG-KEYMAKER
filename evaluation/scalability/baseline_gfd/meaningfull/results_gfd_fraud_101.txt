@@ -1,0 +1,52 @@
+filters: tx.amount >= 300000
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (c1:Client)
+  match: 2433 | tempo: 2392.60 ms, peak 781.2 KiB
+  IDENTIFIER c1.id
+
+FOR (tx:Transfer)
+  match: 14108 | tempo: 1314.33 ms, peak 6361.8 KiB
+  IDENTIFIER tx.amount
+  IDENTIFIER tx.globalStep
+  IDENTIFIER tx.id
+
+FOR (c2:Client)
+  match: 2433 | tempo: 193.13 ms, peak 2075.5 KiB
+  IDENTIFIER c2.id
+
+FOR (c1:Client)-[perf:PERFORMED]->(tx:Transfer)
+  match: 14108 | tempo: 1721.51 ms, peak 8660.0 KiB
+  IDENTIFIER tx.amount
+  IDENTIFIER tx.globalStep
+  IDENTIFIER tx.id
+
+FOR (tx:Transfer)-[to:TO]->(c2:Client)
+  match: 14108 | tempo: 1657.90 ms, peak 11400.5 KiB
+  IDENTIFIER tx.amount
+  IDENTIFIER tx.globalStep
+  IDENTIFIER tx.id
+
+FOR (c1:Client)-[perf:PERFORMED]->(tx:Transfer)-[to:TO]->(c2:Client)
+  match: 14108 | tempo: 2121.04 ms, peak 14709.7 KiB
+  IDENTIFIER tx.amount
+  IDENTIFIER tx.globalStep
+  IDENTIFIER tx.id
+  IDENTIFIER c1.id, c2.name, tx.step
+  IDENTIFIER c1.name, c2.id, tx.ts
+  IDENTIFIER c1.name, c2.name, tx.step
+  IDENTIFIER c1.name, c2.id, tx.step
+  IDENTIFIER c1.id, c2.name, tx.ts
+  IDENTIFIER c1.name, c2.name, tx.ts
+  IDENTIFIER c1.id, c2.id, tx.step
+  IDENTIFIER c1.id, c2.id, tx.ts
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 22
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 9.40s
+memoria massima totale: 14709.7 KiB
+------------------------------------------------------------------------

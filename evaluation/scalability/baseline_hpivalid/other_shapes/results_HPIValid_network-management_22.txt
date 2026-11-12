@@ -1,0 +1,7 @@
+
+### PATTERN (r:Rack)-[h:HOLDS]->(ma:Machine)-[ru:RUNS]->(sp:Service:Process)-[li:LISTENS]->(po:Port)
+
+tempo d'esecuzione totale: 19.915 s
+internal keys discovery time: 13.110 s
+external keys discovery time: 0.000 s
+memoria massima totale: 227.23 MB

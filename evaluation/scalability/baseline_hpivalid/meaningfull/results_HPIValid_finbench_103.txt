@@ -1,0 +1,8 @@
+
+### PATTERN (person:Person)-[edge1:Own]->(pAcc:Account)-[edge2:Transfer]->(compAcc:Account)<-[edge3:Own]-(com:Company)
+### FILTERS datetime('2021-01-01T00:00:00Z') < edge2.createTime < datetime('2022-01-01T00:00:00Z')
+
+tempo d'esecuzione totale: 30.617 s
+internal keys discovery time: 30.617 s
+external keys discovery time: 0.000 s
+memoria massima totale: 242.72 MB

@@ -1,0 +1,53 @@
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (a:Application:Process)
+  match: 8000 | tempo: 2409.21 ms, peak 145.6 MB
+  IDENTIFIER a.startTime
+
+FOR (se:Service:Process)
+  match: 14430 | tempo: 532.10 ms, peak 146.8 MB
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+
+FOR (p:Port)
+  match: 37238 | tempo: 725.18 ms, peak 146.8 MB
+  no key found
+
+FOR [d:DEPENDS_ON]
+  match: 14441 | tempo: 196.89 ms, peak 146.7 MB
+  no key found
+
+FOR [l:LISTENS]
+  match: 37238 | tempo: 179.44 ms, peak 145.7 MB
+  no key found
+
+FOR (a:Application:Process)-[d:DEPENDS_ON]-(se:Service:Process)
+  match: 14430 | tempo: 1240.69 ms, peak 149.8 MB
+  IDENTIFIER a.name, se.startTime
+  IDENTIFIER a.pid, se.startTime
+  IDENTIFIER a.startTime, se.name
+  IDENTIFIER a.startTime, se.pid
+  IDENTIFIER a.startTime, se.startTime
+  IDENTIFIER se.name, se.startTime
+  IDENTIFIER se.pid, se.startTime
+  IDENTIFIER a.name, a.pid, se.pid
+  IDENTIFIER a.pid, se.name, se.pid
+
+FOR (se:Service:Process)-[l:LISTENS]-(p:Port)
+  match: 26006 | tempo: 1027.62 ms, peak 151.1 MB
+  IDENTIFIER p.port, se.startTime
+
+FOR (a:Application:Process)-[d:DEPENDS_ON]-(se:Service:Process)-[l:LISTENS]-(p:Port)
+  match: 26006 | tempo: 5061.31 ms, peak 183.4 MB
+  IDENTIFIER a.startTime, p.port
+  IDENTIFIER p.port, se.startTime
+  IDENTIFIER a.pid, p.port, se.pid
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 16
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 11.37s
+memoria massima totale: 183.43 MB
+------------------------------------------------------------------------

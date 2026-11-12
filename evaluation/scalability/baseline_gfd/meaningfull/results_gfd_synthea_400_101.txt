@@ -1,0 +1,58 @@
+filters: c1 <> c2 AND count(DISTINCT c1) >= 40 PER c2
+========================================================================
+GFD-ADAPTED BASELINE — PG-Key (internally-described) discovery
+min-support = 1
+========================================================================
+
+FOR (c1:Condition)
+  match: 240 | tempo: 5442.46 ms, peak 236.6 KiB
+  IDENTIFIER c1.code
+  IDENTIFIER c1.description
+
+FOR (en:Encounter)
+  match: 56015 | tempo: 39776.30 ms, peak 70113.7 KiB
+  no key found
+
+FOR (c2:Condition)
+  match: 6 | tempo: 981.44 ms, peak 45440.9 KiB
+  IDENTIFIER c2.code
+  IDENTIFIER c2.description
+  IDENTIFIER c2.num
+
+FOR (c1:Condition)<-[hc1:HAS_CONDITION]-(en:Encounter)
+  match: 27021 | tempo: 90841.67 ms, peak 41766.5 KiB
+  IDENTIFIER c1.description, en.id, en.isEnd
+  IDENTIFIER c1.code, en.id, en.isEnd
+  IDENTIFIER c1.description, en.date, en.id
+  IDENTIFIER c1.code, en.date, en.id
+
+FOR (en:Encounter)-[hc2:HAS_CONDITION]->(c2:Condition)
+  match: 14139 | tempo: 51842.31 ms, peak 48778.6 KiB
+  IDENTIFIER c2.code, en.date, en.id
+  IDENTIFIER c2.num, en.id, en.isEnd
+  IDENTIFIER c2.description, en.date, en.id
+  IDENTIFIER c2.description, en.id, en.isEnd
+  IDENTIFIER c2.code, en.id, en.isEnd
+  IDENTIFIER c2.num, en.date, en.id
+
+FOR (c1:Condition)<-[hc1:HAS_CONDITION]-(en:Encounter)-[hc2:HAS_CONDITION]->(c2:Condition)
+  match: 10399 | tempo: 239140.52 ms, peak 34690.7 KiB
+  IDENTIFIER c1.description, c2.description, en.date, en.id
+  IDENTIFIER c1.code, c2.description, en.date, en.id
+  IDENTIFIER c1.code, c2.code, en.date, en.id
+  IDENTIFIER c1.code, c2.num, en.date, en.id
+  IDENTIFIER c1.description, c2.num, en.date, en.id
+  IDENTIFIER c1.description, c2.num, en.id, en.isEnd
+  IDENTIFIER c1.code, c2.code, en.id, en.isEnd
+  IDENTIFIER c1.code, c2.description, en.id, en.isEnd
+  IDENTIFIER c1.description, c2.code, en.id, en.isEnd
+  IDENTIFIER c1.description, c2.code, en.date, en.id
+  IDENTIFIER c1.description, c2.description, en.id, en.isEnd
+  IDENTIFIER c1.code, c2.num, en.id, en.isEnd
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 27
+Sotto-pattern esaminati: 6
+tempo d'esecuzione totale:: 428.02s
+memoria massima totale: 70113.7 KiB
+------------------------------------------------------------------------

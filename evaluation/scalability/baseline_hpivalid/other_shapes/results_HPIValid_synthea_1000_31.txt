@@ -1,0 +1,7 @@
+
+### PATTERN (n1:Patient)-[rel1:HAS_ENCOUNTER]->(n2:Encounter)-[rel2:NEXT]->(n3:Encounter)-[rel3:NEXT]->(n4:Encounter)-[rel4:HAS_PROCEDURE]->(n5:Procedure)
+
+tempo d'esecuzione totale: 939.756 s
+internal keys discovery time: 611.713 s
+external keys discovery time: 292.091 s
+memoria massima totale: 1762.93 MB

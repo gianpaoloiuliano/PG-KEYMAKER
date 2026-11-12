@@ -1,0 +1,50 @@
+========================================================================
+GED-ADAPTED BASELINE (DisGEDs) — PG-Key discovery
+========================================================================
+
+FOR (cl:Client)
+  match: 2433 | tempo: 2108.73 ms, peak 226.4 MB
+  IDENTIFIER cl.id
+
+FOR (ct:CashOut:Transaction)
+  match: 76023 | tempo: 2084.31 ms, peak 226.4 MB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (m:Merchant)
+  match: 347 | tempo: 22.87 ms, peak 211.4 MB
+  IDENTIFIER m.id
+
+FOR [pf:PERFORMED]
+  match: 323489 | tempo: 13.79 ms, peak 194.7 MB
+  no key found
+
+FOR [to:TO]
+  match: 323489 | tempo: 12.78 ms, peak 194.7 MB
+  no key found
+
+FOR (cl:Client)-[pf:PERFORMED]->(ct:CashOut:Transaction)
+  match: 76023 | tempo: 5120.53 ms, peak 232.3 MB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (ct:CashOut:Transaction)-[to:TO]->(m:Merchant)
+  match: 76023 | tempo: 4774.61 ms, peak 242.3 MB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+FOR (cl:Client)-[pf:PERFORMED]->(ct:CashOut:Transaction)-[to:TO]->(m:Merchant)
+  match: 76023 | tempo: 12199.22 ms, peak 308.7 MB
+  IDENTIFIER ct.amount
+  IDENTIFIER ct.globalStep
+  IDENTIFIER ct.id
+
+------------------------------------------------------------------------
+Totale PG-Keys trovate : 14
+Sotto-pattern esaminati: 8
+tempo d'esecuzione totale:: 26.34s
+memoria massima totale: 308.65 MB
+------------------------------------------------------------------------

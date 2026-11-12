@@ -1,0 +1,14 @@
+
+### PATTERN (r:Rack)-[h:HOLDS]->(ma:Machine)-[ro:ROUTES]->(in:Interface)-[exp:EXPOSES]->(po:Port)
+(r:Rack) - INTERNAL_KEYS [['r.name'], ['r.rack', 'r.zone']]
+(r:Rack)-[h:HOLDS]->(ma:Machine) - INTERNAL_KEYS [['ma.name']]
+(r:Rack)-[h:HOLDS]->(ma:Machine)-[ro:ROUTES]->(in:Interface) - INTERNAL_KEYS [['in.ip'], ['ma.name']]
+(r:Rack)-[h:HOLDS]->(ma:Machine)-[ro:ROUTES]->(in:Interface)-[exp:EXPOSES]->(po:Port) - INTERNAL_KEYS [['in.ip', 'po.port'], ['ma.name', 'po.port']]
+(ma:Machine)-[ro:ROUTES]->(in:Interface) - INTERNAL_KEYS [['in.ip'], ['ma.name']]
+(ma:Machine)-[ro:ROUTES]->(in:Interface)-[exp:EXPOSES]->(po:Port) - INTERNAL_KEYS [['in.ip', 'po.port'], ['ma.name', 'po.port']]
+(in:Interface)-[exp:EXPOSES]->(po:Port) - INTERNAL_KEYS [['in.ip', 'po.port']]
+
+tempo d'esecuzione totale: 23.471 s
+internal keys discovery time: 17.870 s
+external keys discovery time: 0.000 s
+memoria massima totale: 279.50 MB

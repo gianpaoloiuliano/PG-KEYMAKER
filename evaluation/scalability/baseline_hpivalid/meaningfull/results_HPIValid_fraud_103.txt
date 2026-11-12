@@ -1,0 +1,8 @@
+
+### PATTERN (victim:Client)-[perf1:PERFORMED]->(t1:Transfer)-[to1:TO]->(mule:Client)-[perf2:PERFORMED]->(t2:CashOut)-[to2:TO]->(m:Merchant)
+### FILTERS t1.step <= t2.step AND count(DISTINCT mule) > 1 PER victim
+
+tempo d'esecuzione totale: 359.418 s
+internal keys discovery time: 359.418 s
+external keys discovery time: 0.000 s
+memoria massima totale: 1152.63 MB
