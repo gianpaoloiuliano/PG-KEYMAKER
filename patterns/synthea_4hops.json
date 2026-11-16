@@ -1,0 +1,4 @@
+[
+  ["(n1:Patient)-[rel1:HAS_ENCOUNTER]->(n2:Encounter)-[rel2:NEXT]->(n3:Encounter)-[rel3:NEXT]->(n4:Encounter)-[rel4:HAS_PROCEDURE]->(n5:Procedure)", ""],
+  ["(n1:Encounter)-[rel1:NEXT]->(n2:Encounter)-[rel2:NEXT]->(n3:Encounter)-[rel3:NEXT]->(n4:Encounter)-[rel4:HAS_PROCEDURE]->(n5:Procedure)", ""]
+]

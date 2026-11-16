@@ -19,7 +19,7 @@ def result_path(nomedb, numtest, alg, tree):
     if tree:
         return os.path.join(f"./evaluation/scalability/pgkeymaker_{alg}/{typology}",
                             f"results_PGKEYMAKER_{alg}_{nomedb}_{numtest}.txt")
-    return os.path.join(f"./evaluation/scalability/ablation/pgkeymaker_{alg}_notree",
+    return os.path.join(f"./evaluation/scalability/ablation/pgkeymaker_{alg}_notree/{typology}",
                         f"results_PGKEYMAKER-NOTREE_{nomedb}_{numtest}.txt")
 
 

@@ -11,7 +11,7 @@ UCC_ALGS = ["hyucc", "hpivalid"]
 USE_DB_SWITCH = False       # True = pass --database <synthea_N> (only if the dbs live in the same Neo4j instance)
 SKIP_EXISTING = True        # True = resume: skip tests whose result file is already complete; False = redo everything
 PAUSE_BETWEEN_DBS = True   # True = before each synthea_N, wait for you to start the instance in Neo4j Desktop
-DBS = [f"synthea_{n}" for n in range(600, 1000, 100)]   # 100..900 (1000 is already done)
+DBS = [f"synthea_{n}" for n in range(100, 1000, 100)]   # 100..900 (1000 is already done)
 HOPS = [(3, 31), (4, 41), (5, 51)]                      # (hop, initial numtest)
 
 HERE = os.path.dirname(os.path.abspath(__file__))

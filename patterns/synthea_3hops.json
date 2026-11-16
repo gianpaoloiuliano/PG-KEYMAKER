@@ -1,0 +1,4 @@
+[
+  ["(p:Patient)-[has:HAS_ENCOUNTER]->(en:Encounter)-[nxt:NEXT]->(en1:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure)", ""],
+  ["(en1:Encounter)-[nx:NEXT]->(en2:Encounter)-[nx1:NEXT]->(en3:Encounter)-[hasp:HAS_PROCEDURE]->(pro:Procedure)", ""]
+]
