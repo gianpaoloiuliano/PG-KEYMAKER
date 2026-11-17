@@ -105,7 +105,22 @@ def create_results_file_baseline(folder, allowed_algorithms, allowed_datasets, o
     print(f"CSV generated: {output_csv}")
     print(df.head())
 
-def create_results_file_stacked(folders, allowed_algorithms, allowed_datasets, output_csv):
+def create_results_file_stacked(folders, allowed_algorithms, allowed_datasets, output_csv,
+                                valid_queries=None, algo_aliases=None):
+    """
+    Builds the stacked time-breakdown csv from the result files in `folders`.
+    valid_queries: queries to keep; default = 1..8 (standard) + 101, 102, 103 (meaningful).
+    algo_aliases: {file_algorithm_name: csv_algorithm_name}, e.g. the hyucc meaningful files are
+    named PGKEYMAKER_hyucc while the stacked ones are PGKEYMAKER -> {"PGKEYMAKER_hyucc": "PGKEYMAKER"}.
+    Pass the meaningful folder too (e.g. ./scalability/pgkeymaker_hpivalid/meaningfull)
+    to include 101, 102, 103.
+    """
+    if valid_queries is None:
+        valid_queries = set(range(1, 9)) | {101, 102, 103}
+    if algo_aliases is None:
+        algo_aliases = {}
+    parse_algorithms = list(allowed_algorithms) + [alias for alias, target in algo_aliases.items()
+                                                   if target in allowed_algorithms]
 
     tree_re = re.compile(r"execution time for tree and leaves:\s*([\d\.]+)\s*s", re.IGNORECASE)
     external_re = re.compile(r"execution time for external keys:\s*([\d\.]+)\s*s", re.IGNORECASE)
@@ -118,11 +133,12 @@ def create_results_file_stacked(folders, allowed_algorithms, allowed_datasets, o
 
     for folder in folders:
         for file in os.listdir(folder):
-            parsed = parse_filename(file, allowed_algorithms, allowed_datasets)
+            parsed = parse_filename(file, parse_algorithms, allowed_datasets, valid_queries)
             if not parsed:
                 continue
 
             algoritmo, dataset, query = parsed
+            algoritmo = algo_aliases.get(algoritmo, algoritmo)
             filepath = os.path.join(folder, file)
 
             with open(filepath, "r", encoding="utf-8") as f:
@@ -676,6 +692,95 @@ def plot_bar_results_from_csv_grid_ablation_other_shapes(csv_path, ncols=2, nrow
 
     plt.tight_layout()
     output_pdf = f"./plots/execution_times_barplot_{ncols}_{nrows}_ablation_other_shapes.pdf"
+    fig.savefig(output_pdf, bbox_inches="tight")
+
+def plot_bar_results_from_csv_grid_ablation_other_shapes_all_datasets(csv_path, ncols=3, nrows=None):
+    """
+    Same as plot_bar_results_from_csv_grid_ablation_other_shapes, but on ALL datasets
+    (synthea_100..synthea_1000, finbench, network-management, fraud), with queries
+    1,2,31,32,41,42,51,52 (8 bar groups per subplot).
+    If nrows is None it is computed from the number of datasets and ncols.
+    """
+    df = pd.read_csv(csv_path, sep=";")
+    color_map = {
+        "PGKEYMAKER": "#ff7f0e",
+        "PGKEYMAKER (without Tree)": "#FFB06A"
+    }
+    df["algoritmo"] = df["algoritmo"].replace({
+        "PGKEYMAKER_hpivalid": "PGKEYMAKER",
+        "PGKEYMAKER_hyucc": "PGKEYMAKER",
+        "PGKEYMAKER-NOTREE": "PGKEYMAKER (without Tree)"
+    })
+
+    queries = [1, 2, 31, 32, 41, 42, 51, 52]
+    hop_labels = ["2 hop", "3 hop", "4 hop", "5 hop"]  # one label for every 2 queries
+
+    df = df[df["query"].isin(queries)]
+    # keep only the PGKEYMAKER variants (as in the original function)
+    df = df[df["algoritmo"].isin(color_map.keys())]
+
+    # order: synthea_100 ... synthea_1000 first, then the other datasets (alphabetical)
+    def dataset_sort_key(ds):
+        if ds.startswith("synthea_"):
+            return (0, int(ds.split("_")[1]), ds)
+        return (1, 0, ds)
+
+    datasets = sorted(df["dataset"].unique(), key=dataset_sort_key)
+    algorithms = sorted(df["algoritmo"].unique())
+
+    if nrows is None:
+        nrows = math.ceil(len(datasets) / ncols)
+
+    # grid with 2*ncols half-slots: each subplot spans 2 slots, so an incomplete
+    # last row can be shifted to be centered
+    fig = plt.figure(figsize=(8 * ncols, 3.5 * nrows))
+    gs = fig.add_gridspec(nrows, 2 * ncols)
+    axes = []
+    for idx in range(len(datasets)):
+        r, c = divmod(idx, ncols)
+        n_in_row = min(ncols, len(datasets) - r * ncols)
+        offset = ncols - n_in_row  # shift in half-slots to center the row
+        axes.append(fig.add_subplot(gs[r, offset + 2 * c: offset + 2 * c + 2]))
+    bar_width = 0.35
+    x = list(range(len(queries)))
+
+    for ax, dataset in zip(axes, datasets):
+        df_ds = df[df["dataset"] == dataset]
+        for i, algo in enumerate(algorithms):
+            # reindex: if a query is missing the bar stays empty (no misalignment)
+            values = (df_ds[df_ds["algoritmo"] == algo]
+                      .drop_duplicates("query")
+                      .set_index("query")["total_time"]
+                      .reindex(queries))
+            ax.bar([p + i * bar_width for p in x], values.fillna(0).values,
+                   width=bar_width, color=color_map.get(algo, "black"), label=algo)
+
+        ax.set_title(dataset.capitalize(), fontsize=18)
+        # a single label per query pair (same length): 2 hop, 3 hop, 4 hop, 5 hop
+        pair_centers = [2 * k + 0.5 + bar_width / 2 for k in range(len(queries) // 2)]
+        ax.set_xticks(pair_centers)
+        ax.set_xticklabels(hop_labels, fontsize=14)
+        ax.tick_params(axis="x", length=0)
+        # dotted separators between one length and the next, to make the pairs clear
+        for k in range(1, len(queries) // 2):
+            ax.axvline(2 * k - 0.5 + bar_width / 2, color="gray", linestyle=":", linewidth=1)
+        ax.set_axisbelow(True)
+        ax.grid(True, axis="y", linestyle="--", alpha=0.7)
+
+    # y label on every subplot that starts a row; x label on the last row
+    for idx, ax in enumerate(axes):
+        if idx % ncols == 0:
+            ax.set_ylabel("Time (s)", fontsize=18)
+    last_row_start = ((len(datasets) - 1) // ncols) * ncols
+    for ax in axes[last_row_start:]:
+        ax.set_xlabel("Pattern length", fontsize=18)
+
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, fontsize=18, loc="upper center",
+               ncol=len(algorithms), bbox_to_anchor=(0.5, 1.03))
+
+    plt.tight_layout()
+    output_pdf = f"./plots/execution_times_barplot_{ncols}_{nrows}_ablation_other_shapes_all_datasets.pdf"
     fig.savefig(output_pdf, bbox_inches="tight")
 
 def plot_bar_results_from_csv_grid_ablation_reducted_3ds(csv_path,ncols,nrows):
@@ -1545,6 +1650,207 @@ def plot_stacked_execution_times_percentages_complete(csv_path):
         fig.savefig("./plots/stacked_ex_times_complete.pdf", bbox_inches="tight")
         #plt.show()
 
+def plot_stacked_execution_times_percentages_complete_with_fraud(csv_path, ablation_csv=None, ncols=3):
+    """
+    Same as plot_stacked_execution_times_percentages_complete, but also including
+    the 'fraud' dataset (13 datasets), laid out like the ablation plot
+    (ncols columns, last incomplete row centered).
+    'fraud' is not in the stacked csv, so if ablation_csv is given, its
+    PGKEYMAKER_hpivalid rows for datasets missing from csv_path are appended
+    (the ablation csv has the same time-breakdown columns).
+    """
+    df = pd.read_csv(csv_path, sep=";")
+
+    if ablation_csv is not None:
+        df_abl = pd.read_csv(ablation_csv, sep=";")
+        df_abl = df_abl[df_abl["algoritmo"] == "PGKEYMAKER_hpivalid"]
+        df_abl = df_abl[~df_abl["dataset"].isin(df["dataset"].unique())]
+        # same queries as the stacked csv (1..8)
+        df_abl = df_abl[df_abl["query"].isin(df["query"].unique())]
+        df = pd.concat([df, df_abl], ignore_index=True)
+
+    df["dataset"] = df["dataset"].replace({"synthea_800_alt": "synthea_800"})
+
+    # order: synthea_100 ... synthea_1000 first, then the other datasets (alphabetical)
+    def dataset_sort_key(ds):
+        if ds.startswith("synthea_"):
+            return (0, int(ds.split("_")[1]), ds)
+        return (1, 0, ds)
+
+    allowed_datasets = [f"synthea_{n}" for n in range(100, 1001, 100)] + \
+                       ["finbench", "network-management", "fraud"]
+    df = df[df["dataset"].isin(allowed_datasets)]
+    datasets = sorted(df["dataset"].unique(), key=dataset_sort_key)
+
+    rows = math.ceil(len(datasets) / ncols)
+
+    plt.rcParams["hatch.linewidth"] = 0.5
+
+    # grid with 2*ncols half-slots: each subplot spans 2 slots, so an incomplete
+    # last row can be shifted to be centered
+    fig = plt.figure(figsize=(6 * ncols, 4.3 * rows))
+    gs = fig.add_gridspec(rows, 2 * ncols)
+    axes = []
+    for idx in range(len(datasets)):
+        r, c = divmod(idx, ncols)
+        n_in_row = min(ncols, len(datasets) - r * ncols)
+        offset = ncols - n_in_row
+        axes.append(fig.add_subplot(gs[r, offset + 2 * c: offset + 2 * c + 2]))
+
+    colors = ["#ff7f0e", "#ffbb78", "#ffd2a8", "#ffe3c8", "#fff2e6"]
+    hatches = ["o", "//", "\\\\", "xx", ".."]
+    labels = [
+        "Tree construction and\ninternal key discovery",
+        "External keys discovery",
+        "Concatenation",
+        "Validation",
+        "Exhaustive discovery"
+    ]
+
+    for i, (ax, dataset) in enumerate(zip(axes, datasets)):
+        df_ds = df[df["dataset"] == dataset].sort_values("query")
+        queries = df_ds["query"].astype(str)
+        x = np.arange(len(queries))
+
+        series = [
+            df_ds["tree_leaves_time_perc"].values,
+            df_ds["external_keys_time_perc"].values,
+            df_ds["case1_time_perc"].values,
+            df_ds["case2_time_perc"].values,
+            df_ds["case3_time_perc"].values,
+        ]
+        bottoms = np.zeros(len(x))
+        for values, color, hatch, label in zip(series, colors, hatches, labels):
+            ax.bar(x, values, bottom=bottoms, color=color, hatch=hatch,
+                   edgecolor="black", linewidth=0.4, width=0.72, label=label)
+            bottoms += values
+
+        ax.set_title(dataset.replace("_", " "), fontsize=17)
+        ax.set_xticks(x)
+        ax.set_xticklabels(queries, rotation=45, ha="right", fontsize=15)
+        ax.set_ylim(0, 100)
+        ax.set_yticks(np.arange(0, 101, 20))
+        ax.tick_params(axis="y", labelsize=15)
+        ax.grid(axis="y", linestyle="--", alpha=0.4)
+        ax.set_axisbelow(True)
+
+        # ylabel on the first subplot of every row
+        if i % ncols == 0:
+            ax.set_ylabel("Execution Time (%)", fontsize=15)
+
+    # xlabel on the last row
+    last_row_start = ((len(datasets) - 1) // ncols) * ncols
+    for ax in axes[last_row_start:]:
+        ax.set_xlabel("Query", fontsize=15)
+
+    handles, legend_labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, legend_labels, loc="upper center",
+               bbox_to_anchor=(0.5, 0.97), ncol=5, fontsize=15, frameon=False)
+
+    fig.subplots_adjust(top=0.90, bottom=0.06, left=0.07, right=0.99,
+                        hspace=0.5, wspace=0.8)
+
+    fig.savefig("./plots/stacked_ex_times_complete_with_fraud.pdf", bbox_inches="tight")
+
+def plot_stacked_execution_times_percentages_complete_with_meaningful(csv_path, ncols=3):
+    """
+    Time breakdown on all 13 datasets (fraud included), queries 1..8 + the meaningful
+    ones (101, 102, 103 -> labelled M1, M2, M3 as in the table): 11 bars per subplot.
+    Reads only the stacked csv, which must contain those queries
+    (create_results_file_stacked with the stacked + meaningfull folders).
+    Layout: ncols columns, last incomplete row centered.
+    """
+    base_queries = list(range(1, 9))
+    meaningful_queries = [101, 102, 103]
+    queries_all = base_queries + meaningful_queries
+    x_labels = [str(q) for q in base_queries] + [f"M{k + 1}" for k in range(len(meaningful_queries))]
+
+    df = pd.read_csv(csv_path, sep=";")
+    df["dataset"] = df["dataset"].replace({"synthea_800_alt": "synthea_800"})
+    df = df[df["query"].isin(queries_all)]
+
+    # order: synthea_100 ... synthea_1000 first, then the other datasets (alphabetical)
+    def dataset_sort_key(ds):
+        if ds.startswith("synthea_"):
+            return (0, int(ds.split("_")[1]), ds)
+        return (1, 0, ds)
+
+    allowed_datasets = [f"synthea_{n}" for n in range(100, 1001, 100)] + \
+                       ["finbench", "network-management", "fraud"]
+    df = df[df["dataset"].isin(allowed_datasets)]
+    datasets = sorted(df["dataset"].unique(), key=dataset_sort_key)
+
+    rows = math.ceil(len(datasets) / ncols)
+
+    plt.rcParams["hatch.linewidth"] = 0.5
+
+    # grid with 2*ncols half-slots: each subplot spans 2 slots, so an incomplete
+    # last row can be shifted to be centered
+    fig = plt.figure(figsize=(8 * ncols, 4.3 * rows))
+    gs = fig.add_gridspec(rows, 2 * ncols)
+    axes = []
+    for idx in range(len(datasets)):
+        r, c = divmod(idx, ncols)
+        n_in_row = min(ncols, len(datasets) - r * ncols)
+        offset = ncols - n_in_row
+        axes.append(fig.add_subplot(gs[r, offset + 2 * c: offset + 2 * c + 2]))
+
+    colors = ["#ff7f0e", "#ffbb78", "#ffd2a8", "#ffe3c8", "#fff2e6"]
+    hatches = ["o", "//", "\\\\", "xx", ".."]
+    labels = [
+        "Tree construction and\ninternal key discovery",
+        "External keys discovery",
+        "Concatenation",
+        "Validation",
+        "Exhaustive discovery"
+    ]
+    perc_cols = ["tree_leaves_time_perc", "external_keys_time_perc",
+                 "case1_time_perc", "case2_time_perc", "case3_time_perc"]
+
+    for i, (ax, dataset) in enumerate(zip(axes, datasets)):
+        # reindex: a missing query leaves an empty slot instead of shifting the bars
+        df_ds = (df[df["dataset"] == dataset]
+                 .drop_duplicates("query")
+                 .set_index("query")
+                 .reindex(queries_all))
+        x = np.arange(len(queries_all))
+
+        bottoms = np.zeros(len(x))
+        for col, color, hatch, label in zip(perc_cols, colors, hatches, labels):
+            values = df_ds[col].fillna(0).values
+            ax.bar(x, values, bottom=bottoms, color=color, hatch=hatch,
+                   edgecolor="black", linewidth=0.4, width=0.72, label=label)
+            bottoms += values
+
+        # separator between the standard queries (1..8) and the meaningful ones (M1..M3)
+        ax.axvline(len(base_queries) - 0.5, color="gray", linestyle=":", linewidth=1)
+
+        ax.set_title(dataset.replace("_", " "), fontsize=17)
+        ax.set_xticks(x)
+        ax.set_xticklabels(x_labels, rotation=45, ha="right", fontsize=14)
+        ax.set_ylim(0, 100)
+        ax.set_yticks(np.arange(0, 101, 20))
+        ax.tick_params(axis="y", labelsize=15)
+        ax.grid(axis="y", linestyle="--", alpha=0.4)
+        ax.set_axisbelow(True)
+
+        # ylabel on the first subplot of every row
+        if i % ncols == 0:
+            ax.set_ylabel("Execution Time (%)", fontsize=15)
+
+    # xlabel on the last row
+    last_row_start = ((len(datasets) - 1) // ncols) * ncols
+    for ax in axes[last_row_start:]:
+        ax.set_xlabel("Query", fontsize=15)
+
+    handles, legend_labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, legend_labels, loc="upper center",
+               bbox_to_anchor=(0.5, 0.97), ncol=5, fontsize=15, frameon=False)
+
+    fig.subplots_adjust(top=0.90, bottom=0.06, left=0.06, right=0.99,
+                        hspace=0.5, wspace=0.8)
+
+    fig.savefig("./plots/stacked_ex_times_complete_with_meaningful.pdf", bbox_inches="tight")
 
 def plot_stacked_barchart_comparison(csv_hyucc, csv_pg, ncols, nrows):
     # --- LOAD ---
@@ -2131,19 +2437,12 @@ def plot_bar_ablation_single_dataset(csv_path, dataset_name):
     print(f"Saved: {output_pdf}")
 
 
-'''
 allowed_algorithms=["HyUCC_bs1"]
 allowed_datasets=["synthea_100","synthea_200","synthea_300","synthea_400",
                   "synthea_500","synthea_600","synthea_700","synthea_800",
                   "synthea_900","synthea_1000","finbench","network-management","fraud"]
 create_results_file_baseline("./scalability/baseline_hyucc/stacked",allowed_algorithms,allowed_datasets,"./csv/risultati_baseline_hyucc.csv")
 
-#hyucc version
-allowed_algorithms=["PGKEYMAKER"]
-create_results_file_stacked(["./scalability/pgkeymaker_hyucc/stacked"],allowed_algorithms,allowed_datasets, "./csv/risultati_pgkeymaker_hyucc_stacked.csv")
-
-allowed_algorithms=["PGKEYMAKER","PGKEYMAKER-NOTREE"]
-create_results_file_ablation("./scalability/pgkeymaker_hyucc/stacked","./scalability/ablation/pgkeymaker_hyucc_notree/stacked",allowed_algorithms,allowed_datasets,"./csv/risultati_ablation_hyucc.csv",)
 
 allowed_algorithms=["HPIValid"]
 allowed_datasets=["synthea_100","synthea_200","synthea_300","synthea_400",
@@ -2151,39 +2450,29 @@ allowed_datasets=["synthea_100","synthea_200","synthea_300","synthea_400",
                   "synthea_900","synthea_1000","finbench","network-management","fraud"]
 create_results_file_baseline("./scalability/baseline_hpivalid/stacked",allowed_algorithms,allowed_datasets,"./csv/risultati_baseline_hpivalid.csv")
 
+#hyucc version
+allowed_algorithms=["PGKEYMAKER"]
+create_results_file_stacked(["./scalability/pgkeymaker_hyucc/stacked","./scalability/pgkeymaker_hyucc/meaningfull"],allowed_algorithms,allowed_datasets, "./csv/risultati_pgkeymaker_hyucc_stacked.csv",
+                            algo_aliases={"PGKEYMAKER_hyucc": "PGKEYMAKER"})
+
 #hpivalid version
 allowed_algorithms=["PGKEYMAKER_hpivalid"]
 allowed_datasets=["synthea_100","synthea_200","synthea_300","synthea_400",
                   "synthea_500","synthea_600","synthea_700","synthea_800",
                   "synthea_900","synthea_1000","finbench","network-management","fraud"]
-create_results_file_stacked(["./scalability/pgkeymaker_hpivalid/stacked"],allowed_algorithms,allowed_datasets, "./csv/risultati_pgkeymaker_hpivalid_stacked.csv")
+create_results_file_stacked(["./scalability/pgkeymaker_hpivalid/stacked","./scalability/pgkeymaker_hpivalid/meaningfull"],allowed_algorithms,allowed_datasets, "./csv/risultati_pgkeymaker_hpivalid_stacked.csv")
 
-
-allowed_algorithms=["PGKEYMAKER_hpivalid","PGKEYMAKER-NOTREE"]
-allowed_datasets=["synthea_100","synthea_200","synthea_300","synthea_400",
-                  "synthea_500","synthea_600","synthea_700","synthea_800",
-                  "synthea_900","synthea_1000","finbench","fraud"]
-create_results_file_ablation("./scalability/pgkeymaker_hpivalid/stacked","./scalability/ablation/pgkeymaker_hpivalid_notree/stacked",allowed_algorithms,allowed_datasets,"./csv/risultati_ablation_hpivalid.csv",)
-
-
-
-allowed_algorithms=["PGKEYMAKER_hpivalid","PGKEYMAKER-NOTREE"]
-allowed_datasets=["synthea_100","synthea_200","synthea_300","synthea_400",
-                  "synthea_500","synthea_600","synthea_700","synthea_800",
-                  "synthea_900","synthea_1000","finbench","network-management","fraud"]
-create_results_file_ablation("./scalability/pgkeymaker_hpivalid/stacked","./scalability/ablation/pgkeymaker_hpivalid_notree/stacked",allowed_algorithms,allowed_datasets,"./csv/risultati_ablation_hpi.csv",)
 '''
-
 # ablation results (include fraud + other_shapes)
 _ds_all = ["synthea_100","synthea_200","synthea_300","synthea_400",
            "synthea_500","synthea_600","synthea_700","synthea_800",
            "synthea_900","synthea_1000","finbench","network-management","fraud"]
+create_results_file_ablation("./scalability/pgkeymaker_hyucc/stacked","./scalability/ablation/pgkeymaker_hyucc_notree/stacked",["PGKEYMAKER","PGKEYMAKER-NOTREE"],_ds_all,"./csv/risultati_ablation_hyucc.csv")
 
-#create_results_file_ablation("./scalability/pgkeymaker_hyucc/stacked","./scalability/ablation/pgkeymaker_hyucc_notree/stacked",["PGKEYMAKER","PGKEYMAKER-NOTREE"],_ds_all,"./csv/risultati_ablation_hyucc.csv")
+create_results_file_ablation("./scalability/pgkeymaker_hpivalid/stacked","./scalability/ablation/pgkeymaker_hpivalid_notree/stacked",["PGKEYMAKER_hpivalid","PGKEYMAKER-NOTREE"],_ds_all,"./csv/risultati_ablation_hpivalid.csv")
 
-#create_results_file_ablation("./scalability/pgkeymaker_hpivalid/stacked","./scalability/ablation/pgkeymaker_hpivalid_notree/stacked",["PGKEYMAKER_hpivalid","PGKEYMAKER-NOTREE"],_ds_all,"./csv/risultati_ablation_hpivalid.csv")
-
-#create_results_file_ablation("./scalability/pgkeymaker_hpivalid/stacked","./scalability/ablation/pgkeymaker_hpivalid_notree/stacked",["PGKEYMAKER_hpivalid","PGKEYMAKER-NOTREE"],_ds_all,"./csv/risultati_ablation_hpi.csv")
+create_results_file_ablation("./scalability/pgkeymaker_hpivalid/stacked","./scalability/ablation/pgkeymaker_hpivalid_notree/stacked",["PGKEYMAKER_hpivalid","PGKEYMAKER-NOTREE"],_ds_all,"./csv/risultati_ablation_hpi.csv")
+'''
 
 #plot scalability
 #plot_scalability_synthea("./csv/risultati_pgkeymaker_hyucc_stacked.csv","./csv/risultati_baseline_hyucc.csv","./csv/risultati_baseline_hpivalid.csv","./csv/risultati_pgkeymaker_hpivalid_stacked.csv")
@@ -2199,8 +2488,14 @@ _ds_all = ["synthea_100","synthea_200","synthea_300","synthea_400",
 #ablation study
 #plot_bar_results_from_csv_grid_ablation("./csv/risultati_ablation_hpi.csv",4,3)
 #plot_bar_results_from_csv_grid_ablation_reducted("./csv/risultati_ablation_hpi.csv",4,3)
-plot_bar_results_from_csv_grid_ablation_other_shapes("./csv/risultati_ablation_hpi.csv",2,2)
+#plot_bar_results_from_csv_grid_ablation_other_shapes("./csv/risultati_ablation_hpi.csv",2,2)
 #plot_bar_results_from_csv_grid_ablation_reducted_3ds("./csv/risultati_ablation_hpi.csv",3,1)
+#plot_bar_results_from_csv_grid_ablation_other_shapes_all_datasets("./csv/risultati_ablation_hpi.csv")
+
+#time breakdown: queries 1-8 + meaningful (M1-M3), all datasets (run from the evaluation folder)
+plot_stacked_execution_times_percentages_complete_with_meaningful(
+      "./csv/risultati_pgkeymaker_hpivalid_stacked.csv")
+
 
 #plot_stacked_barchart_comparison("./csv/risultati_baseline.csv","./csv/risultati_pgkeymaker_stacked.csv", 4, 3)
 #plot_bar_results_from_csv_grid("risultati_scalability_final.csv",3,4)
@@ -2214,5 +2509,3 @@ plot_bar_results_from_csv_grid_ablation_other_shapes("./csv/risultati_ablation_h
 #print("numero chiavi baseline:",len(ris_baseline))
 #print("numero chiavi pg:",len(ris_pg))
 
-# example
-#plot_bar_ablation_single_dataset("./csv/risultati_ablation_diff_hops.csv","finbench")
