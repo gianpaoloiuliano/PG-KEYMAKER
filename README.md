@@ -30,11 +30,12 @@ A **notree** variant (no subpattern tree reuse) is also available and is used as
 ├── PG_K_validator.py             # Key propagation and validation logic
 ├── metanome_ucc.py               # UCC computation (HyUCC via Metanome, or HPIValid via WSL)
 ├── data/                         # Neo4j 5.26.1 database dumps (zip, tracked with Git LFS)
+├── patterns/                     # Synthea patterns (synthea_{3,4,5}hops.json) used by run_synthea_experiments.py
 ├── use_case/                     # Noise / integrity-checking experiment on FinBench
 │   ├── noise_experiment.py       #   sub-commands: validate, compare
 │   └── details_*.csv, summary_*.json
 └── evaluation/
-    ├── baselines/                # HyUCC, HPIValid, GED and GFD-adapted baselines
+    ├── baselines/                # HyUCC, HPIValid, GED and GFD-adapted baselines (HPIValid = executable)
     ├── scalability/              # Raw result files (see "Evaluation Output")
     ├── csv/                      # Aggregated results
     ├── plots/                    # Generated figures (PDF)
@@ -121,7 +122,7 @@ python testing_optimized_wargs.py --db synthea_100 --numtest 1 --tree true --ucc
 python run_synthea_experiments.py
 ```
 
-Runs, for each Synthea database, all combinations of tree/notree, `hyucc`/`hpivalid` and 3/4/5 hops (patterns read from `patterns/synthea_<hop>hops.json`, which must be provided). Existing complete results are skipped.
+Runs, for each Synthea database, all combinations of tree/notree, `hyucc`/`hpivalid` and 3/4/5 hops (patterns read from `patterns/synthea_<hop>hops.json`). Existing complete results are skipped.
 
 ### Filters
 

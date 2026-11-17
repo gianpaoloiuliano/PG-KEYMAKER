@@ -55,7 +55,7 @@ def generate_query_from_pattern(pattern_str, filters=None):
 # ✅ Neo4j connection
 # ------------------------------------------------------------
 uri = "bolt://localhost:7687"
-driver = GraphDatabase.driver(uri, auth=("neo4j", "gianpaolo"))
+driver = GraphDatabase.driver(uri, auth=("neo4j", "password"))
 
 
 # ------------------------------------------------------------

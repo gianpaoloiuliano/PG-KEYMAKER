@@ -42,7 +42,7 @@ qf.DEBUG_FILTRI = 0   # no [FILTERS] prints
 # ===========================================================================
 MODE = "compare"            # "validate" or "compare"
 URI = "neo4j://localhost:7687"
-AUTH = ("neo4j", "gianpaolo")
+AUTH = ("neo4j", "password")
 DATABASE = "finbench_10perc"  # instance name: only a label for the output files (queries go to the "neo4j" db)
 PATTERN = ("(src1:Account)-[edge1:Transfer]->(mid:Account)-[edge2:Withdraw]->(dstCard:Account)",
            "datetime('2021-01-01T00:00:00Z') < edge1.createTime < datetime('2022-01-01T00:00:00Z') "

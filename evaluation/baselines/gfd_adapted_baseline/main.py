@@ -8,7 +8,7 @@ from gfd_adapter import run_discovery, render_report
 
 URI = "bolt://localhost:7687"
 USER = "neo4j"
-PASSWORD = "gianpaolo"
+PASSWORD = "password"
 typology="meaningfull"
 
 dataset="synthea_900"

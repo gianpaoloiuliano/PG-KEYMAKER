@@ -410,7 +410,7 @@ def main():
                         help="does nothing: exit 0 if all tests are already done, 1 if some are missing")
     parser.add_argument("--uri", default="neo4j://localhost:7687")
     parser.add_argument("--user", default="neo4j")
-    parser.add_argument("--password", default="gianpaolo")
+    parser.add_argument("--password", default="password")
     args = parser.parse_args()
 
     patterns = []

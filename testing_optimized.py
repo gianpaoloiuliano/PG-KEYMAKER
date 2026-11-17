@@ -346,7 +346,7 @@ def launch_pgkeymaker_notree(pattern,driver,nomedb,numtest,lenpattern,ucc_alg,tr
 
 # Configure the Neo4j connection
 URI = "neo4j://localhost:7687"
-AUTH = ("neo4j", "gianpaolo")
+AUTH = ("neo4j", "password")
 # Connection to the Neo4j database
 driver = GraphDatabase.driver(URI, auth=AUTH)
 ucc_alg = "hyucc"
