@@ -15,6 +15,10 @@ The pipeline works as follows:
 
 A **notree** variant (no subpattern tree reuse) is also available and is used as ablation in the evaluation.
 
+## 📄 Datasets
+
+You can download the datasets used for the evaluation at this link: https://zenodo.org/records/24310924?preview=1&token=eyJhbGciOiJIUzUxMiJ9.eyJpZCI6Ijc0NThhYjliLTYyZGItNDdlYS1hYmQwLWM1MzY4NmNhMmM3ZCIsImRhdGEiOnt9LCJyYW5kb20iOiJiMGYxMWUxZWM2ZGQyNmQ3YWM5ODI0ZDFmNTU5Zjk0MSJ9.p9_S7-2Rm9Z-BxAJS-ZzpOHxJJ_BVYQazVDsZCTPEhrxQO5Uabbm48UYwbLbLCjdsL6wjT3ERHjnT8ClMS0rzQ
+
 ---
 
 ## 📁 Project Structure
